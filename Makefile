@@ -1,18 +1,25 @@
 NAME	=	minishell
-FILES	=	main.c
+FILES	=	minishell.c
+LIBFT	=	libft.a
 FLAGS	=	# -Wall -Wextra -Werror
 OBJS	=	$(FILES:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	cc $(CFLAGS) -o $(NAME) $(OBJS)
+	@make -C libft
+	@gcc $(FLAGS) -o $(NAME) $(OBJS) libft/$(LIBFT)
+
+%.o: %.c
+	@gcc $(FLAGS) -c $<
 
 clean:
-	rm -f $(OBJS)
+	@make clean -C libft
+	@rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	@make fclean -C libft
+	@rm -f $(NAME)
 
 re: fclean all
 
