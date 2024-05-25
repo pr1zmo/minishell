@@ -6,12 +6,13 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/05/25 12:54:22 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/05/25 13:06:38 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "libft/libft.h"
+# include <sys/wait.h>
 
 #endif

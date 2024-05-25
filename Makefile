@@ -8,10 +8,10 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@make -C libft
-	@gcc $(FLAGS) -o $(NAME) $(OBJS) libft/$(LIBFT)
+	@cc $(FLAGS) -o $(NAME) $(OBJS) libft/$(LIBFT)
 
 %.o: %.c
-	@gcc $(FLAGS) -c $<
+	@cc $(FLAGS) -c $<
 
 clean:
 	@make clean -C libft

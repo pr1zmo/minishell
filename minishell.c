@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:09 by prizmo            #+#    #+#             */
-/*   Updated: 2024/05/25 12:53:43 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/05/25 13:07:05 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 
 int	main()
 {
-	ft_putstr_fd("Hello world!\n", 1);
+	int	is_up;
+
+	is_up = 1;
+	ft_putstr_fd("minishell> ", 1);
+	while (is_up)
+	{
+		wait(0);
+	}
 	return (0);
 }
