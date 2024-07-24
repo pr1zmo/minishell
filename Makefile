@@ -1,15 +1,11 @@
 NAME	=	minishell
-
-FILES	=	minishell.c \
-			builtins/echo.c builtins/cd.c builtins/pwd.c \
-			builtins/export.c builtins/unset.c builtins/env.c builtins/exit.c \
-			execution/execution.c execution/execution_utils.c
-
+FIELS	=	minishell.c builtins/echo.c builtins/cd.c \
+		builtins/pwd.c builtins/export.c builtins/unset.c \
+		builtins/env.c builtins/exit.c execution/execution.c \
+		execution/execution_utils.c
+OBJS	=	$(FIELS:.c=.o)
 LIBFT	=	libft/libft.a
-
-FLAGS	=	#-Wall -Wextra -Werror
-
-OBJS	=	$(FILES:.c=.o)
+FLAGS	=	#-Wall -Wextra -Werror -g -fsanitize=address	
 
 all: $(NAME)
 
@@ -38,4 +34,8 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+t:
+	@$(MAKE) re
+	@$(MAKE) clean
+
+.PHONY: all clean fclean re t
