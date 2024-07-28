@@ -5,7 +5,7 @@ FIELS	=	minishell.c builtins/echo.c builtins/cd.c \
 		execution/execution_utils.c
 OBJS	=	$(FIELS:.c=.o)
 LIBFT	=	libft/libft.a
-FLAGS	=	#-Wall -Wextra -Werror -g -fsanitize=address	
+FLAGS	=	-fsanitize=address #-Wall -Wextra -Werror -g 	
 
 all: $(NAME)
 

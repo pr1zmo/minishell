@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/22 18:09:45 by marvin            #+#    #+#             */
-/*   Updated: 2024/07/22 18:09:45 by marvin           ###   ########.fr       */
+/*   Created: 2024/07/26 15:46:19 by prizmo            #+#    #+#             */
+/*   Updated: 2024/07/26 15:46:19 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static char	*get_full_cmd(char *av, char **env)
 	return (NULL);
 }
 
-void	exec_pipe(char *av, char **env)
+void	exec_command(char *av, char **env)
 {
 	char	**cmd;
 	char	*path;
