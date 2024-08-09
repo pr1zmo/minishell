@@ -28,8 +28,9 @@ int	ft_lstsize(t_list *lst)
 int	handle_command(char *str, t_list *env)
 {
 	t_tree	*tree;
-	tree = ft_parse(str, env);
+	// tree = ft_parse(str, env);
 
+	ft_execute(str, env);
 	return (1);
 }
 
