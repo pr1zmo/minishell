@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/27 12:42:34 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/08 11:44:22 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ int	ft_lstsize(t_list *lst)
 
 int	handle_command(char *str, t_list *env)
 {
+	t_tree	*tree;
+	tree = ft_parse(str, env);
+
+	return (1);
+}
+
+void	ft_execute(char *str, t_list *env)
+{
 	char	**cmd;
 
 	cmd = ft_split(str, ' ');
@@ -43,10 +51,9 @@ int	handle_command(char *str, t_list *env)
 	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
 		ft_unset(cmd, env);
 	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
-		return (0);
+		ft_exit();
 	else
 		execution(cmd, env);
-	return (1);
 }
 
 void	error_exit(char *str)
@@ -79,7 +86,6 @@ void	parent(char **av, char **env, int fds[2])
 		error_exit("file error");
 	dup2(fds[0], 0);
 	dup2(file_fd, 1);
-	// nullify_fd(fds[1]);
 	close(fds[1]);
 	exec_command(av[3], env);
 }

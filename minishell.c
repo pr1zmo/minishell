@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/26 17:37:40 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/02 14:47:29 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,13 @@ int	main(int ac, char **av, char **env)
 	int		is_up;
 	char	*str;
 	t_list	*env_list;
-	t_list	*tmp;
 
 	is_up = 1;
 	while (is_up)
 	{
 		env_list = get_env(env);
-		// printf("%s\n", env_list->data);
 		str = readline("minishell> ");
-		if (str)
+		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
 			is_up = handle_command(str, env_list);

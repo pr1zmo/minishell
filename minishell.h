@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/27 12:22:40 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/08 11:41:22 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,21 @@
 # include <fcntl.h>
 # include <readline/history.h>
 
+# define PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+// # define CD ""
+
 typedef struct s_list
 {
 	struct s_list	*next;
 	char			*data;
 }					t_list;
+
+typedef struct s_tree
+{
+	struct s_tree	*left;
+	struct s_tree	*right;
+	char			*data;
+}					t_tree;
 
 int		ft_env(t_list *lst);
 int		handle_command(char *str, t_list *env);
