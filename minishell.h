@@ -34,6 +34,7 @@ typedef struct s_tree
 	char			*data;
 }					t_tree;
 
+void	ft_execute(char *str, t_list *env);
 int		ft_env(t_list *lst);
 int		handle_command(char *str, t_list *env);
 t_list	*get_env(char **env);
