@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/08 11:44:22 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/11 09:39:48 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,24 @@ void	parent(char **av, char **env, int fds[2])
 }
 
 int	execution(char **args, t_list *env)
+{
+	char	**env_data;
+	int 	i;
+
+	i = 0;
+	env_data = (char **)malloc(sizeof(char *) * ft_lstsize(env) + 1);
+	while (env)
+	{
+		env_data[i] = env->data;
+		env = env->next;
+		i++;
+	}
+	// check_arguments(args);
+	exec_command(args[0], env_data);
+	return (1);
+}
+
+int	ft_pipe(char **args, t_list *env)
 {
 	pid_t	id;
 	int		fds[2];

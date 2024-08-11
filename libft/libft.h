@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 20:28:01 by zelbassa          #+#    #+#             */
-/*   Updated: 2023/11/15 22:11:03 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/11 11:03:15 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <limits.h>
+
+typedef struct s_list
+{
+	void			*data;
+	struct s_list	*next;
+}	t_list;
+
 
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
@@ -55,5 +62,7 @@ void	ft_putchar_fd(char c, int fd);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
+void	ft_lstadd_back(t_list **alst, t_list *new);
+t_list	*ft_lstlast(t_list *lst);
 
 #endif

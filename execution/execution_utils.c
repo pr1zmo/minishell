@@ -35,14 +35,10 @@ static	char	**check_path(char **env)
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
-		{
-			path = ft_split(env[i] + 5, ':');
-			break;
-		}
-		else
-			i++;
+			return (ft_split(env[i] + 5, ':'));
+		i++;
 	}
-	return (path);
+	return (NULL);
 }
 
 static char	*get_full_cmd(char *av, char **env)
@@ -80,14 +76,20 @@ void	exec_command(char *av, char **env)
 		path = ft_strdup(cmd[0]);
 	else
 		path = get_full_cmd(cmd[0], env);
+	printf("THIS IS PATH: %s\n", path);
 	if (!path)
 	{
+		printf("Something went wrong\n");
 		free_arr(cmd);
 		perror(cmd[0]);
 		exit(1);
 	}
-	if (execve(path, cmd, env) == -1)
+	for(int i = 0; env[i]; i++)
+		printf("This is env: %s\n", env[i]);
+	int	err = execve(path, cmd, env);
+	if (err == -1)
 	{
+		printf("ERROR: %d\n", err);
 		free_arr(cmd);
 		perror("execve");
 		exit(1);
