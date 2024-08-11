@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/11 11:01:23 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/11 11:52:10 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@
 # define PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 // # define CD ""
 
+typedef struct s_list
+{
+	struct s_list	*next;
+	char			*data;
+}					t_list;
+
 typedef struct s_tree
 {
 	struct s_tree	*left;
@@ -32,7 +38,7 @@ void	ft_execute(char *str, t_list *env);
 int		ft_env(t_list *lst);
 int		handle_command(char *str, t_list *env);
 t_list	*get_env(char **env);
-void	exec_command(char *av, char **env);
+int		exec_command(char **av, char **env);
 void	check_arguments(char **av);
 void	error_exit(char *str);
 void	parent(char **av, char **env, int fds[2]);

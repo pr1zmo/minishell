@@ -49,9 +49,11 @@ static char	*get_full_cmd(char *av, char **env)
 	char	**path;
 
 	i = 0;
-	path = check_path(env);
+	// path = check_path(env);
+	path = ft_split(getenv("PATH"), ':');
 	if (!path)
 		error_exit("Path error");
+
 	while (path[i])
 	{
 		result = ft_strjoin(path[i], "/");
@@ -66,34 +68,27 @@ static char	*get_full_cmd(char *av, char **env)
 	return (NULL);
 }
 
-void	exec_command(char *av, char **env)
+int	exec_command(char **av, char **env)
 {
 	char	**cmd;
 	char	*path;
 
-	cmd = ft_split(av, ' ');
-	if (cmd[0][0] == '/')
-		path = ft_strdup(cmd[0]);
+	if (av[0][0] == '/')
+		path = ft_strdup(av[0]);
 	else
-		path = get_full_cmd(cmd[0], env);
-	printf("THIS IS PATH: %s\n", path);
+		path = get_full_cmd(av[0], env);
 	if (!path)
 	{
-		printf("Something went wrong\n");
-		free_arr(cmd);
-		perror(cmd[0]);
+		perror(av[0]);
 		exit(1);
 	}
-	for(int i = 0; env[i]; i++)
-		printf("This is env: %s\n", env[i]);
-	int	err = execve(path, cmd, env);
-	if (err == -1)
+	if (execve(path, av, env) == -1)
 	{
-		printf("ERROR: %d\n", err);
 		free_arr(cmd);
 		perror("execve");
 		exit(1);
 	}
+	return (1);
 }
 
 void	check_arguments(char **av)

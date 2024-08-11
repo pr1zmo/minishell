@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/11 09:39:48 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/11 11:53:17 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,31 +65,31 @@ void	error_exit(char *str)
 	exit(1);
 }
 
-void	child(char **av, char **env, int fds[2])
-{
-	int	file_fd;
+// void	child(char **av, char **env, int fds[2])
+// {
+// 	int	file_fd;
 
-	file_fd = open(av[1], O_RDONLY, 0777);
-	if (file_fd == -1)
-		error_exit("file error");
-	dup2(fds[1], 1);
-	dup2(file_fd, 0);
-	close(fds[0]);
-	exec_command(av[2], env);
-}
+// 	file_fd = open(av[1], O_RDONLY, 0777);
+// 	if (file_fd == -1)
+// 		error_exit("file error");
+// 	dup2(fds[1], 1);
+// 	dup2(file_fd, 0);
+// 	close(fds[0]);
+// 	exec_command(av[2], env);
+// }
 
-void	parent(char **av, char **env, int fds[2])
-{
-	int	file_fd;
+// void	parent(char **av, char **env, int fds[2])
+// {
+// 	int	file_fd;
 
-	file_fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (file_fd == -1)
-		error_exit("file error");
-	dup2(fds[0], 0);
-	dup2(file_fd, 1);
-	close(fds[1]);
-	exec_command(av[3], env);
-}
+// 	file_fd = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+// 	if (file_fd == -1)
+// 		error_exit("file error");
+// 	dup2(fds[0], 0);
+// 	dup2(file_fd, 1);
+// 	close(fds[1]);
+// 	exec_command(av[3], env);
+// }
 
 int	execution(char **args, t_list *env)
 {
@@ -105,33 +105,32 @@ int	execution(char **args, t_list *env)
 		i++;
 	}
 	// check_arguments(args);
-	exec_command(args[0], env_data);
-	return (1);
+	return (exec_command(args, env_data));
 }
 
-int	ft_pipe(char **args, t_list *env)
-{
-	pid_t	id;
-	int		fds[2];
-	char	**env_data;
-	int		i;
+// int	ft_pipe(char **args, t_list *env)
+// {
+// 	pid_t	id;
+// 	int		fds[2];
+// 	char	**env_data;
+// 	int		i;
 
-	i = 0;
-	env_data = (char **)malloc(sizeof(char *) * ft_lstsize(env) + 1);
-	while (env)
-	{
-		env_data[i] = env->data;
-		env = env->next;
-		i++;
-	}
-	if (pipe(fds) == -1)
-		error_exit("pipe");
-	check_arguments(args);
-	id = fork();
-	if (id < 0)
-		error_exit("fork error");
-	if (id == 0)
-		child(args, env_data, fds);
-	waitpid(0, NULL, 0);
-	parent(args, env_data, fds);
-}
+// 	i = 0;
+// 	env_data = (char **)malloc(sizeof(char *) * ft_lstsize(env) + 1);
+// 	while (env)
+// 	{
+// 		env_data[i] = env->data;
+// 		env = env->next;
+// 		i++;
+// 	}
+// 	if (pipe(fds) == -1)
+// 		error_exit("pipe");
+// 	check_arguments(args);
+// 	id = fork();
+// 	if (id < 0)
+// 		error_exit("fork error");
+// 	if (id == 0)
+// 		child(args, env_data, fds);
+// 	waitpid(0, NULL, 0);
+// 	parent(args, env_data, fds);
+// }
