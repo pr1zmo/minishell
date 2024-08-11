@@ -82,12 +82,17 @@ int	exec_command(char **av, char **env)
 		perror(av[0]);
 		exit(1);
 	}
-	if (execve(path, av, env) == -1)
+	int	fd = fork();
+	if (fd == 0)
 	{
-		free_arr(cmd);
-		perror("execve");
-		exit(1);
+		if (execve(path, av, env) == -1)
+		{
+			free_arr(cmd);
+			perror("execve");
+			exit(1);
+		}
 	}
+	waitpid(fd, NULL, 0);
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/11 11:53:17 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/11 20:46:37 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,21 @@ void	ft_execute(char *str, t_list *env)
 	char	**cmd;
 
 	cmd = ft_split(str, ' ');
-	if (ft_strncmp(cmd[0], "env", 3) == 0)
-		ft_env(env);
-	if (ft_strncmp(cmd[0], "echo", 4) == 0)
-		ft_echo(cmd);
-	else if (ft_strncmp(cmd[0], "cd", 2) == 0)
-		ft_cd(cmd, env);
-	else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
-		ft_pwd();
-	else if (ft_strncmp(cmd[0], "export", 6) == 0)
-		ft_export(cmd, env);
-	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
-		ft_unset(cmd, env);
-	else if (ft_strncmp(cmd[0], "exit", 4) == 0)
-		ft_exit();
-	else
-		execution(cmd, env);
+	// if (ft_strncmp(cmd[0], "env", 3) == 0)
+	// 	ft_env(env);
+	// if (ft_strncmp(cmd[0], "echo", 4) == 0)
+	// 	ft_echo(cmd);
+	// else if (ft_strncmp(cmd[0], "cd", 2) == 0)
+	// 	ft_cd(cmd, env);
+	// else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
+	// 	ft_pwd();
+	// else if (ft_strncmp(cmd[0], "export", 6) == 0)
+	// 	ft_export(cmd, env);
+	// else if (ft_strncmp(cmd[0], "unset", 5) == 0)
+	// 	ft_unset(cmd, env);
+	// else if (ft_strncmp(cmd[0], "exit", 4) == 0)
+	// 	ft_exit();
+	execution(cmd, env);
 }
 
 void	error_exit(char *str)
@@ -104,8 +103,16 @@ int	execution(char **args, t_list *env)
 		env = env->next;
 		i++;
 	}
+	// tokenize(args, env_data);
 	// check_arguments(args);
 	return (exec_command(args, env_data));
+}
+
+void	tokenize(char **args, char **env_data)
+{
+	int i;
+
+	i = 0;
 }
 
 // int	ft_pipe(char **args, t_list *env)

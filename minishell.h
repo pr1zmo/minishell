@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/11 11:52:10 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/11 18:33:44 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ t_list	*get_env(char **env);
 int		exec_command(char **av, char **env);
 void	check_arguments(char **av);
 void	error_exit(char *str);
-void	parent(char **av, char **env, int fds[2]);
-void	child(char **av, char **env, int fds[2]);
+// void	parent(char **av, char **env, int fds[2]);
+// void	child(char **av, char **env, int fds[2]);
 int		execution(char **args, t_list *env);
 int		ft_cd(char **cmd, t_list *env);
 int		ft_echo(char **cmd);

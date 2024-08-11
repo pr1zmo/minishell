@@ -2,3 +2,4 @@
 *.a
 /bash_tests
 minishell
+.*
