@@ -49,11 +49,9 @@ static char	*get_full_cmd(char *av, char **env)
 	char	**path;
 
 	i = 0;
-	// path = check_path(env);
 	path = ft_split(getenv("PATH"), ':');
 	if (!path)
 		error_exit("Path error");
-
 	while (path[i])
 	{
 		result = ft_strjoin(path[i], "/");
@@ -66,6 +64,13 @@ static char	*get_full_cmd(char *av, char **env)
 	}
 	free_arr(path);
 	return (NULL);
+}
+
+void	process_command(char *path, char **av, char **env)
+{
+	int	i;
+
+	i = 0;
 }
 
 int	exec_command(char **av, char **env)
@@ -82,17 +87,7 @@ int	exec_command(char **av, char **env)
 		perror(av[0]);
 		exit(1);
 	}
-	int	fd = fork();
-	if (fd == 0)
-	{
-		if (execve(path, av, env) == -1)
-		{
-			free_arr(cmd);
-			perror("execve");
-			exit(1);
-		}
-	}
-	waitpid(fd, NULL, 0);
+	process_command(path, av, env);
 	return (1);
 }
 
