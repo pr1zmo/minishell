@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:11:39 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 15:11:40 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 18:13:06 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@ static int	count_args(char **arg, int i, char c)
 {
 	int	count;
 
-	count = 0;
+	count = 1;
+	i++;
 	while (arg[i] && !ft_strchr(arg[i], c))
 	{
 		count++;
@@ -27,51 +28,58 @@ static int	count_args(char **arg, int i, char c)
 	return (count);
 }
 
-int	tokenize_quotarg(char **arg, int i, t_line *tmp, char c)
+void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c)
 {
 	int		count;
 	int		j;
 
-	count = count_args(arg, i, c);
+	count = count_args(arg, *i, c);
 	j = 0;
-	tmp->str = malloc(sizeof(char *) * (count + 2));
-	while (arg[i] && !ft_strchr(arg[i], c))
+	tmp->str = malloc(sizeof(char *) * (count + 1));
+	tmp->str[j] = ft_strdup(arg[*i]);
+	j++;
+	*i += 1;
+	while (arg[*i] && !ft_strchr(arg[*i], c))
 	{
-		tmp->str[j] = ft_strdup(arg[i]);
+		tmp->str[j] = ft_strdup(arg[*i]);
 		j++;
-		i += 1;
+		*i += 1;
 	}
-	if (arg[i])
-		tmp->str[j++] = ft_strdup(arg[i++]);
+	printf("arg[%i]: %s\n", *i,arg[*i]);
+	if (arg[*i])
+	{
+		tmp->str[j] = ft_strdup(arg[*i]);
+		j++;
+		*i += 1;
+	}
 	tmp->str[j] = NULL;
 	tmp->type = ARG;
 	tmp->next = NULL;
-	return (j);
 }
 
-int	tokenize_arg(char **arg, int i, t_line *tmp)
+void	tokenize_arg(char **arg, int *i, t_line *tmp)
 {
 	int	count;
 	int	j;
 
 	count = 0;
-	j = 0;
-	while (arg[i] && get_token(arg[i]) == NONE)
-	{
-		count++;
-		i += 1;
-	}
-	tmp->str = malloc(sizeof(char *) * (count + 1));
+	j = *i;
 	while (arg[j] && get_token(arg[j]) == NONE)
 	{
-		tmp->str[j] = ft_strdup(arg[j]);
+		count++;
+		j += 1;
+	}
+	j = 0;
+	tmp->str = malloc(sizeof(char *) * (count + 1));
+	while (arg[*i] && get_token(arg[*i]) == NONE)
+	{
+		tmp->str[j] = ft_strdup(arg[*i]);
 		j++;
-		i += 1;
+		*i += 1;
 	}
 	tmp->str[j] = NULL;
 	tmp->type = ARG;
 	tmp->next = NULL;
-	return (count);
 }
 
 void	tokenize(char *arg, t_line *tmp)

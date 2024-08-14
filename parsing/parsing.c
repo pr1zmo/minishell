@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:11:32 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 17:57:22 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/14 18:14:38 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	ft_free(char **arg, char *line)
 	free(line);
 }
 
-t_line	*parse(char *line, t_line *head, char **env)
+void	*parse(char *line, t_line *head, char **env)
 {
 	char	**arg;
 
@@ -117,5 +117,4 @@ t_line	*parse(char *line, t_line *head, char **env)
 	lexer(arg, head);
 	generate_env(head, env);
 	ft_free(arg, line);
-	return (head);
 }

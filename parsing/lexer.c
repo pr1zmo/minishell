@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:11:36 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 15:11:37 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 18:13:49 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ t_token	get_token(char *str)
 		return (NONE);
 	if (!ft_strncmp(str, "|", 1))
 		return (PIPE);
-	else if (!ft_strncmp(str, "<", 1))
-		return (REDIR_IN);
-	else if (!ft_strncmp(str, ">", 1))
-		return (REDIR_OUT);
 	else if (!ft_strncmp(str, ">>", 2))
 		return (APPEND);
 	else if (!ft_strncmp(str, "<<", 2))
 		return (HEREDOC);
+	else if (!ft_strncmp(str, "<", 1))
+		return (REDIR_IN);
+	else if (!ft_strncmp(str, ">", 1))
+		return (REDIR_OUT);
 	else
 		return (NONE);
 }
@@ -43,28 +43,25 @@ int	is_command(char **arg, int i)
 void	lexer(char **arg, t_line *head)
 {
 	t_line	*tmp;
-	int		count;
 	int		i;
 
 	i = 0;
 	while (arg[i])
 	{
-		count = 1;
 		tmp = malloc(sizeof(t_line));
 		if (!tmp)
 			return ;
 		if (is_command(arg, i))
-			tokenize_cmd(arg[i], tmp);
+			tokenize_cmd(arg[i++], tmp);
 		else if (ft_strchr(arg[i], '\"'))
-			count = tokenize_quotarg(arg, i, tmp, '\"');
+			tokenize_quotarg(arg, &i, tmp, '\"');
 		else if (ft_strchr(arg[i], '\''))
-			count = tokenize_quotarg(arg, i, tmp, '\'');
+			tokenize_quotarg(arg, &i, tmp, '\'');
 		else if (get_token(arg[i]) != NONE)
-			tokenize(arg[i], tmp);
+			tokenize(arg[i++], tmp);
 		else
-			tokenize_arg(arg, i, tmp);
-		add_back(&head, tmp);
-		i += count;
+			tokenize_arg(arg, &i, tmp);
+		ft_lstadd_back(&head, tmp);
 	}
 	while (head)
 	{
