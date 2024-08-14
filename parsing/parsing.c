@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/14 15:11:32 by prizmo            #+#    #+#             */
+/*   Updated: 2024/08/14 15:14:59 by prizmo           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "parsing.h"
 
 int	special_char(char *str, int i)
 {
@@ -66,19 +78,19 @@ t_line	*parse(char *line)
 	return (head);
 }
 
-int main(int ac, char **av)
+int ft_parse(int ac, char **av)
 {
 	char	*line;
 	t_line	*head;
 
-	while (1)
-	{
-		line = readline("minishell$ ");
-		if (!line)
-			break ;
-		add_history(line);
-		head = parse(line);
-		printf("%p\n", head);
-		free(line);
-	}
+// 	while (1)
+// 	{
+// 		line = readline("minishell$ ");
+// 		if (!line)
+// 			break ;
+// 		add_history(line);
+// 		head = parse(line);
+// 		printf("%p\n", head);
+// 		free(line);
+// 	}
 }

@@ -6,26 +6,11 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 13:47:43 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 15:04:20 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_lstadd_back(t_env **lst, t_env *new)
-{
-	t_env	*tmp;
-
-	if (!*lst)
-	{
-		*lst = new;
-		return ;
-	}
-	tmp = *lst;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-}
 
 t_env	*get_env(char	**env)
 {
@@ -40,7 +25,7 @@ t_env	*get_env(char	**env)
 		tmp = malloc(sizeof(t_env));
 		if (!tmp)
 			error_exit("Malloc error");
-		tmp->data = ft_strdup(env[i]);
+		tmp->content = ft_strdup(env[i]);
 		tmp->next = NULL;
 		ft_lstadd_back(&env_list, tmp);
 		i++;

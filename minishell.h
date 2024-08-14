@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 13:55:34 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 14:54:51 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,10 @@
 # include <readline/readline.h>
 # include <fcntl.h>
 # include <readline/history.h>
+# include "parsing/parsing.h"
 
 # define PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-// # define CD ""
 
-// typedef struct s_command t_command;
-// typedef struct s_env t_env;
-// typedef struct s_tree t_tree;
 
 typedef	struct s_command
 {
@@ -32,12 +29,6 @@ typedef	struct s_command
 	struct s_command	*left;
 	struct s_command	*rigth;
 }						t_command;
-
-typedef struct s_env
-{
-    struct s_env	*next;
-    char			*data;
-}					t_env;
 
 typedef struct s_tree
 {

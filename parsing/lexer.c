@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/14 15:11:36 by prizmo            #+#    #+#             */
+/*   Updated: 2024/08/14 15:11:37 by prizmo           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "parsing.h"
 
 t_token	get_token(char *str)
 {
@@ -51,7 +63,7 @@ void	lexer(char **arg, t_line *head)
 			tokenize(arg[i], tmp);
 		else
 			tokenize_arg(arg, i, tmp);
-		ft_lstadd_back(&head, tmp);
+		add_back(&head, tmp);
 		i += count;
 	}
 	while (head)

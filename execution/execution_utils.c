@@ -73,11 +73,11 @@ void	process_command(char *path, char **av, char **env)
 	i = 0;
 }
 
-char	*special_char(char *cmd)
-{
-	if (ft_strncmp(cmd, '|', 1))
-		return (NULL);
-}
+// char	*special_char(char *cmd)
+// {
+// 	if (ft_strncmp(cmd, "|", 1))
+// 		return (NULL);
+// }
 
 void	exec_command_list(char *path, char **cmd, char **av)
 {
@@ -85,11 +85,11 @@ void	exec_command_list(char *path, char **cmd, char **av)
 	char	*special_cmd;
 
 	i = 0;
-	while (cmd[i])
-	{
-		if (special_cmd = special_char(cmd[i]))
-			return;
-	}
+	// while (cmd[i])
+	// {
+	// 	if (special_cmd = special_char(cmd[i]))
+	// 		return;
+	// }
 }
 
 int	exec_command(char **av, char **env)

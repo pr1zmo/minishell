@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 21:24:33 by mel-bouh          #+#    #+#             */
-/*   Updated: 2023/11/04 22:18:59 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/08/14 15:03:07 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
+t_env	*ft_lstmap(t_env *lst, void *(*f)(void *), void (*del)(void *))
 {
-	t_list	*newlist;
-	t_list	*new;
+	t_env	*newlist;
+	t_env	*new;
 
 	if (lst == NULL || f == NULL || del == NULL)
 		return (NULL);

@@ -1,8 +1,10 @@
 NAME	=	minishell
-FILES	=	minishell.c builtins/echo.c builtins/cd.c \
+PARS_F	=	parsing/parsing.c parsing/lexer.c parsing/utils.c parsing/tokenize.c
+EXEC_F	=	minishell.c builtins/echo.c builtins/cd.c \
 		builtins/pwd.c builtins/export.c builtins/unset.c \
 		builtins/env.c builtins/exit.c execution/execution.c \
-		execution/execution_utils.c parsing/parsing.c
+		execution/execution_utils.c
+FILES	= $(PARS_F) $(EXEC_F)
 OBJS	=	$(FILES:.c=.o)
 LIBFT	=	libft/libft.a
 FLAGS	=	-fsanitize=address -g3 #-Wall -Wextra -Werror -g 	

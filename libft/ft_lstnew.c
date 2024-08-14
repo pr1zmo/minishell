@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 17:36:31 by mel-bouh          #+#    #+#             */
-/*   Updated: 2023/11/06 15:31:50 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/08/14 14:54:24 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list	*ft_lstnew(void *content)
+t_env	*ft_lstnew(void *content)
 {
-	t_list	*node;
+	t_env	*node;
 
-	node = (t_list *)malloc(sizeof(t_list));
+	node = (t_env *)malloc(sizeof(t_env));
 	if (node == NULL)
 		return (NULL);
 	node->content = content;

@@ -6,24 +6,11 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 13:48:55 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 14:55:53 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	ft_lstsize(t_env *lst)
-{
-	size_t	i;
-
-	i = 0;
-	while (lst)
-	{
-		lst = lst->next;
-		i++;
-	}
-	return (i);
-}
 
 int	handle_command(char *str, t_data *data)
 {
@@ -101,7 +88,7 @@ int	execution(char **args, t_data *data)
 	env_data = (char **)malloc(sizeof(char *) * ft_lstsize(env) + 1);
 	while (env)
 	{
-		env_data[i] = env->data;
+		env_data[i] = env->content;
 		env = env->next;
 		i++;
 	}
@@ -110,12 +97,12 @@ int	execution(char **args, t_data *data)
 	return (exec_command(args, env_data));
 }
 
-void	tokenize(char **args, char **env_data)
-{
-	int i;
+// void	tokenize(char **args, char **env_data)
+// {
+// 	int i;
 
-	i = 0;
-}
+// 	i = 0;
+// }
 
 // int	ft_pipe(char **args, t_env *env)
 // {

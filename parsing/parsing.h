@@ -1,5 +1,5 @@
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef PARSING_H
+# define PARSING_H
 
 # include <stdio.h>
 # include <unistd.h>
@@ -7,7 +7,7 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "./libft/libft.h"
+# include "../minishell.h"
 
 typedef enum
 {
@@ -31,11 +31,15 @@ typedef struct s_token
 }	t_line;
 
 void	lexer(char **arg, t_line *head);
-void	ft_lstadd_back(t_line **head, t_line *new);
+int		special_char(char *str, int i);
+void	add_back(t_line **head, t_line *new);
 void	tokenize_cmd(char *str, t_line *tmp);
 void	tokenize(char *arg, t_line *tmp);
 int		tokenize_arg(char **arg, int i, t_line *tmp);
 int		tokenize_quotarg(char **arg, int i, t_line *tmp, char c);
 t_token	get_token(char *str);
+int		checkquotes(char *line);
+int	checkspaces(char *line);
+t_line	*parse(char *line);
 
 #endif
