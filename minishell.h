@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 17:55:47 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/14 18:03:20 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,12 @@
 # include <readline/history.h>
 # include "parsing/parsing.h"
 
-# define PATH "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-
+# define RESET	"\x1b[0m"
+# define BOLD	"\x1b[1m"
+# define RED	"\x1b[31m"
+# define GREEN	"\x1b[32m"
+# define YELLOW	"\x1b[93m"
+# define CYAN	"\x1b[36m"
 
 typedef	struct s_command
 {

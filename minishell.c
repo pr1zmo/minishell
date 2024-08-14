@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 17:56:06 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/14 18:06:01 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,14 @@ int	main(int ac, char **av, char **env)
 	t_line	*head;
 
 	is_up = 1;
-	ft_strjoin("PWD=", getcwd(NULL, 0));
 	while (is_up)
 	{
-		str = readline("minishell> ");
+		str = readline("\x1b[36mminishell->\x1b[0m ");
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
 			parse(str, head, env);
 			// is_up = handle_command(str, data);
-			free(str);
 		}
 		wait(0);
 	}
