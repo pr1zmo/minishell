@@ -6,13 +6,13 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:46:48 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/27 12:17:44 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 13:56:21 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_unset(char **av, t_list *env)
-{
-	//
-}
+// int	ft_unset(char **av, t_list *env)
+// {
+// 	//
+// }

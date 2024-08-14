@@ -76,6 +76,7 @@ void	process_command(char *path, char **av, char **env)
 char	*special_char(char *cmd)
 {
 	if (ft_strncmp(cmd, '|', 1))
+		return (NULL);
 }
 
 void	exec_command_list(char *path, char **cmd, char **av)

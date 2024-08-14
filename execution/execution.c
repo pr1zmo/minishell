@@ -6,13 +6,13 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/11 20:46:37 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 13:48:55 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_lstsize(t_list *lst)
+int	ft_lstsize(t_env *lst)
 {
 	size_t	i;
 
@@ -25,16 +25,16 @@ int	ft_lstsize(t_list *lst)
 	return (i);
 }
 
-int	handle_command(char *str, t_list *env)
+int	handle_command(char *str, t_data *data)
 {
 	t_tree	*tree;
 	// tree = ft_parse(str, env);
 
-	ft_execute(str, env);
+	ft_execute(str, data);
 	return (1);
 }
 
-void	ft_execute(char *str, t_list *env)
+void	ft_execute(char *str, t_data *data)
 {
 	char	**cmd;
 
@@ -53,7 +53,7 @@ void	ft_execute(char *str, t_list *env)
 	// 	ft_unset(cmd, env);
 	// else if (ft_strncmp(cmd[0], "exit", 4) == 0)
 	// 	ft_exit();
-	execution(cmd, env);
+	execution(cmd, data);
 }
 
 void	error_exit(char *str)
@@ -90,11 +90,13 @@ void	error_exit(char *str)
 // 	exec_command(av[3], env);
 // }
 
-int	execution(char **args, t_list *env)
+int	execution(char **args, t_data *data)
 {
 	char	**env_data;
 	int 	i;
+	t_env	*env;
 
+	env = data->env;
 	i = 0;
 	env_data = (char **)malloc(sizeof(char *) * ft_lstsize(env) + 1);
 	while (env)
@@ -115,7 +117,7 @@ void	tokenize(char **args, char **env_data)
 	i = 0;
 }
 
-// int	ft_pipe(char **args, t_list *env)
+// int	ft_pipe(char **args, t_env *env)
 // {
 // 	pid_t	id;
 // 	int		fds[2];
