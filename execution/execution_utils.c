@@ -66,13 +66,13 @@ static char	*get_full_cmd(char *av, char **env)
 	return (NULL);
 }
 
-<<<<<<< HEAD
 void	process_command(char *path, char **av, char **env)
 {
 	int	i;
 
 	i = 0;
-=======
+}
+
 char	*special_char(char *cmd)
 {
 	if (ft_strncmp(cmd, '|', 1))
@@ -87,8 +87,8 @@ void	exec_command_list(char *path, char **cmd, char **av)
 	while (cmd[i])
 	{
 		if (special_cmd = special_char(cmd[i]))
+			return;
 	}
->>>>>>> 3d68ba5 (M)
 }
 
 int	exec_command(char **av, char **env)
@@ -105,10 +105,6 @@ int	exec_command(char **av, char **env)
 		perror(av[0]);
 		exit(1);
 	}
-<<<<<<< HEAD
 	process_command(path, av, env);
-=======
-	exec_command_list(path, cmd, av);
->>>>>>> 3d68ba5 (M)
 	return (1);
 }
