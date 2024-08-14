@@ -3,46 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 17:21:45 by zelbassa          #+#    #+#             */
-/*   Updated: 2023/11/16 13:23:06 by zelbassa         ###   ########.fr       */
+/*   Created: 2023/11/01 16:40:33 by mel-bouh          #+#    #+#             */
+/*   Updated: 2024/08/12 15:57:54 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	*ft_strcpy(char *dst, char *src)
+char	*ft_strjoin(char *line, char *buf)
 {
-	while (*src)
-		*dst++ = *src++;
-	*dst = '\0';
-	return (dst);
-}
+	char	*join;
 
-static char	*ft_strcat(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i])
-		i ++;
-	while (*s2)
-		s1[i++] = *s2++;
-	s1[i] = '\0';
-	return (s1);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*ptr;
-
-	if (!s1 || !s2)
+	if (!line && !buf)
 		return (NULL);
-	ptr = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!ptr)
+	join = (char *)malloc(ft_strlen(line) + ft_strlen(buf) + 1);
+	if (!join)
 		return (NULL);
-	ft_strcpy(ptr, (char *)s1);
-	ft_strcat(ptr, (char *)s2);
-	return (ptr);
+	join[0] = '\0';
+	if (line)
+		ft_strlcat(join, line, ft_strlen(line) + 1);
+	if (buf)
+		ft_strlcat(join, buf, ft_strlen(buf) + ft_strlen(line) + 1);
+	if (!join[0])
+		return (free(join), NULL);
+	return (free(line), join);
 }

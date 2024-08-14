@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/15 17:43:52 by zelbassa          #+#    #+#             */
-/*   Updated: 2023/11/18 11:19:40 by zelbassa         ###   ########.fr       */
+/*   Created: 2023/10/31 15:10:40 by mel-bouh          #+#    #+#             */
+/*   Updated: 2023/11/03 21:41:01 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	char	*byte;
+	size_t	i;
 
-	byte = (char *)s;
-	while (n-- > 0)
-		*byte++ = 0;
+	i = 0;
+	while (i < n)
+	{
+		((unsigned char *)s)[i] = 0;
+		i++;
+	}
 }

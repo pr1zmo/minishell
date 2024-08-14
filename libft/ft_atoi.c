@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/15 17:24:03 by zelbassa          #+#    #+#             */
-/*   Updated: 2023/11/15 23:08:32 by zelbassa         ###   ########.fr       */
+/*   Created: 2023/11/04 22:25:35 by mel-bouh          #+#    #+#             */
+/*   Updated: 2023/11/05 22:24:44 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,25 @@
 
 int	ft_atoi(const char *str)
 {
-	unsigned long long	result;
-	int					sign;
+	int	i;
+	int	number;
+	int	sign;
 
+	i = 0;
 	sign = 1;
-	result = 0;
-	while (*str == ' ' || (*str >= '\t' && *str <= '\r'))
-		str++;
-	if (*str == '-' || *str == '+')
+	number = 0;
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		sign = (-1 * (*str == '-')) + (*str == '+');
-		str++;
+		if (str[i] == '-')
+			sign *= -1;
+		i++;
 	}
-	while (*str >= '0' && *str <= '9')
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		result = result * 10 + (*str - '0');
-		if (result > (unsigned long long)LLONG_MAX && sign == 1)
-			return (-1);
-		else if (result > (unsigned long long)LLONG_MAX && sign == -1)
-			return (0);
-		str++;
+		number = number * 10 + (str[i] - '0');
+		i++;
 	}
-	return ((int)(result * sign));
+	return (number * sign);
 }

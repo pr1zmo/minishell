@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/31 17:21:14 by zelbassa          #+#    #+#             */
-/*   Updated: 2023/11/18 11:36:33 by zelbassa         ###   ########.fr       */
+/*   Created: 2023/11/02 17:04:42 by mel-bouh          #+#    #+#             */
+/*   Updated: 2023/11/06 18:15:50 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,29 @@
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	size_t			i;
-	unsigned char	*ptr_dst;
-	unsigned char	*ptr_src;
+	int	i;
 
-	i = 0;
-	ptr_src = (unsigned char *)src;
-	ptr_dst = (unsigned char *)dst;
-	if (ptr_dst < ptr_src)
+	if (!dst && !src)
+		return (dst);
+	if (dst == src)
+		return (dst);
+	if (dst < src)
 	{
-		while (i < len)
+		i = 0;
+		while (i < (int)len)
 		{
-			ptr_dst[i] = ptr_src[i];
-			i ++;
+			((unsigned char *)dst)[i] = ((unsigned char *)src)[i];
+			i++;
 		}
 	}
-	else if (ptr_dst > ptr_src)
+	else
 	{
-		i = len;
-		while (i > 0)
+		i = len - 1;
+		while (i >= 0)
 		{
-			ptr_dst[i - 1] = ptr_src[i - 1];
-			i --;
+			((unsigned char *)dst)[i] = ((unsigned char *)src)[i];
+			i--;
 		}
 	}
-	return (ptr_dst);
+	return (dst);
 }
