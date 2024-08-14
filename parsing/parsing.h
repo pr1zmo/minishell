@@ -25,6 +25,7 @@ typedef enum
 typedef struct s_token
 {
 	char 			**str;
+	char			**env;
 	t_token			type;
 	struct s_token	*next;
 	struct s_token	*prev;
@@ -37,9 +38,9 @@ void	tokenize_cmd(char *str, t_line *tmp);
 void	tokenize(char *arg, t_line *tmp);
 int		tokenize_arg(char **arg, int i, t_line *tmp);
 int		tokenize_quotarg(char **arg, int i, t_line *tmp, char c);
-t_token	get_token(char *str);
 int		checkquotes(char *line);
-int	checkspaces(char *line);
-t_line	*parse(char *line);
+int		checkspaces(char *line);
+t_token	get_token(char *str);
+t_line	*parse(char *line, t_line *head, char **env);
 
 #endif

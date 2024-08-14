@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:11:32 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 15:14:59 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 17:57:22 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,50 @@ int	checkspaces(char *line)
 	return (1);
 }
 
-t_line	*parse(char *line)
+void	generate_env(t_line *head, char **env)
+{
+	t_line	*tmp;
+	char	**envir;
+	int		i;
+
+	tmp = head;
+	i = 0;
+	while (env[i])
+		i++;
+	envir = malloc(sizeof(char *) * (i + 1));
+	if (!envir)
+		return ;
+	i = 0;
+	while (env[i])
+	{
+		envir[i] = ft_strdup(env[i]);
+		i++;
+	}
+	envir[i] = NULL;
+	while (tmp)
+	{
+		tmp->env = envir;
+		tmp = tmp->next;
+	}
+}
+
+void	ft_free(char **arg, char *line)
+{
+	int	i;
+
+	i = 0;
+	while (arg[i])
+	{
+		free(arg[i]);
+		i++;
+	}
+	free(arg);
+	free(line);
+}
+
+t_line	*parse(char *line, t_line *head, char **env)
 {
 	char	**arg;
-	t_line	*head;
 
 	if (!checkspaces(line))
 		return (NULL);
@@ -75,22 +115,7 @@ t_line	*parse(char *line)
 	if (!arg)
 		return (NULL);
 	lexer(arg, head);
+	generate_env(head, env);
+	ft_free(arg, line);
 	return (head);
-}
-
-int ft_parse(int ac, char **av)
-{
-	char	*line;
-	t_line	*head;
-
-// 	while (1)
-// 	{
-// 		line = readline("minishell$ ");
-// 		if (!line)
-// 			break ;
-// 		add_history(line);
-// 		head = parse(line);
-// 		printf("%p\n", head);
-// 		free(line);
-// 	}
 }

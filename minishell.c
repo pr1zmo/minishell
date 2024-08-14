@@ -3,35 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 15:04:20 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/14 17:56:06 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_env	*get_env(char	**env)
-{
-	int		i;
-	t_env	*env_list;
-	t_env	*tmp;
-
-	i = 0;
-	env_list = NULL;
-	while (env[i])
-	{
-		tmp = malloc(sizeof(t_env));
-		if (!tmp)
-			error_exit("Malloc error");
-		tmp->content = ft_strdup(env[i]);
-		tmp->next = NULL;
-		ft_lstadd_back(&env_list, tmp);
-		i++;
-	}
-	return (env_list);
-}
 
 int	main(int ac, char **av, char **env)
 {
@@ -40,16 +19,18 @@ int	main(int ac, char **av, char **env)
 	int		is_up;
 	char	*str;
 	t_data	*data;
+	t_line	*head;
 
 	is_up = 1;
+	ft_strjoin("PWD=", getcwd(NULL, 0));
 	while (is_up)
 	{
-		data->env = get_env(env);
 		str = readline("minishell> ");
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
-			is_up = handle_command(str, data);
+			parse(str, head, env);
+			// is_up = handle_command(str, data);
 			free(str);
 		}
 		wait(0);

@@ -7,7 +7,7 @@ EXEC_F	=	minishell.c builtins/echo.c builtins/cd.c \
 FILES	= $(PARS_F) $(EXEC_F)
 OBJS	=	$(FILES:.c=.o)
 LIBFT	=	libft/libft.a
-FLAGS	=	-fsanitize=address -g3 #-Wall -Wextra -Werror -g 	
+FLAGS	=	#-fsanitize=address -g3 #-Wall -Wextra -Werror -g
 
 all: $(NAME)
 
