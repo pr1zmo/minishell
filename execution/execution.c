@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 14:03:57 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:55:53 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,20 @@ static char	*get_full_cmd(char *av, char **env)
 	return (NULL);
 }
 
-void	ft_execute(char *str, t_data *data)
+void	ft_execute(t_data *data)
 {
 	//
 }
 
-int	handle_command(char *str, t_data *data)
+int	single_cmd(t_data *data)
 {
-	ft_execute(str, data);
+	
+}
+
+int	handle_command(t_data *data)
+{
+	if (single_cmd(data->head))
+		exec_single_cmd(data);
+	// ft_execute(data);
 	return (1);
 }

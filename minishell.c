@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 14:00:41 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:54:37 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ int	main(int ac, char **av, char **env)
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
-			program->head = head;
 			parse(str, head, env);
-			program->status = handle_command(str, program);
+			program->head = head;
+			program->status = handle_command(program);
 		}
 		wait(0);
 	}

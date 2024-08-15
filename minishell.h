@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 10:49:49 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:54:51 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_data
 
 void	ft_execute(char *str, t_data *data);
 // int		ft_env(t_env *lst);
-int		handle_command(char *str, t_data *data);
+int		handle_command(t_data *data);
 // t_list	*get_env(char **env);
 int		exec_command(char **av, char **env);
 // void	check_arguments(char **av);
