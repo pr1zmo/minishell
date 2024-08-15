@@ -5,12 +5,27 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/14 15:11:36 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 10:08:08 by prizmo           ###   ########.fr       */
+/*   Created: 2024/08/15 13:58:49 by prizmo            #+#    #+#             */
+/*   Updated: 2024/08/15 14:04:40 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+static void	lstadd_back(t_line **head, t_line *new)
+{
+	t_line	*tmp;
+
+	if (!*head)
+	{
+		*head = new;
+		return ;
+	}
+	tmp = *head;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+}
 
 t_token	get_token(char *str)
 {
@@ -61,15 +76,15 @@ void	lexer(char **arg, t_line *head)
 			tokenize(arg[i++], tmp);
 		else
 			tokenize_arg(arg, &i, tmp);
-		add_back(&head, tmp);
+		lstadd_back(&head, tmp);
 	}
-	while (head)
-	{
-		printf("this is a node\n");
-		printf("--------------\n");
-		for (int j = 0; head->str[j]; j++)
-			printf("str: %s\n", head->str[j]);
-		printf("type: %d\n", head->type);
-		head = head->next;
-	}
+	// while (head)
+	// {
+	// 	printf("this is a node\n");
+	// 	printf("--------------\n");
+	// 	for (int j = 0; head->str[j]; j++)
+	// 		printf("str: %s\n", head->str[j]);
+	// 	printf("type: %d\n", head->type);
+	// 	head = head->next;
+	// }
 }

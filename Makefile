@@ -1,5 +1,5 @@
 NAME	=	minishell
-PARS_F	=	parsing/parsing.c parsing/lexer.c parsing/utils.c \
+PARS_F	=	parsing/parsing.c parsing/lexer.c \
 		parsing/tokenize.c
 EXEC_F	=	minishell.c builtins/echo.c builtins/cd.c \
 		builtins/pwd.c builtins/export.c builtins/unset.c \

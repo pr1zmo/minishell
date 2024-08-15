@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/14 15:11:32 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 18:14:38 by mouad            ###   ########.fr       */
+/*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
+/*   Updated: 2024/08/15 13:59:33 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,60 +61,57 @@ int	checkspaces(char *line)
 	return (1);
 }
 
-void	generate_env(t_line *head, char **env)
+void	get_env(t_line *line, char **env)
 {
-	t_line	*tmp;
-	char	**envir;
 	int		i;
+	char	**tmp;
 
-	tmp = head;
 	i = 0;
 	while (env[i])
 		i++;
-	envir = malloc(sizeof(char *) * (i + 1));
-	if (!envir)
-		return ;
+	tmp = malloc(sizeof(char *) * (i + 1));
 	i = 0;
 	while (env[i])
 	{
-		envir[i] = ft_strdup(env[i]);
+		tmp[i] = ft_strdup(env[i]);
 		i++;
 	}
-	envir[i] = NULL;
-	while (tmp)
+	tmp[i] = NULL;
+	while (line)
 	{
-		tmp->env = envir;
-		tmp = tmp->next;
+		line->env = tmp;
+		line = line->next;
 	}
 }
 
-void	ft_free(char **arg, char *line)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		free(arg[i]);
-		i++;
-	}
-	free(arg);
-	free(line);
-}
-
-void	*parse(char *line, t_line *head, char **env)
+void	parse(char *line, t_line *head, char **env)
 {
 	char	**arg;
 
 	if (!checkspaces(line))
-		return (NULL);
+		return ;
 	if (!checkquotes(line))
-		return (NULL);
+		return ;
 	head = NULL;
 	arg = ft_split(line, ' ');
 	if (!arg)
-		return (NULL);
+		return ;
 	lexer(arg, head);
-	generate_env(head, env);
-	ft_free(arg, line);
+	get_env(head, env);
 }
+
+// int main(int ac, char **av, char **env)
+// {
+// 	char	*line;
+// 	t_line	*head;
+
+// 	while (1)
+// 	{
+// 		line = readline("minishell$ ");
+// 		if (!line)
+// 			break ;
+// 		add_history(line);
+// 		parse(line, head, env);
+// 		free(line);
+// 	}
+// }
