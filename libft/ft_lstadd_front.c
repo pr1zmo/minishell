@@ -6,13 +6,13 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 17:46:20 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/08/14 14:54:24 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:20:55 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_front(t_env **lst, t_env *new)
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
 	if (lst && new)
 	{

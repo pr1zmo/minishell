@@ -6,17 +6,17 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 17:36:31 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/08/14 14:54:24 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:20:55 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_env	*ft_lstnew(void *content)
+t_list	*ft_lstnew(void *content)
 {
-	t_env	*node;
+	t_list	*node;
 
-	node = (t_env *)malloc(sizeof(t_env));
+	node = (t_list *)malloc(sizeof(t_list));
 	if (node == NULL)
 		return (NULL);
 	node->content = content;
