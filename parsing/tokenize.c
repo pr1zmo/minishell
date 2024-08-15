@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:58 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 13:58:59 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:11:55 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c)
 		j++;
 		*i += 1;
 	}
-	printf("arg[%i]: %s\n", *i,arg[*i]);
 	if (arg[*i])
 	{
 		tmp->str[j] = ft_strdup(arg[*i]);
