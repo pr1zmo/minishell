@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 14:55:53 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:20:55 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	execution(char **args, t_data *data)
 {
 	char	**env_data;
 	int 	i;
-	t_env	*env;
+	t_list	*env;
 
 	env = data->env;
 	i = 0;

@@ -6,16 +6,16 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 18:12:07 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/08/14 14:54:24 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:20:55 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstclear(t_env **lst, void (*del)(void *))
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	t_env	*node;
-	t_env	*save;
+	t_list	*node;
+	t_list	*save;
 
 	if (!lst || !del || !(*lst))
 		return ;

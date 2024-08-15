@@ -6,15 +6,15 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:02:16 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 15:02:28 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:20:55 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_lstadd_back(t_env **lst, t_env *new)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	t_env	*tmp;
+	t_list	*tmp;
 
 	if (!*lst)
 	{

@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 15:11:36 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 22:49:54 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/15 10:08:08 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	lexer(char **arg, t_line *head)
 			tokenize(arg[i++], tmp);
 		else
 			tokenize_arg(arg, &i, tmp);
-		ft_lstadd_back(&head, tmp);
+		add_back(&head, tmp);
 	}
 	while (head)
 	{

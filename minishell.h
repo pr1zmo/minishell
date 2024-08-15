@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 18:03:20 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/15 10:49:49 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define YELLOW	"\x1b[93m"
 # define CYAN	"\x1b[36m"
 
+typedef struct s_token t_line;
+
 typedef	struct s_command
 {
 	char				*symbol;
@@ -45,14 +47,16 @@ typedef struct s_tree
 typedef struct s_data
 {
 	t_command	*command;
-	t_env		*env;
+	t_list		*env;
 	t_tree		*tree;
+	t_line		*head;
+	int			status;
 }				t_data;
 
 void	ft_execute(char *str, t_data *data);
 // int		ft_env(t_env *lst);
 int		handle_command(char *str, t_data *data);
-t_env	*get_env(char **env);
+// t_list	*get_env(char **env);
 int		exec_command(char **av, char **env);
 // void	check_arguments(char **av);
 void	error_exit(char *str);
