@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/16 12:13:24 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/16 12:29:41 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	checkspaces(char *line)
 	int	i;
 
 	i = 0;
+	if (!line)
+		return (0);
 	while ((line[i] >= 9 && line[i] <= 13) || line[i] == 32)
 		i++;
 	if (!line[i])
@@ -61,27 +63,39 @@ int	checkspaces(char *line)
 	return (1);
 }
 
-// void	get_env(t_line **line, char **env)
+void	get_env(t_line **head, char **env)
+{
+	int		i;
+	char	**tmp;
+	t_line	*line;
+
+	i = 0;
+	line = *head;
+	while (env[i])
+		i++;
+	tmp = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (env[i])
+	{
+		tmp[i] = ft_strdup(env[i]);
+		i++;
+	}
+	tmp[i] = NULL;
+	while (line)
+	{
+		line->env = tmp;
+		line = line->next;
+	}
+}
+
+// void	ft_free(char **env)
 // {
-// 	int		i;
-// 	char	**tmp;
+// 	int	i;
 
 // 	i = 0;
 // 	while (env[i])
-// 		i++;
-// 	tmp = malloc(sizeof(char *) * (i + 1));
-// 	i = 0;
-// 	while (env[i])
-// 	{
-// 		tmp[i] = ft_strdup(env[i]);
-// 		i++;
-// 	}
-// 	tmp[i] = NULL;
-// 	while (line)
-// 	{
-// 		line->env = tmp;
-// 		line = line->next;
-// 	}
+// 		free(env[i++]);
+// 	free(env);
 // }
 
 void	parse(char *line, t_line **head, char **env)
@@ -96,5 +110,6 @@ void	parse(char *line, t_line **head, char **env)
 	if (!arg)
 		return ;
 	lexer(arg, head);
-	// get_env(head, env);
+	// get_env(head, env
+	// ft_free(env);
 }

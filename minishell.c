@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/16 12:14:06 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/16 12:27:29 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int ac, char **av, char **env)
 		return (printf("minishell doesn't take any arguments\n"), 1);
 	program = malloc(sizeof(t_data));
 	program->status = 1;
-	
+	head = NULL;
 	while (1)
 	{
 		str = readline("\x1b[36mminishell->\x1b[0m ");
@@ -32,7 +32,7 @@ int	main(int ac, char **av, char **env)
 		{
 			add_history(str);
 			parse(str, &head, env);
-			printf("str: %s\n", head->str[0]);
+			// printf("str: %s\n", head->env[0]);
 			// for (int i = 0; head->str[i]; i++)
 			// 	printf("STR: %s\n", head->str[i]);
 			// program->status = handle_command(program);
