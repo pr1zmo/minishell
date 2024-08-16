@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/16 12:29:41 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/16 16:50:37 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,16 +88,6 @@ void	get_env(t_line **head, char **env)
 	}
 }
 
-// void	ft_free(char **env)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (env[i])
-// 		free(env[i++]);
-// 	free(env);
-// }
-
 void	parse(char *line, t_line **head, char **env)
 {
 	char	**arg;
@@ -110,6 +100,5 @@ void	parse(char *line, t_line **head, char **env)
 	if (!arg)
 		return ;
 	lexer(arg, head);
-	// get_env(head, env
-	// ft_free(env);
+	get_env(head, env);
 }
