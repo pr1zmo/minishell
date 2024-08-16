@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 14:54:51 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/16 11:50:19 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,23 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <fcntl.h>
-# include <readline/history.h>
+#include <stdio.h>      // printf, perror
+#include <stdlib.h>     // malloc, free, exit
+#include <unistd.h>     // read, write, access, open, close, fork, execve, getcwd, chdir, unlink, dup, dup2, pipe, isatty, ttyname, ttyslot
+#include <fcntl.h>      // open, O_RDONLY, O_WRONLY, O_RDWR, O_CREAT, O_TRUNC
+#include <string.h>     // strerror
+#include <sys/types.h>  // fork, wait, waitpid, wait3, wait4, stat, lstat, fstat, kill, opendir, readdir, closedir
+#include <sys/stat.h>   // stat, lstat, fstat, open
+#include <sys/wait.h>   // wait, waitpid, wait3, wait4
+#include <signal.h>     // signal, sigaction, sigemptyset, sigaddset, kill
+#include <dirent.h>     // opendir, readdir, closedir
+#include <termios.h>    // tcsetattr, tcgetattr, ioctl
+#include <curses.h>     // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
+#include <term.h>       // tgetent, tgetflag, tgetnum, tgetstr, tgoto, tputs
+#include <errno.h>      // errno
+#include <sys/ioctl.h>  // ioctl
+#include <readline/readline.h>    // readline, add_history
+#include <readline/history.h>     // rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay
 # include "parsing/parsing.h"
 
 # define RESET	"\x1b[0m"
@@ -53,7 +66,7 @@ typedef struct s_data
 	int			status;
 }				t_data;
 
-void	ft_execute(char *str, t_data *data);
+// void	ft_execute(char *str, t_data *data);
 // int		ft_env(t_env *lst);
 int		handle_command(t_data *data);
 // t_list	*get_env(char **env);

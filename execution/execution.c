@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 14:55:53 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/16 10:54:05 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,39 @@ static char	*get_full_cmd(char *av, char **env)
 	return (NULL);
 }
 
-void	ft_execute(t_data *data)
+void	ft_execve(t_data *data)
 {
-	//
+	int	pid;
+
+	if (access(data->head->str[0], X_OK | F_OK) == 0)
+	{
+		pid = fork();
+		if (pid == 0)
+			execve(getenv("PATH"), data->head->str, data->head->env);
+	}
+	else
+		error_exit("data->head->str");
 }
 
-int	single_cmd(t_data *data)
+void	ft_execute(t_data *data)
 {
-	
+	int	i;
+
+	i = 0;
+	if (ft_strncmp(data->head->str[0], "/", 1) == 0)
+		ft_execve(data);
 }
+
+// int	single_cmd(t_data *data)
+// {
+	
+// }
 
 int	handle_command(t_data *data)
 {
-	if (single_cmd(data->head))
-		exec_single_cmd(data);
-	// ft_execute(data);
+	printf("str: %s\n", data->head->str[0]);
+	// if (single_cmd(data->head))
+	// 	exec_single_cmd(data);
+	ft_execute(data);
 	return (1);
 }

@@ -13,8 +13,8 @@ typedef enum
 {
 	NONE,		// 0
 	PIPE,		// 1
-	REDIR_IN,   // 2
-	REDIR_OUT,  // 3
+	REDIR_IN,	// 2
+	REDIR_OUT,	// 3
 	APPEND,		// 4
 	HEREDOC,	// 5
 	EXPORT,		// 6
@@ -31,12 +31,12 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_line;
 
-void	lexer(char **arg, t_line *head);
+void	lexer(char **arg, t_line **head);
 void	tokenize_cmd(char *str, t_line *tmp);
 void	tokenize(char *arg, t_line *tmp);
 void	tokenize_arg(char **arg, int *i, t_line *tmp);
 void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c);
-void	parse(char *line, t_line *head, char **env);
+void	parse(char *line, t_line **head, char **env);
 t_token	get_token(char *str);
 
 #endif

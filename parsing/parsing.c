@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 13:59:33 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/16 12:13:24 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,30 +61,30 @@ int	checkspaces(char *line)
 	return (1);
 }
 
-void	get_env(t_line *line, char **env)
-{
-	int		i;
-	char	**tmp;
+// void	get_env(t_line **line, char **env)
+// {
+// 	int		i;
+// 	char	**tmp;
 
-	i = 0;
-	while (env[i])
-		i++;
-	tmp = malloc(sizeof(char *) * (i + 1));
-	i = 0;
-	while (env[i])
-	{
-		tmp[i] = ft_strdup(env[i]);
-		i++;
-	}
-	tmp[i] = NULL;
-	while (line)
-	{
-		line->env = tmp;
-		line = line->next;
-	}
-}
+// 	i = 0;
+// 	while (env[i])
+// 		i++;
+// 	tmp = malloc(sizeof(char *) * (i + 1));
+// 	i = 0;
+// 	while (env[i])
+// 	{
+// 		tmp[i] = ft_strdup(env[i]);
+// 		i++;
+// 	}
+// 	tmp[i] = NULL;
+// 	while (line)
+// 	{
+// 		line->env = tmp;
+// 		line = line->next;
+// 	}
+// }
 
-void	parse(char *line, t_line *head, char **env)
+void	parse(char *line, t_line **head, char **env)
 {
 	char	**arg;
 
@@ -92,26 +92,9 @@ void	parse(char *line, t_line *head, char **env)
 		return ;
 	if (!checkquotes(line))
 		return ;
-	head = NULL;
 	arg = ft_split(line, ' ');
 	if (!arg)
 		return ;
 	lexer(arg, head);
-	get_env(head, env);
+	// get_env(head, env);
 }
-
-// int main(int ac, char **av, char **env)
-// {
-// 	char	*line;
-// 	t_line	*head;
-
-// 	while (1)
-// 	{
-// 		line = readline("minishell$ ");
-// 		if (!line)
-// 			break ;
-// 		add_history(line);
-// 		parse(line, head, env);
-// 		free(line);
-// 	}
-// }

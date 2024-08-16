@@ -6,11 +6,12 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 14:54:37 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/16 12:14:06 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <string.h>
 
 int	main(int ac, char **av, char **env)
 {
@@ -30,9 +31,11 @@ int	main(int ac, char **av, char **env)
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
-			parse(str, head, env);
-			program->head = head;
-			program->status = handle_command(program);
+			parse(str, &head, env);
+			printf("str: %s\n", head->str[0]);
+			// for (int i = 0; head->str[i]; i++)
+			// 	printf("STR: %s\n", head->str[i]);
+			// program->status = handle_command(program);
 		}
 		wait(0);
 	}
