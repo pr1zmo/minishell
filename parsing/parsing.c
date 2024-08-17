@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/16 16:50:37 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/17 12:17:26 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,17 +88,18 @@ void	get_env(t_line **head, char **env)
 	}
 }
 
-void	parse(char *line, t_line **head, char **env)
+t_line	*parse(char *line, t_line **head, char **env)
 {
 	char	**arg;
 
 	if (!checkspaces(line))
-		return ;
+		return (NULL);
 	if (!checkquotes(line))
-		return ;
+		return (NULL);
 	arg = ft_split(line, ' ');
 	if (!arg)
-		return ;
+		return (NULL);
 	lexer(arg, head);
 	get_env(head, env);
+	return (*head);
 }

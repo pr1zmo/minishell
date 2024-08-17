@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/16 16:50:54 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/17 12:18:07 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,22 @@ int	main(int ac, char **av, char **env)
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
-			parse(str, &head, env);
-			// for (int i = 0; head->str[i]; i++)
-			// 	printf("STR: %s\n", head->str[i]);
-			// program->status = handle_command(program);
+			program->head = parse(str, &head, env);
+			// while (head)
+			// {
+			// 	int i = 0;
+			// 	while ((head)->str[i] && (head))
+			// 	{
+			// 		printf("This is a node: \n");
+			// 		printf("----------------------\n");
+			// 		printf("args[%d]: %s\n", i, (head)->str[i]);
+			// 		printf("type: %d\n", (head)->type);
+			// 		printf("----------------------\n");
+			// 		i++;
+			// 	}
+			// 	(head) = (head)->next;
+			// }
+			program->status = handle_command(program);
 		}
 		wait(0);
 	}
