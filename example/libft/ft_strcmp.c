@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mcombeau <mcombeau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/09 16:43:22 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/18 15:04:43 by zelbassa         ###   ########.fr       */
+/*   Created: 2022/09/17 19:08:27 by mcombeau          #+#    #+#             */
+/*   Updated: 2022/09/17 19:08:28 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int	ft_cd(char **av, t_list *env)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	return (0);
+	size_t	i;
+
+	i = 0;
+	if (!s1 || !s2)
+		return (1);
+	while (s1[i] && s2[i] && (s1[i] == s2[i]))
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

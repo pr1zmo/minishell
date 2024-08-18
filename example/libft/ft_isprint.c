@@ -1,18 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mcombeau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/09 16:43:22 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/18 15:04:43 by zelbassa         ###   ########.fr       */
+/*   Created: 2021/11/22 13:50:49 by mcombeau          #+#    #+#             */
+/*   Updated: 2021/12/02 14:42:17 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+/*
+	DESCRIPTION :
+	The function ft_isprint checks whether c is a printable character or not.
 
-int	ft_cd(char **av, t_list *env)
+	RETURN VALUE :
+	Non-zero if c is printable, zero if not.
+*/
+
+int	ft_isprint(int c)
 {
+	if (c >= ' ' && c <= '~')
+		return (c);
 	return (0);
 }

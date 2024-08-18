@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mcombeau <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/09 16:43:22 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/18 15:04:43 by zelbassa         ###   ########.fr       */
+/*   Created: 2021/11/22 13:52:40 by mcombeau          #+#    #+#             */
+/*   Updated: 2021/12/02 16:49:56 by mcombeau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "libft.h"
 
-int	ft_cd(char **av, t_list *env)
+/*
+	DESCRIPTION :
+	The function ft_isalnum checks whether the value of c is alphanumeric.
+
+	RETURN VALUE :
+	Non-zero if c is alphanumeric, zero if not.
+*/
+
+int	ft_isalnum(int c)
 {
+	if (ft_isalpha(c) || ft_isdigit(c))
+		return (c);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/16 10:54:05 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/18 13:01:46 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ static char	*get_full_cmd(char *av, char **env)
 
 void	ft_execve(t_data *data)
 {
-	int	pid;
+	int		pid;
+	char	*cmd;
 
 	if (access(data->head->str[0], X_OK | F_OK) == 0)
 	{
@@ -75,20 +76,23 @@ void	ft_execute(t_data *data)
 	int	i;
 
 	i = 0;
-	if (ft_strncmp(data->head->str[0], "/", 1) == 0)
-		ft_execve(data);
+	ft_execve(data);
 }
 
-// int	single_cmd(t_data *data)
-// {
-	
-// }
+int	single_cmd(t_data *data)
+{
+	while (data->head)
+	{
+		if (data->head->type == 8)
+			ft_execute(data);
+	}
+}
 
 int	handle_command(t_data *data)
 {
 	printf("str: %s\n", data->head->str[0]);
-	// if (single_cmd(data->head))
-	// 	exec_single_cmd(data);
+	if (single_cmd(data->head))
+		exec_single_cmd(data);
 	ft_execute(data);
 	return (1);
 }

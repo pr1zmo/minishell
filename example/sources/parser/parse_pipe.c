@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   parse_pipe.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alexa <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/09 16:43:22 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/08/18 15:04:43 by zelbassa         ###   ########.fr       */
+/*   Created: 2022/11/10 00:22:49 by alexa             #+#    #+#             */
+/*   Updated: 2022/11/10 00:22:52 by alexa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
-int	ft_cd(char **av, t_list *env)
+void	parse_pipe(t_command **cmd, t_token **token_lst)
 {
-	return (0);
+	t_command	*last_cmd;
+
+	last_cmd = lst_last_cmd(*cmd);
+	last_cmd->pipe_output = true;
+	lst_add_back_cmd(&last_cmd, lst_new_cmd(false));
+	*token_lst = (*token_lst)->next;
 }
