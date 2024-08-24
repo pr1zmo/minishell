@@ -3,96 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/18 13:01:46 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:14:59 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	error_exit(char *str)
+int	minishell(t_data *data)
 {
-	ft_putstr_fd(str, 2);
-	exit(1);
-}
+	char	*tmp;
 
-static void	free_arr(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i])
+	data->args = readline(READLINE_MSG);
+	tmp = ft_strtrim(data->args, " ");
+	free(data->args);
+	data->args = tmp;
+	if (!data->args)
 	{
-		free(arr[i]);
-		i++;
+		ft_putendl_fd("exit", STDOUT_FILENO);
+		exit(EXIT_SUCCESS);
 	}
-	free(arr);
-}
-
-static char	*get_full_cmd(char *av, char **env)
-{
-	int		i;
-	char	*result;
-	char	*full_cmd;
-	char	**path;
-
-	i = 0;
-	path = ft_split(getenv("PATH"), ':');
-	if (!path)
-		error_exit("Path error");
-	while (path[i])
-	{
-		result = ft_strjoin(path[i], "/");
-		full_cmd = ft_strjoin(result, av);
-		free(result);
-		if (access(full_cmd, X_OK | F_OK) == 0)
-			return (full_cmd);
-		free(full_cmd);
-		i++;
-	}
-	free_arr(path);
-	return (NULL);
-}
-
-void	ft_execve(t_data *data)
-{
-	int		pid;
-	char	*cmd;
-
-	if (access(data->head->str[0], X_OK | F_OK) == 0)
-	{
-		pid = fork();
-		if (pid == 0)
-			execve(getenv("PATH"), data->head->str, data->head->env);
-	}
-	else
-		error_exit("data->head->str");
-}
-
-void	ft_execute(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	ft_execve(data);
-}
-
-int	single_cmd(t_data *data)
-{
-	while (data->head)
-	{
-		if (data->head->type == 8)
-			ft_execute(data);
-	}
-}
-
-int	handle_command(t_data *data)
-{
-	printf("str: %s\n", data->head->str[0]);
-	if (single_cmd(data->head))
-		exec_single_cmd(data);
-	ft_execute(data);
+	if (data->args[0] == '\0')
+		return (reset_tools(data));
+	add_history(data->args);
+	if (!count_quotes(data->args))
+		return (ft_error(2, data));
+	if (!token_reader(data))
+		return (ft_error(1, data));
+	parser(data);
+	prepare_executor(data);
+	reset_tools(data);
 	return (1);
 }

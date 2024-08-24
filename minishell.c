@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/18 14:48:56 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:13:15 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,17 @@ int	main(int ac, char **av, char **env)
 	program = malloc(sizeof(t_data));
 	program->status = 1;
 	head = NULL;
-	while (1)
-	{
-		str = readline("\x1b[36mminishell->\x1b[0m ");
-		if (ft_strlen(str) > 0)
-		{
-			add_history(str);
-			program->head = parse(str, &head, env);
-			program->status = handle_command(program);
-		}
-	}
+	minishell(&program);
+	// while (1)
+	// {
+	// 	str = readline("\x1b[36mminishell->\x1b[0m ");
+	// 	if (ft_strlen(str) > 0)
+	// 	{
+	// 		add_history(str);
+	// 		program->head = parse(str, &head, env);
+	// 		program->status = handle_command(program);
+	// 	}
+	// }
 	free(program);
 	return (0);
 }

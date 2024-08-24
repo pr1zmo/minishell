@@ -2,5 +2,8 @@
 *.a
 /bash_tests
 minishell
+/zizi
+/test
 .*
 /example
+/.vscode
