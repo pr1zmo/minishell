@@ -7,3 +7,5 @@ minishell
 .*
 /example
 /.vscode
+/st-minishell
+/st_minishell-2
