@@ -6,11 +6,11 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/17 12:17:26 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/25 13:36:09 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../includes/minishell.h"
 
 int	special_char(char *str, int i)
 {

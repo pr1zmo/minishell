@@ -6,11 +6,11 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:58 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/15 14:11:55 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/25 13:36:11 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../includes/minishell.h"
 
 static int	count_args(char **arg, int i, char c)
 {

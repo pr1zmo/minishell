@@ -6,11 +6,11 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:49 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/17 12:16:03 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/25 13:36:01 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parsing.h"
+#include "../includes/minishell.h"
 
 static void	lstadd_back(t_line **head, t_line *new)
 {

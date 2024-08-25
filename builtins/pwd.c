@@ -6,11 +6,11 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:47:27 by prizmo            #+#    #+#             */
-/*   Updated: 2024/07/26 15:47:52 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/25 13:45:00 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../includes/minishell.h"
 
 int ft_pwd(void)
 {

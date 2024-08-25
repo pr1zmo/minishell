@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/11/03 16:05:43 by mel-bouh          #+#    #+#              #
-#    Updated: 2024/08/14 15:02:47 by prizmo           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME		= libft.a
 CFLAGS		= -Wall -Werror -Wextra -I. -c
 FILES		= ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c ft_isascii.c \

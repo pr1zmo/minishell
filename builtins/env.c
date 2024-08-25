@@ -6,11 +6,11 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 11:45:30 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/14 13:56:12 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/25 13:44:51 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../includes/minishell.h"
 
 // int	ft_env(t_list	*env)
 // {

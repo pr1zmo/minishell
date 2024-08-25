@@ -2,10 +2,7 @@
 *.a
 /bash_tests
 minishell
-/zizi
-/test
+/_*
 .*
 /example
 /.vscode
-/st-minishell
-/st_minishell-2
