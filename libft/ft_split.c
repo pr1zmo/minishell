@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 20:49:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/08/14 09:26:47 by mouad            ###   ########.fr       */
+/*   Updated: 2024/08/25 20:50:42 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 static int	count_words(const char *s, char c)
 {
@@ -82,4 +83,12 @@ char	**ft_split(char const *s, char c)
 	}
 	split[i] = NULL;
 	return (split);
+}
+
+int main()
+{
+	char	*str=  "HELLO THERE MY FRIENDO!";
+	char	**s = ft_split(str, ' ');
+	for (int i = 0; s[i]; i++)
+		printf("%s\n", s[i]);
 }
