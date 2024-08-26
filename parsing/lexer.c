@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:49 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/25 13:36:01 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/26 15:13:11 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,19 +78,4 @@ void	lexer(char **arg, t_line **head)
 			tokenize_arg(arg, &i, tmp);
 		lstadd_back(head, tmp);
 	}
-	// i = 0;
-	// while (*head)
-	// {
-	// 	i = 0;
-	// 	while ((*head)->str[i] && (*head))
-	// 	{
-	// 		printf("This is a node: \n");
-	// 		printf("----------------------\n");
-	// 		printf("args[%d]: %s\n", i, (*head)->str[i]);
-	// 		printf("type: %d\n", (*head)->type);
-	// 		printf("----------------------\n");
-	// 		i++;
-	// 	}
-	// 	(*head) = (*head)->next;
-	// }
 }

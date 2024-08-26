@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 20:49:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/08/25 20:50:42 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/26 11:15:41 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,4 @@ char	**ft_split(char const *s, char c)
 	}
 	split[i] = NULL;
 	return (split);
-}
-
-int main()
-{
-	char	*str=  "HELLO THERE MY FRIENDO!";
-	char	**s = ft_split(str, ' ');
-	for (int i = 0; s[i]; i++)
-		printf("%s\n", s[i]);
 }

@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/25 20:44:18 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/26 12:35:04 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct s_data
 	int			status;
 	char		*pwd;
 	char		*old_pwd;
-	int			pipe;
+	int			pipes;
 	int			*pid;
 	int			heredoc;
 }				t_data;
@@ -80,6 +80,7 @@ typedef struct s_data
 // 	bool					reset;
 // }	t_tools;
 
-int	minishell(t_data *data);
+int		minishell(t_data *data);
+void	free_arr(char **arr);
 
 #endif

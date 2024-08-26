@@ -6,13 +6,13 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/25 20:54:46 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/26 12:37:47 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-static void	free_arr(char **arr)
+void	free_arr(char **arr)
 {
 	int	i;
 
@@ -51,16 +51,12 @@ int	main(int ac, char **av, char **env)
 {
 	(void)av;
 	char	*str;
-	t_data	*program;
+	t_data	program;
 
 	if (ac != 1)
 		return (printf("minishell doesn't take any arguments\n"), 1);
-	printf("S1\n");
-	program->envp = set_env(env);
-	printf("S\n");
-	program = malloc(sizeof(t_data));
-	program->status = 1;
-	minishell(program);
-	free(program);
+	program.envp = set_env(env);
+	program.status = 1;
+	minishell(&program);
 	return (0);
 }
