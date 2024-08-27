@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/26 22:22:18 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/27 19:00:53 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,43 +75,6 @@ static char	*get_full_cmd(char *av, char **env, t_data *data)
     return (NULL);
 }
 
-/* static char	*get_full_cmd(char *av, char **env, t_data *data)
-{
-	int		i;
-	char	*result;
-	char	*full_cmd;
-	char	**path;
-
-	i = 0;
-	path = ft_split(getenv("PATH"), ':');
-	printf("path[i] %s\n", path[0]);
-	if (!path)
-		ft_error(3, data);
-	while (path[i])
-	{
-		printf("1");
-		result = ft_strjoin(path[i], "/");
-		printf("12");
-		full_cmd = ft_strjoin(result, av);
-		printf("13");
-		free(result);
-		printf("14");
-		if (access(full_cmd, X_OK | F_OK) == 0)
-		{
-			printf("Found access! %s\n", full_cmd);
-			return (full_cmd);
-		}
-		printf("15");
-		free(full_cmd);
-		i++;
-		printf("16");
-		printf("Starting again\n");
-	}
-	printf("ZIZI\n");
-	free_arr(path);
-	return (NULL);
-} */
-
 /* int	check_quotes(char *arg)
 {
 	int	i;
@@ -148,7 +111,6 @@ void	execute_cmd(char **cmd, t_data *data)
 	char	*full_cmd;
 
 	full_cmd = NULL;
-	// printf("full command: %s\n", cmd[0]);
 	if (cmd[0][0] == '/')
 		full_cmd = ft_strdup(cmd[0]);
 	else
@@ -162,20 +124,25 @@ void	execute_cmd(char **cmd, t_data *data)
 void	single_command(t_data *data)
 {
 	int		pid;
-	int		status;
 	t_line	*temp;
 
-	pid = fork();
-	temp = (t_line *)malloc(sizeof(t_line));
-	temp = data->head;
-	if (pid < 0)
-		ft_error(1, data);
-	if (pid == 0)
-		execute_cmd(temp->str, data);
-	waitpid(pid, &status, 0);
-	int err;
-	if (WIFEXITED(status))
-		err = WEXITSTATUS(status);
+    pid = fork();
+    temp = data->head;
+    cmd = NULL;
+    if (pid < 0)
+        ft_error(1, data);
+    if (pid == 0)
+    {
+        cmd_args = ft_split(cmd, ' ');
+        if (!cmd_args)
+            ft_error(2, data);
+        execute_cmd(cmd_args, data);
+    }
+    waitpid(pid, &status, 0);
+    int err;
+    if (WIFEXITED(status))
+        err = WEXITSTATUS(status);
+    free(cmd);
 }
 
 int	count_pipes(t_data *data)
@@ -225,7 +192,7 @@ int	count_pipes(t_data *data)
 int	handle_input(t_data *data)
 {
 	data->pipes = count_pipes(data);
-	printf("pipes: %d\n", data->pipes);
+	// printf("pipes: %d\n", data->pipes);
 	single_command(data);
 	// if (data->pipes == 0)
 	// else
@@ -241,12 +208,12 @@ int	minishell(t_data *data)
 		return (reset_shell(data));
 	add_history(data->line);
 	parse(data->line, &data->head, data->envp);
-	while (data->head)
-	{
-		for (int i = 0; data->head->str[i]; i++)
-			printf("str: %s type:%d\n--------------------------\n", data->head->str[i], data->head->type);
-		data->head = data->head->next;
-	}
+	// while (data->head)
+	// {
+	// 	for (int i = 0; data->head->str[i]; i++)
+	// 		printf("str: %s type:%d\n--------------------------\n", data->head->str[i], data->head->type);
+	// 	data->head = data->head->next;
+	// }
 	handle_input(data);
 	reset_shell(data);
 	return (1);
