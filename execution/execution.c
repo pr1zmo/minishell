@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/27 19:00:53 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/08/29 14:05:07 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,43 +37,43 @@ int	ft_error(int error, t_data *data)
 	else if (error == 1)
 		ft_putstr_fd("error when forking\n",
 			STDERR_FILENO);
-	else if (error = 2)
+	else if (error == 2)
 		ft_putstr_fd("error finding command\n", STDERR_FILENO);
-	else if (error = 3)
+	else if (error == 3)
 		ft_putstr_fd("Could not find corresponding path\n", STDERR_FILENO);
 	reset_shell(data);
 	return (EXIT_FAILURE);
 }
 
-static char	*get_full_cmd(char *av, char **env, t_data *data)
+/* static char	*get_full_cmd(char *av, char **env, t_data *data)
 {
-    int		i;
-    char	*result;
-    char	*full_cmd;
-    char	**path;
+	int		i;
+	char	*result;
+	char	*full_cmd;
+	char	**path;
 
-    i = 0;
-    path = ft_split(getenv("PATH"), ':');
+	i = 0;
+	path = ft_split(getenv("PATH"), ':');
 	// printf("%s\n", path[1]);
-    if (!path)
-        ft_error(3, data);
-    while (path[i])
-    {
-        result = ft_strjoin(path[i], "/");
-        full_cmd = ft_strjoin(result, av);
+	if (!path)
+		ft_error(3, data);
+	while (path[i])
+	{
+		result = ft_strjoin(path[i], "/");
+		full_cmd = ft_strjoin(result, av);
 		// printf("full command = %s\n", full_cmd);
-        // free(result);
-        if (access(full_cmd, X_OK | F_OK) == 0)
-        {
-            // free_arr(path);
-            return (full_cmd);
-        }
-        // free(full_cmd);
-        i++;
-    }
-    // free_arr(path);
-    return (NULL);
-}
+		// free(result);
+		if (access(full_cmd, X_OK | F_OK) == 0)
+		{
+			// free_arr(path);
+			return (full_cmd);
+		}
+		// free(full_cmd);
+		i++;
+	}
+	// free_arr(path);
+	return (NULL);
+} */
 
 /* int	check_quotes(char *arg)
 {
@@ -106,7 +106,7 @@ void	printa(char *message, char **str)
 		printf("%s\n", str[i]);
 }
 
-void	execute_cmd(char **cmd, t_data *data)
+/* void	execute_cmd(char **cmd, t_data *data)
 {
 	char	*full_cmd;
 
@@ -119,31 +119,31 @@ void	execute_cmd(char **cmd, t_data *data)
 		ft_error(2, data);
 	if (execve(full_cmd, cmd, data->envp) == -1)
 		ft_error(2, data);
-}
+} */
 
-void	single_command(t_data *data)
+/* void	single_command(t_data *data)
 {
 	int		pid;
 	t_line	*temp;
 
-    pid = fork();
-    temp = data->head;
-    cmd = NULL;
-    if (pid < 0)
-        ft_error(1, data);
-    if (pid == 0)
-    {
-        cmd_args = ft_split(cmd, ' ');
-        if (!cmd_args)
-            ft_error(2, data);
-        execute_cmd(cmd_args, data);
-    }
-    waitpid(pid, &status, 0);
-    int err;
-    if (WIFEXITED(status))
-        err = WEXITSTATUS(status);
-    free(cmd);
-}
+	pid = fork();
+	temp = data->head;
+	cmd = NULL;
+	if (pid < 0)
+		ft_error(1, data);
+	if (pid == 0)
+	{
+		cmd_args = ft_split(cmd, ' ');
+		if (!cmd_args)
+			ft_error(2, data);
+		execute_cmd(cmd_args, data);
+	}
+	waitpid(pid, &status, 0);
+	int err;
+	if (WIFEXITED(status))
+		err = WEXITSTATUS(status);
+	free(cmd);
+} */
 
 int	count_pipes(t_data *data)
 {
@@ -158,6 +158,7 @@ int	count_pipes(t_data *data)
 	{
 		while (temp->str[i])
 		{
+			printf("The alleged pipe: %d", temp->type);
 			if (temp->type == 1)
 				k++;
 			i++;
@@ -168,52 +169,62 @@ int	count_pipes(t_data *data)
 	return (k);
 }
 
-// int	count_pipes(t_data *data)
-// {
-// 	int	i;
-// 	int	k;
-
-// 	i = 0;
-// 	k = 0;
-// 	while (data->head)
-// 	{
-// 		while (data->head->str[i])
-// 		{
-// 			printf("str: %s +++++ type: %d\n", data->head->str[i], data->head->type);
-// 			if (data->head->type == 1)
-// 				k++;
-// 			i++;
-// 		}
-// 		data->head = data->head->next;
-// 	}
-// 	return (k);
-// }
-
 int	handle_input(t_data *data)
 {
-	data->pipes = count_pipes(data);
-	// printf("pipes: %d\n", data->pipes);
-	single_command(data);
+	t_data	*temp;
+
+	temp = (t_data *)malloc(sizeof(t_data));
+	// temp = data;
+	// data->pipes = count_pipes(temp);
+	printf("pipes: %d\n", data->pipes);
+	// single_command(data);
 	// if (data->pipes == 0)
 	// else
 		// printf("FOUND PIPE");
+	return (0);
+}
+
+void	debug()
+{
+	static int count;
+	
+	count += 1;
+	printf("Here: %d\n", count);
+}
+
+void print_temp(t_data *data)
+{
+	t_line *temp = data->head;
+	while (temp)
+	{
+		printf("Str: ");
+		printf("%s", temp->str[0]);
+		// if (temp->str)
+		// {
+		// 	printa("NONE", temp->str);
+		// }
+		// else
+		// {
+		// 	printf("(null)");
+		// }
+		printf("\n-----\ntype: %d\n----\n", temp->type);
+		temp = temp->next;
+	}
 }
 
 int	minishell(t_data *data)
 {
 	char	*str;
 
-	data->line = readline(READLINE_MSG);
-	if (data->line == NULL || data->line[0] == '\0')
+	data->args = readline(READLINE_MSG);
+	debug();
+	if (data->args == NULL || data->args[0] == '\0')
 		return (reset_shell(data));
-	add_history(data->line);
+	debug();
+	add_history(data->args);
 	parse(data->line, &data->head, data->envp);
-	// while (data->head)
-	// {
-	// 	for (int i = 0; data->head->str[i]; i++)
-	// 		printf("str: %s type:%d\n--------------------------\n", data->head->str[i], data->head->type);
-	// 	data->head = data->head->next;
-	// }
+	printf("SSSSSSs: %s\n", data->head->str[0]);
+	print_temp(data);
 	handle_input(data);
 	reset_shell(data);
 	return (1);
