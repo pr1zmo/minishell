@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/29 12:42:42 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/29 14:37:14 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,34 +36,22 @@
 # include "styles.h"
 
 typedef struct s_token t_line;
-
-typedef	struct s_command
+typedef struct s_builtin
 {
-	char				*symbol;
-	char				*command;
-	struct s_command	*left;
-	struct s_command	*rigth;
-}						t_command;
-
-typedef struct s_tree
-{
-    struct s_tree	*left;
-    struct s_tree	*right;
-    char			*data;
-}					t_tree;
+	char		*command;
+	int			has_args;
+	char		*argument;
+}				t_builtin;
 
 typedef struct s_data
 {
-	t_line		*head;
-	char		*args;
-	char		**envp;
-	char		*line;
-	int			status;
-	char		*pwd;
-	char		*old_pwd;
-	int			pipes;
-	int			*pid;
-	int			heredoc;
+	t_line		*head; // parsed and tokenized user input
+	char		*arg;  // This is the return of the readline function
+	int			status;	// Shell status (1=running | 0=stopped)
+	char		**envp; // an array of the envirement variables
+	char		*curr_dir;
+	char		*old_dir;
+	int			pipe_count;
 }				t_data;
 
 // typedef struct s_tools
