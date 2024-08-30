@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/29 15:24:03 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/29 21:59:57 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	reset_shell(t_data *data)
 		// free(data->arg);
 		data->arg = NULL;
 	}
-	rl_clear_history();
+	// rl_clear_history();
 	minishell(data);
 	return (1);
 }
@@ -62,7 +62,7 @@ int	count_pipes(t_data *data)
 	{
 		while (temp->str[i])
 		{
-			printf("The alleged pipe: %d", temp->type);
+			// printf("The alleged pipe: %d", temp->type);
 			if (temp->type == 1)
 				k++;
 			i++;
@@ -121,25 +121,83 @@ void	exec_cmd(char *av, char **env)
 		// cmd = NULL;
 		// free_arr(cmd);
 		perror(cmd[0]);
-		exit(1);
+		// exit(1);
 	}
+	// printf("here ;");
 	if (execve(path, cmd, env) == -1)
 	{
 		// cmd = NULL;
 		// free_arr(cmd);
-		perror("execve");
+		// perror("execve");
 		return ;
 	}
 }
 
-int	handle_input(t_data *data)
+char	*array_to_string(t_line *temp)
+{
+	size_t total_length = 0;
+	char *cmd;
+	size_t cmd_size;
+	t_line *current = temp;
+
+	// Calculate the total length needed
+	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
+	{
+		for (size_t i = 0; current->str[i]; i++)
+			total_length += strlen(current->str[i]) + 1;
+		current = current->next;
+	}
+
+	// Allocate memory for the result string
+	cmd_size = total_length + 1; // +1 for the null terminator
+	cmd = (char *)malloc(cmd_size);
+	if (!cmd)
+	{
+		perror("malloc");
+		return NULL;
+	}
+	cmd[0] = '\0'; // Initialize the result string
+
+	// Concatenate each element with a space
+	current = temp;
+	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
+	{
+		for (size_t i = 0; current->str[i]; i++)
+		{
+			ft_strlcat(cmd, current->str[i], cmd_size);
+			if (current->str[i + 1] || (current->next && 
+				(current->next->type == 7 || current->next->type == 8)))
+				ft_strlcat(cmd, " ", cmd_size);
+		}
+		current = current->next;
+	}
+	return cmd;
+}
+
+int	count_symbols(t_data *data)
+{
+	int		i;
+	t_line	*temp = data->head;
+
+	i = 0;
+	while (temp)
+	{
+		if (temp->type >= 1 && temp->type <= 5)
+			i++;
+		temp = temp->next;
+	}
+	return (i);
+}
+
+int	single_command(t_data *data, char *cmd)
 {
 	t_line	*temp = data->head;
-	char	*cmd = temp->str[0];
-	int		pid;
+	int pid;
 
 	while (temp)
 	{
+		if (temp->next && temp->next->type == 7)
+			temp = temp->next;
 		pid = fork();
 		if (pid == -1)
 			return (ft_error(1, data));
@@ -148,6 +206,28 @@ int	handle_input(t_data *data)
 		waitpid(0, NULL, 0);
 		temp = temp->next;
 	}
+	return (0);
+}
+
+int	complex_command(t_data *data, char *cmd, int symbol)
+{
+	t_tree	*command;
+
+	return (0);
+}
+
+int	handle_input(t_data *data)
+{
+	t_line	*temp = data->head;
+	char	*cmd;
+	int		pid;
+
+	int i = count_symbols(data);
+	cmd = array_to_string(temp);
+	if (i == 0)
+		single_command(data, cmd);
+	else
+		complex_command(data, cmd, i);
 	return (0);
 }
 

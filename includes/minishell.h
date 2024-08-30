@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/29 14:37:14 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/30 15:49:35 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,15 @@ typedef struct s_builtin
 	int			has_args;
 	char		*argument;
 }				t_builtin;
+
+typedef struct s_tree
+{
+	char			*cmd;
+	int				type;
+	struct t_tree	*left;
+	struct t_tree	*right;
+}					t_tree;
+
 
 typedef struct s_data
 {
