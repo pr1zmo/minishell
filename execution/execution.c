@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/29 21:59:57 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:03:29 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,15 @@ int	single_command(t_data *data, char *cmd)
 int	complex_command(t_data *data, char *cmd, int symbol)
 {
 	t_tree	*command;
+	t_line	*temp = data->head;
 
+	while (temp)
+	{
+		if (temp->type >= 1 && temp->type <= 4)
+			//
+		temp = temp->next;
+	}
+	recursive_cmd();
 	return (0);
 }
 

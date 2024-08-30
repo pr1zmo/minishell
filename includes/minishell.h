@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/30 15:49:35 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/30 16:51:57 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_tree
 {
 	char			*cmd;
 	int				type;
+	int				priority;
 	struct t_tree	*left;
 	struct t_tree	*right;
 }					t_tree;

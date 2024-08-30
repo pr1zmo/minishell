@@ -7,3 +7,5 @@ minishell
 /example
 /.vscode
 /pipex
+test.sh
+outputFile.txt
