@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/30 17:03:29 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/08/31 00:21:29 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,19 @@ int	count_symbols(t_data *data)
 	return (i);
 }
 
+t_tree *create_node(char *cmd, int type)
+{
+	t_tree *node;
+
+	node = (t_tree *)malloc(sizeof(t_tree));
+	node->cmd = strdup(cmd);
+	node->type = type;
+	node->priority = 0;
+	node->left = NULL;
+	node->right = NULL;
+	return (node);
+}
+
 int	single_command(t_data *data, char *cmd)
 {
 	t_line	*temp = data->head;
@@ -209,18 +222,84 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
+t_tree *build_execution_tree(t_line *temp)
+{
+	t_tree *root = NULL;
+	t_tree *current = NULL;
+	t_tree	*node;
+
+	while (temp) 
+	{
+		node = create_node(temp->str[0], temp->type);
+		if (!root) 
+		{
+			root = node;
+			current = node;
+		}
+		else
+		{
+			if (current->type == 1)
+				current->right = node;
+			else if (current->type == 2)
+				current->right = node;
+			else
+				current->left = node;
+			current = node;
+		}
+		temp = temp->next;
+	}
+	return (root);
+}
+
+void execute_tree(t_tree *root, char **envp) {
+    if (!root) return;
+
+    if (root->type == 0) { // command
+        char *args[] = {root->cmd, NULL};
+        execvp(root->cmd, args);
+        perror("execvp");
+        exit(EXIT_FAILURE);
+    } else if (root->type == 1) { // pipe
+        int pipefd[2];
+        pipe(pipefd);
+        if (fork() == 0) {
+            close(pipefd[0]);
+            dup2(pipefd[1], STDOUT_FILENO);
+            close(pipefd[1]);
+            execute_tree(root->left, envp);
+        } else {
+            close(pipefd[1]);
+            dup2(pipefd[0], STDIN_FILENO);
+            close(pipefd[0]);
+            execute_tree(root->right, envp);
+        }
+    } else if (root->type == 2) { // redirection
+        int fd = open(root->cmd, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (fd < 0) {
+            perror("open");
+            exit(EXIT_FAILURE);
+        }
+        if (fork() == 0) {
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+            execute_tree(root->left, envp);
+        } else {
+            close(fd);
+            wait(NULL);
+        }
+    }
+}
+
 int	complex_command(t_data *data, char *cmd, int symbol)
 {
 	t_tree	*command;
 	t_line	*temp = data->head;
 
-	while (temp)
-	{
-		if (temp->type >= 1 && temp->type <= 4)
-			//
-		temp = temp->next;
-	}
-	recursive_cmd();
+	command = build_execution_tree(temp);
+	if (fork() == 0)
+		execute_tree(command, data->envp);
+	else
+		wait(NULL);
 	return (0);
 }
 
