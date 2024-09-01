@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/01 10:13:39 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/01 11:25:08 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ char	*new_strjoin(char *s1, char *s2)
 	return (result);
 }
 
-t_tree *create_node(char **cmd, int type)
+t_tree *create_node(char *cmd, int type)
 {
 	t_tree *node;
 	int		i;
@@ -246,31 +246,75 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
+t_tree	*set_node(t_tree *node, t_tree *root)
+{
+	t_tree *current = NULL;
+
+	if (!root) 
+	{
+		root = node;
+		current = node;
+	}
+	else
+	{
+		if (current->type == 1)
+			current->right = node;
+		else if (current->type == 2)
+			current->right = node;
+		else
+			current->left = node;
+		current = node;
+	}
+	return (current);
+}
+
+char	*ft_strcat(char *s1, char *s2)
+{
+	char	*dest;
+
+	dest = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	while (*s1)
+		*dest++ = *s1++;
+	while(*s2)
+		*dest++ = *s2++;
+	*dest = '\0';
+	return (dest);
+}
+
 t_tree *build_execution_tree(t_line *temp)
 {
-	t_tree *root = NULL;
-	t_tree *current = NULL;
-	t_tree	*node;
+	t_tree		*root = NULL;
+	t_tree		*current;
+	t_tree		*node;
+	char static	*cmd;
 
 	while (temp) 
 	{
-		printf("The string in the loop: %s\n", temp->str);
-		node = create_node(temp->str[0], temp->type);
-		if (!root) 
+		// printa("The string in the loop: ", temp->str);
+		while (temp->type == 7 || temp->type == 8)
 		{
-			root = node;
-			current = node;
+			cmd = ft_strcat(cmd, new_strjoin(cmd, temp->str[0]));
+			node = create_node(temp->str[0], temp->type);
+			current = set_node(node, root);
+			temp = temp->next;
 		}
-		else
-		{
-			if (current->type == 1)
-				current->right = node;
-			else if (current->type == 2)
-				current->right = node;
-			else
-				current->left = node;
-			current = node;
-		}
+		// current = set_node(node, root);
+		// exit(1);
+		// if (!root) 
+		// {
+		// 	root = node;
+		// 	current = node;
+		// }
+		// else
+		// {
+		// 	if (current->type == 1)
+		// 		current->right = node;
+		// 	else if (current->type == 2)
+		// 		current->right = node;
+		// 	else
+		// 		current->left = node;
+		// 	current = node;
+		// }
 		temp = temp->next;
 	}
 	return (root);
