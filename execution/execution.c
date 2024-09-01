@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/31 00:21:29 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/01 10:13:39 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,12 +189,36 @@ int	count_symbols(t_data *data)
 	return (i);
 }
 
-t_tree *create_node(char *cmd, int type)
+char	*new_strjoin(char *s1, char *s2)
+{
+	char	*result;
+
+	if (!s1 || !s2)
+	{
+		if (s1)
+			return (ft_strdup(s1));
+		if (s2)
+			return (ft_strdup(s2));
+	}
+	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 2);
+	while (*s1)
+		*result++ = *s1++;
+	*result = ' ';
+	result++;
+	while (*s2)
+		*result++ = *s2++;
+	*result = '\0';
+	return (result);
+}
+
+t_tree *create_node(char **cmd, int type)
 {
 	t_tree *node;
+	int		i;
 
+	i = 0;
 	node = (t_tree *)malloc(sizeof(t_tree));
-	node->cmd = strdup(cmd);
+	node->cmd = ft_strdup(cmd);
 	node->type = type;
 	node->priority = 0;
 	node->left = NULL;
@@ -230,6 +254,7 @@ t_tree *build_execution_tree(t_line *temp)
 
 	while (temp) 
 	{
+		printf("The string in the loop: %s\n", temp->str);
 		node = create_node(temp->str[0], temp->type);
 		if (!root) 
 		{
@@ -251,39 +276,53 @@ t_tree *build_execution_tree(t_line *temp)
 	return (root);
 }
 
-void execute_tree(t_tree *root, char **envp) {
-    if (!root) return;
+void execute_tree(t_tree *root, char **envp)
+{
+    if (!root)
+		return;
 
-    if (root->type == 0) { // command
+    if (root->type == 0)
+	{ // command
         char *args[] = {root->cmd, NULL};
         execvp(root->cmd, args);
         perror("execvp");
         exit(EXIT_FAILURE);
-    } else if (root->type == 1) { // pipe
+    }
+	else if (root->type == 1)
+	{ // pipe
         int pipefd[2];
         pipe(pipefd);
-        if (fork() == 0) {
+        if (fork() == 0)
+		{
             close(pipefd[0]);
             dup2(pipefd[1], STDOUT_FILENO);
             close(pipefd[1]);
             execute_tree(root->left, envp);
-        } else {
+        }
+		else
+		{
             close(pipefd[1]);
             dup2(pipefd[0], STDIN_FILENO);
             close(pipefd[0]);
             execute_tree(root->right, envp);
         }
-    } else if (root->type == 2) { // redirection
+    }
+	else if (root->type == 2)
+	{
         int fd = open(root->cmd, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (fd < 0) {
+        if (fd < 0)
+		{
             perror("open");
             exit(EXIT_FAILURE);
         }
-        if (fork() == 0) {
+        if (fork() == 0)
+		{
             dup2(fd, STDOUT_FILENO);
             close(fd);
             execute_tree(root->left, envp);
-        } else {
+        }
+		else
+		{
             close(fd);
             wait(NULL);
         }
@@ -311,6 +350,7 @@ int	handle_input(t_data *data)
 
 	int i = count_symbols(data);
 	cmd = array_to_string(temp);
+	printf("Which type of command to ruN: %d\n", i);
 	if (i == 0)
 		single_command(data, cmd);
 	else
