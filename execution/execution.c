@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/03 17:27:23 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/03 22:23:51 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,11 +214,9 @@ char	*new_strjoin(char *s1, char *s2)
 t_tree *create_node(char *cmd, int type)
 {
 	t_tree *node;
-	int		i;
 
-	i = 0;
 	node = (t_tree *)malloc(sizeof(t_tree));
-	node->cmd = ft_strdup(cmd);
+	node->str = ft_strdup(cmd);
 	node->type = type;
 	node->priority = 0;
 	node->left = NULL;
@@ -246,26 +244,43 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
-t_tree	*set_node(t_tree *node, t_tree *root)
+t_tree	*fill_tree(t_line *temp)
 {
-	t_tree *current = NULL;
+	t_tree	*root = NULL;
+	t_tree	*current = NULL;
 
-	if (!root) 
+	while (temp)
 	{
-		root = node;
-		current = node;
-	}
-	else
-	{
-		if (current->type == 1)
-			current->right = node;
-		else if (current->type == 2)
-			current->right = node;
+		t_tree *node = create_node(temp->str[0], temp->type);
+		if (!root)
+		{
+			root = node;
+			current = node;
+		}		
 		else
-			current->left = node;
-		current = node;
+		{
+			if (temp->type == 1)
+			{
+				node->left = root;
+				root = node;
+				current = node;
+			}
+			else if (temp->type == 2)
+			{
+				current->right = node;
+				current = node;
+			}
+			else
+			{
+				if (!current->left)
+					current->left = node;
+				else
+					current->right = node;
+			}
+		}
+		temp = temp->next;
 	}
-	return (current);
+	return (root);
 }
 
 char	*ft_strcat(char *s1, char *s2)
@@ -283,27 +298,15 @@ char	*ft_strcat(char *s1, char *s2)
 
 t_tree *build_execution_tree(t_line *temp)
 {
-	t_tree		*root = NULL;
-	t_tree		*current;
-	t_tree		*node;
-	char static	*cmd;
+	t_tree	*node;
 
-	while (temp) 
-	{
-		node = create_node(temp->str[0], temp->type);
-		current = set_node(node, root);
-		temp = temp->next;
-	}
+	node = fill_tree(temp);
 	return (node);
 }
 
 void execute_tree(t_tree *root, char **envp)
 {
-	int	pid;
-
-	// pid = fork();
-    if (!root)
-		return;
+	//
 }
 
 int	complex_command(t_data *data, char *cmd, int symbol)
@@ -344,7 +347,6 @@ int	minishell(t_data *data)
 		return (reset_shell(data));
 	add_history(data->arg);
 	parse(data->arg, &data->head, data->envp);
-	// print_temp(data);
 	handle_input(data);
 	reset_shell(data);
 	return (1);
