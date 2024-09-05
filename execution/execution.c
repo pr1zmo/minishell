@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/03 22:23:51 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/05 11:34:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,56 +244,64 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
-t_tree	*fill_tree(t_line *temp)
+t_tree	*set_node(t_tree *node, t_tree *root)
 {
-	t_tree	*root = NULL;
-	t_tree	*current = NULL;
-
-	while (temp)
+	if (!root)
+		return (node);
+	if (node->type == 1)
+		node->left = root;
+	else if (node->type == 2)
 	{
-		t_tree *node = create_node(temp->str[0], temp->type);
-		if (!root)
-		{
-			root = node;
-			current = node;
-		}		
-		else
-		{
-			if (temp->type == 1)
-			{
-				node->left = root;
-				root = node;
-				current = node;
-			}
-			else if (temp->type == 2)
-			{
-				current->right = node;
-				current = node;
-			}
-			else
-			{
-				if (!current->left)
-					current->left = node;
-				else
-					current->right = node;
-			}
-		}
-		temp = temp->next;
+		root->right = node;
+		return (root);
 	}
-	return (root);
+	else
+	{
+		if (!root->left)
+			root->left = node;
+		else
+			root->right = node;
+	}
+	return (node);
 }
 
 char	*ft_strcat(char *s1, char *s2)
 {
 	char	*dest;
+	int		i;
 
+	i = 0;
 	dest = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	while (*s1)
+	while (s1 && *s1)
 		*dest++ = *s1++;
-	while(*s2)
+	while(s2 && *s2)
 		*dest++ = *s2++;
 	*dest = '\0';
 	return (dest);
+}
+
+t_tree	*fill_tree(t_line *temp)
+{
+	t_tree	*root = NULL;
+	t_tree	*current = NULL;
+	t_tree	*node;
+	char *cmd = NULL;
+
+	root = create_node(temp->str[0], temp->type);
+	while (temp)
+	{
+		// while (temp->type == 7 || temp->type == 8)
+		// {
+		// 	cmd = ft_strcat(cmd, temp->str[0]);
+		// 	temp = temp->next;
+		// }
+		node = create_node(cmd?cmd:temp->str[0], temp->type);
+		current = set_node(node, root);
+		if (!root)
+			root = current;
+		temp = temp->next;
+	}
+	return (root);
 }
 
 t_tree *build_execution_tree(t_line *temp)
@@ -304,9 +312,42 @@ t_tree *build_execution_tree(t_line *temp)
 	return (node);
 }
 
+void	execute_command(char *cmd, char **envp)
+{
+	char *args[] = {cmd, NULL};
+	execvp(cmd, args);
+	perror("execvp");
+	exit(EXIT_FAILURE);
+}
+
 void execute_tree(t_tree *root, char **envp)
 {
-	//
+	int	pipefd[2];
+	int	pid;
+
+	debug();
+	printf("Type: %d\n", root->type);
+	if (!root)
+		return ;
+	if (root->type == 1)
+	{
+		pipe(pipefd);
+		if ((pid == fork()) == 0)
+		{
+			close(pipefd[0]);
+			dup2(pipefd[1], STDOUT_FILENO);
+			close(pipefd[1]);
+			execute_tree(root->left, envp);
+			exit(EXIT_SUCCESS);
+		}
+	}
+	else
+	{
+		if ((pid == fork()) == 0)
+			execute_command(root->str, envp);
+		else
+			waitpid(pid, NULL, 0);
+	}
 }
 
 int	complex_command(t_data *data, char *cmd, int symbol)
