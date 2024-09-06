@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/05 11:34:17 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/06 09:22:18 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	reset_shell(t_data *data)
 		data->arg = NULL;
 	}
 	// rl_clear_history();
-	minishell(data);
+	// minishell(data);
 	return (1);
 }
 
@@ -62,7 +62,6 @@ int	count_pipes(t_data *data)
 	{
 		while (temp->str[i])
 		{
-			// printf("The alleged pipe: %d", temp->type);
 			if (temp->type == 1)
 				k++;
 			i++;
@@ -380,15 +379,18 @@ int	handle_input(t_data *data)
 
 int	minishell(t_data *data)
 {
-	char	*str;
-
-	data->head = NULL;
-	data->arg = readline(READLINE_MSG);
-	if (data->arg == NULL || data->arg[0] == '\0')
-		return (reset_shell(data));
-	add_history(data->arg);
-	parse(data->arg, &data->head, data->envp);
-	handle_input(data);
-	reset_shell(data);
+	while (1)
+	{
+		data->head = NULL;
+		data->arg = readline(READLINE_MSG);
+		if (data->arg == NULL || data->arg[0] == '\0')
+			return (reset_shell(data));
+		add_history(data->arg);
+		parse(data->arg, &data->head, data->envp);
+		handle_input(data);
+		reset_shell(data);
+		if (data->status == 0)
+			break ;
+	}
 	return (1);
 }
