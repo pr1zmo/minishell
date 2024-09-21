@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/18 14:48:56 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/21 14:09:29 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int	main(int ac, char **av, char **env)
 {
 	(void)av;
 	char	*str;
-	t_data	*program;
+	// t_data	*program;
 	t_line	*head;
 
 	if (ac != 1)
 		return (printf("minishell doesn't take any arguments\n"), 1);
-	program = malloc(sizeof(t_data));
-	program->status = 1;
+	// program = malloc(sizeof(t_data));
+	// program->status = 1;
 	head = NULL;
 	while (1)
 	{
@@ -31,10 +31,9 @@ int	main(int ac, char **av, char **env)
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
-			program->head = parse(str, &head, env);
-			program->status = handle_command(program);
+			parse(str, &head, env);
+			printf("%s\n", head->env[0]);
 		}
 	}
-	free(program);
 	return (0);
 }

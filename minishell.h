@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/16 11:50:19 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/09/21 14:09:16 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,19 @@ typedef struct s_data
 
 // void	ft_execute(char *str, t_data *data);
 // int		ft_env(t_env *lst);
-int		handle_command(t_data *data);
+// int		handle_command(t_data *data);
 // t_list	*get_env(char **env);
-int		exec_command(char **av, char **env);
+// int		exec_command(char **av, char **env);
 // void	check_arguments(char **av);
-void	error_exit(char *str);
+// void	error_exit(char *str);
 // void	parent(char **av, char **env, int fds[2]);
 // void	child(char **av, char **env, int fds[2]);
-int		execution(char **args, t_data *data);
+// int		execution(char **args, t_data *data);
 // int		ft_cd(char **cmd, t_env *env);
-int		ft_echo(char **cmd);
-int		ft_pwd(void);
+// int		ft_echo(char **cmd);
+// int		ft_pwd(void);
 // int		ft_export(char **cmd, t_env *env);
 // int		ft_unset(char **cmd, t_env *env);
-int		ft_exit(void);
+// int		ft_exit(void);
 
 #endif
