@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/24 15:24:24 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/24 15:26:26 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,13 @@ typedef struct s_builtin
 	char		*argument;
 }				t_builtin;
 
-typedef struct s_tree
+typedef struct s_cmd
 {
 	char			*str;
 	int				type;
 	int				priority;
-	struct s_tree	*left;
-	struct s_tree	*right;
-}					t_tree;
+	struct s_cmd	*next;
+}					t_cmd;
 
 
 typedef struct s_data

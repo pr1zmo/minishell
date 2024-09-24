@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/24 15:10:42 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/24 16:11:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,16 +210,15 @@ char	*new_strjoin(char *s1, char *s2)
 	return (result);
 }
 
-t_tree *create_node(char *cmd, int type)
+t_cmd *create_node(char *cmd, int type)
 {
-	t_tree *node;
+	t_cmd *node;
 
-	node = (t_tree *)malloc(sizeof(t_tree));
+	node = (t_cmd *)malloc(sizeof(t_cmd));
 	node->str = ft_strdup(cmd);
 	node->type = type;
 	node->priority = 0;
-	node->left = NULL;
-	node->right = NULL;
+	node->next = NULL;
 	return (node);
 }
 
@@ -243,27 +242,6 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
-t_tree	*set_node(t_tree *node, t_tree *root)
-{
-	if (!root)
-		return (node);
-	if (node->type == 1)
-		node->left = root;
-	else if (node->type == 2)
-	{
-		root->right = node;
-		return (root);
-	}
-	else
-	{
-		if (!root->left)
-			root->left = node;
-		else
-			root->right = node;
-	}
-	return (node);
-}
-
 char	*ft_strcat(char *s1, char *s2)
 {
 	char	*dest;
@@ -279,107 +257,87 @@ char	*ft_strcat(char *s1, char *s2)
 	return (dest);
 }
 
-t_tree	*fill_tree(t_line *temp)
-{
-	t_tree	*root = NULL;
-	t_tree	*current = NULL;
-	t_tree	*node;
-	char *cmd = NULL;
+// t_cmd	*fill_tree(t_line *temp)
+// {
+// 	t_cmd	*root = NULL;
+// 	t_cmd	*current = NULL;
+// 	t_cmd	*node;
+// 	char *cmd = NULL;
 
-	root = create_node(temp->str[0], temp->type);
-	while (temp)
-	{
-		// while (temp->type == 7 || temp->type == 8)
-		// {
-		// 	cmd = ft_strcat(cmd, temp->str[0]);
-		// 	temp = temp->next;
-		// }
-		node = create_node(cmd?cmd:temp->str[0], temp->type);
-		current = set_node(node, root);
-		if (!root)
-			root = current;
-		temp = temp->next;
-	}
-	return (root);
+// 	root = create_node(temp->str[0], temp->type);
+// 	while (temp)
+// 	{
+// 		// while (temp->type == 7 || temp->type == 8)
+// 		// {
+// 		// 	cmd = ft_strcat(cmd, temp->str[0]);
+// 		// 	temp = temp->next;
+// 		// }
+// 		node = create_node(cmd?cmd:temp->str[0], temp->type);
+// 		current = set_node(node, root);
+// 		if (!root)
+// 			root = current;
+// 		temp = temp->next;
+// 	}
+// 	return (root);
+// }
+
+t_cmd	fill_tree(t_line *data)
+{
+	t_cmd	*result;
+	
+	result = (t_cmd *)malloc(sizeof(t_cmd));
+	result->str = data->str[0];
+	result->type = data->type;
+	result->next = data->next;
+	return (result);
 }
 
-void print_tree(t_tree *data) {
-	if (data == NULL)
-	{
-		printf("Tree is empty.\n");
-		return;
-	}
-	printf("This is the tree -> str: %s\ntype: %d\npriority: %d\n", data->str, data->type, data->priority);
-	if (data->right)
-	{
-		printf("Something on the right:\n");
-		print_tree(data->right);
-	}
-	else
-		printf("Nothing on the right.\n");
-	if (data->left)
-	{
-		printf("Something on the left:\n");
-		print_tree(data->left);
-	}
-	else
-		printf("Nothing on the left.\n");
-}
-
-t_tree *build_execution_tree(t_line *temp)
+t_cmd *build_execution_tree(t_line *temp)
 {
-	t_tree	*node;
+	t_cmd	*node;
 
 	node = fill_tree(temp);
 	return (node);
 }
 
-void	execute_command(char *cmd, char **envp)
-{
-	char *args[] = {cmd, NULL};
-	execvp(cmd, args);
-	perror("execvp");
-	exit(EXIT_FAILURE);
-}
+// void execute_tree(t_cmd *root, char **envp)
+// {
+// 	int	pipefd[2];
+// 	int	pid;
 
-void execute_tree(t_tree *root, char **envp)
-{
-	int	pipefd[2];
-	int	pid;
-
-	// debug();
-	printf("Type: %d\n", root->type);
-	if (!root)
-		return ;
-	if (root->type == 1)
-	{
-		pipe(pipefd);
-		if ((pid == fork()) == 0)
-		{
-			close(pipefd[0]);
-			dup2(pipefd[1], STDOUT_FILENO);
-			close(pipefd[1]);
-			execute_tree(root->left, envp);
-			exit(EXIT_SUCCESS);
-		}
-	}
-	else
-	{
-		if ((pid == fork()) == 0)
-			execute_command(root->str, envp);
-		else
-			waitpid(pid, NULL, 0);
-	}
-}
+// 	debug();
+// 	printf("Type: %d\n", root->type);
+// 	if (!root)
+// 		return ;
+// 	if (root->type == 1)
+// 	{
+// 		pipe(pipefd);
+// 		if ((pid == fork()) == 0)
+// 		{
+// 			close(pipefd[0]);
+// 			dup2(pipefd[1], STDOUT_FILENO);
+// 			close(pipefd[1]);
+// 			execute_tree(root->next, envp);
+// 			exit(EXIT_SUCCESS);
+// 		}
+// 	}
+// 	else
+// 	{
+// 		if ((pid == fork()) == 0)
+// 			execute_command(root->str, envp);
+// 		else
+// 			waitpid(pid, NULL, 0);
+// 	}
+// }
 
 int	complex_command(t_data *data, char *cmd, int symbol)
 {
-	t_tree	*command;
+	t_cmd	*command;
 	t_line	*temp = data->head;
 
 	command = build_execution_tree(temp);
 	if (command)
-		print_tree(command);
+		printf("Command\n");
 	else
 		printf("Command not set :,(");
 	execute_tree(command, data->envp);
