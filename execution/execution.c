@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/06 09:22:18 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/24 15:10:42 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,6 +303,29 @@ t_tree	*fill_tree(t_line *temp)
 	return (root);
 }
 
+void print_tree(t_tree *data) {
+	if (data == NULL)
+	{
+		printf("Tree is empty.\n");
+		return;
+	}
+	printf("This is the tree -> str: %s\ntype: %d\npriority: %d\n", data->str, data->type, data->priority);
+	if (data->right)
+	{
+		printf("Something on the right:\n");
+		print_tree(data->right);
+	}
+	else
+		printf("Nothing on the right.\n");
+	if (data->left)
+	{
+		printf("Something on the left:\n");
+		print_tree(data->left);
+	}
+	else
+		printf("Nothing on the left.\n");
+}
+
 t_tree *build_execution_tree(t_line *temp)
 {
 	t_tree	*node;
@@ -324,7 +347,7 @@ void execute_tree(t_tree *root, char **envp)
 	int	pipefd[2];
 	int	pid;
 
-	debug();
+	// debug();
 	printf("Type: %d\n", root->type);
 	if (!root)
 		return ;
@@ -356,7 +379,7 @@ int	complex_command(t_data *data, char *cmd, int symbol)
 
 	command = build_execution_tree(temp);
 	if (command)
-		printf("Command type: %d\n", command->type);
+		print_tree(command);
 	else
 		printf("Command not set :,(");
 	execute_tree(command, data->envp);
