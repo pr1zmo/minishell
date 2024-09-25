@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/24 16:11:17 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:42:04 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,67 +281,50 @@ char	*ft_strcat(char *s1, char *s2)
 // 	return (root);
 // }
 
-t_cmd	fill_tree(t_line *data)
+t_cmd	*build_cmd_list(t_line *data)
 {
-	t_cmd	*result;
-	
-	result = (t_cmd *)malloc(sizeof(t_cmd));
-	result->str = data->str[0];
-	result->type = data->type;
-	result->next = data->next;
-	return (result);
+	t_cmd	*cmd;
+	int		i;
+
+	i = 0;
+	while (data)
+	{
+		cmd->str = data->str;
+		cmd->type = data->type;
+		while (data->type == 7 || data->type == 8)
+			i++;
+		cmd = cmd->next;
+		data = data->next;
+	}
+	return (cmd);
 }
 
-t_cmd *build_execution_tree(t_line *temp)
+void	execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 {
-	t_cmd	*node;
+	int	pid;
 
-	node = fill_tree(temp);
-	return (node);
+	while (cmd_list)
+	{
+		if (cmd_list->next && cmd_list->next->type == 7)
+			cmd_list = cmd_list->next;
+		pid = fork();
+		if (pid == -1)
+			return (ft_error(1, data));
+		if (pid == 0)
+			exec_cmd(cmd_list->str, data->envp);
+		waitpid(0, NULL, 0);
+		cmd_list = cmd_list->next;
+	}
 }
 
-// void execute_tree(t_cmd *root, char **envp)
-// {
-// 	int	pipefd[2];
-// 	int	pid;
-
-// 	debug();
-// 	printf("Type: %d\n", root->type);
-// 	if (!root)
-// 		return ;
-// 	if (root->type == 1)
-// 	{
-// 		pipe(pipefd);
-// 		if ((pid == fork()) == 0)
-// 		{
-// 			close(pipefd[0]);
-// 			dup2(pipefd[1], STDOUT_FILENO);
-// 			close(pipefd[1]);
-// 			execute_tree(root->next, envp);
-// 			exit(EXIT_SUCCESS);
-// 		}
-// 	}
-// 	else
-// 	{
-// 		if ((pid == fork()) == 0)
-// 			execute_command(root->str, envp);
-// 		else
-// 			waitpid(pid, NULL, 0);
-// 	}
-// }
-
-int	complex_command(t_data *data, char *cmd, int symbol)
+void	complex_command(t_data *data)
 {
-	t_cmd	*command;
+	t_cmd	*cmd_list;
 	t_line	*temp = data->head;
 
-	command = build_execution_tree(temp);
-	if (command)
-		printf("Command\n");
-	else
-		printf("Command not set :,(");
-	execute_tree(command, data->envp);
-	return (0);
+	cmd_list = build_cmd_list(temp);
+	if (cmd_list)
+		execute_cmds(cmd_list, data->envp, data);
 }
 
 int	handle_input(t_data *data)
@@ -354,7 +337,7 @@ int	handle_input(t_data *data)
 	if (i == 0)
 		single_command(data, cmd);
 	else
-		complex_command(data, cmd, i);
+		complex_command(data);
 	return (0);
 }
 
