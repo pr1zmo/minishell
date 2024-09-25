@@ -37,6 +37,10 @@ void	tokenize(char *arg, t_line *tmp);
 void	tokenize_arg(char **arg, int *i, t_line *tmp);
 void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c);
 void	parse(char *line, t_line **head, char **env);
+int		check_token(int c);
+int		special_char(char *str, int i);
+int		checkquotes(char *line);
+int		checkspaces(char *line);
 t_token	get_token(char *str);
 
 #endif

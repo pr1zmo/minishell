@@ -3,27 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/21 14:09:29 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/09/25 04:28:47 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <string.h>
 
 int	main(int ac, char **av, char **env)
 {
 	(void)av;
 	char	*str;
-	// t_data	*program;
 	t_line	*head;
 
 	if (ac != 1)
 		return (printf("minishell doesn't take any arguments\n"), 1);
-	// program = malloc(sizeof(t_data));
-	// program->status = 1;
 	head = NULL;
 	while (1)
 	{
@@ -32,7 +28,15 @@ int	main(int ac, char **av, char **env)
 		{
 			add_history(str);
 			parse(str, &head, env);
-			printf("%s\n", head->env[0]);
+			while (head)
+			{
+				printf("  this is a node\n");
+				printf("------------------\n");
+				for (int i = 0;head->str[i];i++)
+					printf("str: %s\n", head->str[i]);
+				printf("type: %i\n", head->type);
+				head = head->next;
+			}
 		}
 	}
 	return (0);

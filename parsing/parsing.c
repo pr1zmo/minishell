@@ -3,65 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/21 14:06:47 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/09/25 04:45:07 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-int	special_char(char *str, int i)
-{
-	if (str[i] == '&' || str[i] == ';')
-		return (1);
-	if (str[i] == '|' && str[i + 1] == '|')
-		return (1);
-	return (0);
-}
-
-int	checkquotes(char *line)
-{
-	int	i;
-	int	quotes[2];
-
-	i = 0;
-	quotes[0] = 0;
-	quotes[1] = 0;
-	while (line[i])
-	{
-		if (line[i] == '\'' && !(quotes[1] % 2))
-			quotes[0]++;
-		else if (line[i] == '\"' && !(quotes[0] % 2))
-			quotes[1]++;
-		else if (special_char(line, i) && !(quotes[0] % 2) && !(quotes[1] % 2))
-		{
-			write (2, "Parsing error near '", 20);
-			write (2, &line[i], 1);
-			write (2, "'\n", 2);
-			return (0);
-		}
-		i++;
-	}
-	if ((quotes[0] % 2) || (quotes [1] % 2))
-		return (ft_putstr_fd("Parsing error: missing closing quotation\n", 2),0);
-	return (1);
-}
-
-int	checkspaces(char *line)
-{
-	int	i;
-
-	i = 0;
-	if (!line)
-		return (0);
-	while ((line[i] >= 9 && line[i] <= 13) || line[i] == 32)
-		i++;
-	if (!line[i])
-		return (0);
-	return (1);
-}
 
 void	get_env(t_line **head, char **env)
 {
@@ -88,6 +37,61 @@ void	get_env(t_line **head, char **env)
 	}
 }
 
+int	search_for_var(char *str, char **env)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	len = 0;
+	while (str[len] && !(str[len] >= 9 && str[len] <= 13) && str[len] != ' ')
+		len++;
+	while (env[i])
+	{
+		if (!ft_strncmp(env, str, len))
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+void	find_and_replace(char **str, char **env)
+{
+	char	*p;
+	int		index;
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		p = str[i];
+		while (*p)
+		{
+			if (*p == '$' && *(p + 1))
+			{
+				p++;
+				index = search_for_var(p, env);
+				if (index != -1)
+					expand_variable(str, env, index);
+			}
+			p++;
+		}
+		i++;
+	}
+}
+
+void	expand(t_line **head)
+{
+	t_line	*node;
+	int		i;
+
+	node = *head;
+	while (node)
+	{
+		find_and_replace(node->str, node->env);
+	}
+}
+
 void	parse(char *line, t_line **head, char **env)
 {
 	char	**arg;
@@ -101,4 +105,5 @@ void	parse(char *line, t_line **head, char **env)
 		return ;
 	lexer(arg, head);
 	get_env(head, env);
+	expand(head);
 }
