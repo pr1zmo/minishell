@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:58 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/25 04:01:48 by mouad            ###   ########.fr       */
+/*   Updated: 2024/09/26 03:38:26 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ void	tokenize_cmd(char *str, t_line *tmp)
 	i = 0;
 	size = 0;
 	j = 0;
-	while (str[i] && check_token(str[i]))
+	while (str[size] && check_token(str[size]))
 		size++;
 	tmp->str = malloc(sizeof(char *) * 2);
 	tmp->str[0] = malloc(size + 1);

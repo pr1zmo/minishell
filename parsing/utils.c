@@ -10,40 +10,44 @@ int	check_token(int c)
 		return (0);
 }
 
-int	special_char(char *str, int i)
+int	quotes_open(char *s, int i)
 {
-	if (str[i] == '&' || str[i] == ';')
+	int	quotes[2];
+	int	j;
+
+	ft_bzero(quotes, 2 * 4);
+	j = 0;
+	while (s[j] && j < i)
+	{
+		if (s[i] == '\'' && !(quotes[1] % 2))
+			quotes[0]++;
+		else if (s[i] == '\"' && !(quotes[0] % 2))
+			quotes[1]++;
+		j++;
+	}
+	if (quotes[0] % 2)
 		return (1);
-	if (str[i] == '|' && str[i + 1] == '|')
-		return (1);
-	return (0);
+	else if (quotes[1] % 2 || quotes[2] % 2)
+		return (2);
+	else
+		return (0);
 }
 
 int	checkquotes(char *line)
 {
 	int	i;
-	int	quotes[2];
 
 	i = 0;
-	quotes[0] = 0;
-	quotes[1] = 0;
 	while (line[i])
 	{
-		if (line[i] == '\'' && !(quotes[1] % 2))
-			quotes[0]++;
-		else if (line[i] == '\"' && !(quotes[0] % 2))
-			quotes[1]++;
-		else if (special_char(line, i) && !(quotes[0] % 2) && !(quotes[1] % 2))
-		{
-			write (2, "Parsing error near '", 20);
-			write (2, &line[i], 1);
-			write (2, "'\n", 2);
-			return (0);
-		}
+		if (line[i] == '$' && quotes_open(line, i) != 1)
+			line[i] == -1;
 		i++;
 	}
-	if ((quotes[0] % 2) || (quotes [1] % 2))
-		return (ft_putstr_fd("Parsing error: missing closing quotation\n", 2),0);
+	if (quotes_open(line, i) == 1)
+		return (ft_putstr_fd("minishell: syntax error near unexpected token '\''\n", 2),0);
+	if (quotes_open(line, i) == 2)
+		return (ft_putstr_fd("minishell: syntax error near unexpected token '\"'\n", 2),0);
 	return (1);
 }
 

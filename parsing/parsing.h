@@ -28,7 +28,6 @@ typedef struct s_token
 	char			**env;
 	t_token			type;
 	struct s_token	*next;
-	struct s_token	*prev;
 }	t_line;
 
 void	lexer(char **arg, t_line **head);
@@ -41,6 +40,7 @@ int		check_token(int c);
 int		special_char(char *str, int i);
 int		checkquotes(char *line);
 int		checkspaces(char *line);
+int		quotes_open(char *s, int i);
 t_token	get_token(char *str);
 
 #endif
