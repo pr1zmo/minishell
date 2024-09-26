@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/25 17:42:04 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/25 19:39:44 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,17 +210,17 @@ char	*new_strjoin(char *s1, char *s2)
 	return (result);
 }
 
-t_cmd *create_node(char *cmd, int type)
-{
-	t_cmd *node;
+// t_cmd *create_node(char *cmd, int type)
+// {
+// 	t_cmd *node;
 
-	node = (t_cmd *)malloc(sizeof(t_cmd));
-	node->str = ft_strdup(cmd);
-	node->type = type;
-	node->priority = 0;
-	node->next = NULL;
-	return (node);
-}
+// 	node = (t_cmd *)malloc(sizeof(t_cmd));
+// 	node->str = ft_strdup(cmd);
+// 	node->type = type;
+// 	node->priority = 0;
+// 	node->next = NULL;
+// 	return (node);
+// }
 
 int	single_command(t_data *data, char *cmd)
 {
@@ -281,40 +281,100 @@ char	*ft_strcat(char *s1, char *s2)
 // 	return (root);
 // }
 
+void execute_command(t_cmd *cmd, char **envp)
+{
+	if (cmd->input_file)
+	{
+		int fd = open(cmd->input_file, O_RDONLY);
+		if (fd < 0)
+		{
+			perror("open");
+			exit(EXIT_FAILURE);
+		}
+		dup2(fd, STDIN_FILENO);
+		close(fd);
+	}
+	if (cmd->output_file)
+	{
+		int fd = open(cmd->output_file, O_WRONLY | O_CREAT | (cmd->type==4 ? O_APPEND : O_TRUNC), 0644);
+		if (fd < 0)
+		{
+			perror("open");
+			exit(EXIT_FAILURE);
+		}
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+	}
+	execve(cmd->argv[0], cmd->argv, envp);
+	perror("execvp");
+	exit(EXIT_FAILURE);
+}
+
 t_cmd	*build_cmd_list(t_line *data)
 {
-	t_cmd	*cmd;
+	t_cmd	*cmd = NULL;
+	t_cmd	*head = NULL;
+	t_cmd	*new_node;
 	int		i;
 
 	i = 0;
 	while (data)
 	{
-		cmd->str = data->str;
-		cmd->type = data->type;
+		new_node = (t_cmd *)malloc(sizeof(t_cmd));
+		if (!new_node)
+		{
+			perror("malloc");
+			return (NULL);
+		}
+		new_node->argv = data->str;
+		new_node->type = data->type;
+		new_node->next = NULL;
+		if (!cmd)
+			head = new_node;
+		else
+			cmd->next = new_node;
+		cmd = new_node;
 		while (data->type == 7 || data->type == 8)
 			i++;
-		cmd = cmd->next;
 		data = data->next;
 	}
-	return (cmd);
+	return (head);
 }
 
-void	execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
-{
+int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data) {
 	int	pid;
+	int	pipefd[2];
+	int	in_fd = STDIN_FILENO;
 
 	while (cmd_list)
 	{
-		if (cmd_list->next && cmd_list->next->type == 7)
-			cmd_list = cmd_list->next;
+		if (cmd_list->next && cmd_list->next->type == PIPE)
+			pipe(pipefd);
+		else
+			pipefd[1] = STDOUT_FILENO;
+
 		pid = fork();
 		if (pid == -1)
-			return (ft_error(1, data));
+			return ft_error(1, data);
 		if (pid == 0)
-			exec_cmd(cmd_list->str, data->envp);
-		waitpid(0, NULL, 0);
+		{
+			dup2(in_fd, STDIN_FILENO);
+			if (pipefd[1] != STDOUT_FILENO)
+			{
+				dup2(pipefd[1], STDOUT_FILENO);
+				close(pipefd[1]);
+			}
+			execute_command(cmd_list, envp);
+		}
+		else
+		{
+			waitpid(pid, NULL, 0);
+			close(pipefd[1]);
+			in_fd = pipefd[0];
+		}
 		cmd_list = cmd_list->next;
 	}
+	return 0;
 }
 
 void	complex_command(t_data *data)
@@ -322,6 +382,7 @@ void	complex_command(t_data *data)
 	t_cmd	*cmd_list;
 	t_line	*temp = data->head;
 
+	debug();
 	cmd_list = build_cmd_list(temp);
 	if (cmd_list)
 		execute_cmds(cmd_list, data->envp, data);
