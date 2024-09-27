@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/25 19:39:44 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/27 01:03:04 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,42 @@ int	reset_shell(t_data *data)
 	return (1);
 }
 
+int	builtin(char *cmd)
+{
+	char	*builtin[8];
+	int		i;
+
+	i = 0;
+	builtin[0] = "echo";
+	builtin[1] = "cd";
+	builtin[2] = "pwd";
+	builtin[3] = "export";
+	builtin[4] = "unset";
+	builtin[5] = "env";
+	builtin[6] = "exit";
+	builtin[7] = NULL;
+	while (i < 7)
+	{
+		if (ft_strncmp(builtin[i], cmd, 0) == 0)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	exec_builtin(t_data *data, char **cmd)
+{
+	int	res;
+
+	if (ft_strncmp(cmd[0], "pwd", 0) == 0)
+		res = ft_pwd(data, cmd);
+	else if (ft_strncmp(cmd[0], "env", 0) == 0)
+		res = ft_env(data, cmd);
+	else if (ft_strncmp(cmd[0], "echo", 0) == 0)
+		res = ft_echo(data, cmd);
+	return (res);
+}
+
 int	ft_error(int error, t_data *data)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -40,6 +76,11 @@ int	ft_error(int error, t_data *data)
 		ft_putstr_fd("Could not find corresponding path\n", STDERR_FILENO);
 	reset_shell(data);
 	return (EXIT_FAILURE);
+}
+
+void	set_env_var(t_data *data, char *value, char *old_value)
+{
+	//
 }
 
 void	printa(char *message, char **str)
@@ -105,7 +146,7 @@ static char	*get_full_cmd(char *av, char **env)
 	return (NULL);
 }
 
-void	exec_cmd(char *av, char **env)
+void	exec_cmd(char *av, char **env, t_data *data)
 {
 	char	**cmd;
 	char	*path;
@@ -114,7 +155,14 @@ void	exec_cmd(char *av, char **env)
 	if (cmd[0][0] == '/')
 		path = ft_strdup(cmd[0]);
 	else
+	{
+		if (builtin(cmd[0]))
+		{
+			exec_builtin(data, cmd);
+			return ;
+		}
 		path = get_full_cmd(cmd[0], env);
+	}
 	if (!path)
 	{
 		// cmd = NULL;
@@ -235,7 +283,7 @@ int	single_command(t_data *data, char *cmd)
 		if (pid == -1)
 			return (ft_error(1, data));
 		if (pid == 0)
-			exec_cmd(cmd, data->envp);
+			exec_cmd(cmd, data->envp, data);
 		waitpid(0, NULL, 0);
 		temp = temp->next;
 	}
@@ -257,30 +305,6 @@ char	*ft_strcat(char *s1, char *s2)
 	return (dest);
 }
 
-// t_cmd	*fill_tree(t_line *temp)
-// {
-// 	t_cmd	*root = NULL;
-// 	t_cmd	*current = NULL;
-// 	t_cmd	*node;
-// 	char *cmd = NULL;
-
-// 	root = create_node(temp->str[0], temp->type);
-// 	while (temp)
-// 	{
-// 		// while (temp->type == 7 || temp->type == 8)
-// 		// {
-// 		// 	cmd = ft_strcat(cmd, temp->str[0]);
-// 		// 	temp = temp->next;
-// 		// }
-// 		node = create_node(cmd?cmd:temp->str[0], temp->type);
-// 		current = set_node(node, root);
-// 		if (!root)
-// 			root = current;
-// 		temp = temp->next;
-// 	}
-// 	return (root);
-// }
-
 void execute_command(t_cmd *cmd, char **envp)
 {
 	if (cmd->input_file)
@@ -291,7 +315,7 @@ void execute_command(t_cmd *cmd, char **envp)
 			perror("open");
 			exit(EXIT_FAILURE);
 		}
-		dup2(fd, STDIN_FILENO);
+		// dup2(fd, STDIN_FILENO);
 		close(fd);
 	}
 	if (cmd->output_file)
@@ -302,11 +326,11 @@ void execute_command(t_cmd *cmd, char **envp)
 			perror("open");
 			exit(EXIT_FAILURE);
 		}
-		dup2(fd, STDOUT_FILENO);
+		// dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
 	execve(cmd->argv[0], cmd->argv, envp);
-	perror("execvp");
+	perror("execve");
 	exit(EXIT_FAILURE);
 }
 
@@ -334,18 +358,43 @@ t_cmd	*build_cmd_list(t_line *data)
 		else
 			cmd->next = new_node;
 		cmd = new_node;
-		while (data->type == 7 || data->type == 8)
-			i++;
-		data = data->next;
+		while (data)
+		{
+			if (data->type == 7 || data->type == 8)
+			{
+				data = data->next;
+				i++;
+			}
+			else
+			{
+				data = data->next;
+				break;
+			}
+		}
 	}
 	return (head);
+}
+
+void	show_cmd(t_cmd *cmd_list)
+{
+	int	i = 0;
+	t_cmd	*temp = cmd_list;
+	while (temp)
+	{
+		printf("Count: %d\n----------------------------\n", i);
+		printa("The command", temp->argv);
+		printf("The command: %s\nThe output file: %s\nThe input file %d\n", temp->output_file, temp->input_file, temp->type);
+		temp = temp->next;
+		i++;
+	}
 }
 
 int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data) {
 	int	pid;
 	int	pipefd[2];
-	int	in_fd = STDIN_FILENO;
-
+	int	in_fd;
+	
+	in_fd = STDIN_FILENO;
 	while (cmd_list)
 	{
 		if (cmd_list->next && cmd_list->next->type == PIPE)
@@ -364,7 +413,8 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data) {
 				dup2(pipefd[1], STDOUT_FILENO);
 				close(pipefd[1]);
 			}
-			execute_command(cmd_list, envp);
+			// show_cmd(cmd_list);
+			// execute_command(cmd_list, envp);
 		}
 		else
 		{
@@ -382,8 +432,8 @@ void	complex_command(t_data *data)
 	t_cmd	*cmd_list;
 	t_line	*temp = data->head;
 
-	debug();
 	cmd_list = build_cmd_list(temp);
+	show_cmd(cmd_list);
 	if (cmd_list)
 		execute_cmds(cmd_list, data->envp, data);
 }
