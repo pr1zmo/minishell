@@ -1,13 +1,10 @@
 #include "parsing.h"
 
-int	check_token(int c)
+int	is_space(char c)
 {
-	if (c == '|')
-		return (0);
-	if (c == '<')
-		return (0);
-	if (c == '>')
-		return (0);
+	if ((c >= 9 && c <= 13) || c == 32)
+		return (1);
+	return (0);
 }
 
 int	quotes_open(char *s, int i)
@@ -31,36 +28,4 @@ int	quotes_open(char *s, int i)
 		return (2);
 	else
 		return (0);
-}
-
-int	checkquotes(char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] == '$' && quotes_open(line, i) != 1)
-			line[i] == -1;
-		i++;
-	}
-	if (quotes_open(line, i) == 1)
-		return (ft_putstr_fd("minishell: syntax error near unexpected token '\''\n", 2),0);
-	if (quotes_open(line, i) == 2)
-		return (ft_putstr_fd("minishell: syntax error near unexpected token '\"'\n", 2),0);
-	return (1);
-}
-
-int	checkspaces(char *line)
-{
-	int	i;
-
-	i = 0;
-	if (!line)
-		return (0);
-	while ((line[i] >= 9 && line[i] <= 13) || line[i] == 32)
-		i++;
-	if (!line[i])
-		return (0);
-	return (1);
 }

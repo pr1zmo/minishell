@@ -6,36 +6,11 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/26 03:42:34 by mouad            ###   ########.fr       */
+/*   Updated: 2024/09/27 03:22:19 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-void	get_env(t_line **head, char **env)
-{
-	int		i;
-	char	**tmp;
-	t_line	*line;
-
-	i = 0;
-	line = *head;
-	while (env[i])
-		i++;
-	tmp = malloc(sizeof(char *) * (i + 1));
-	i = 0;
-	while (env[i])
-	{
-		tmp[i] = ft_strdup(env[i]);
-		i++;
-	}
-	tmp[i] = NULL;
-	while (line)
-	{
-		line->env = tmp;
-		line = line->next;
-	}
-}
 
 // int	search_for_var(char *str, char **env)
 // {
@@ -92,23 +67,19 @@ void	get_env(t_line **head, char **env)
 // 	}
 // }
 
-void	spacing(char *line)
-{
-
-}
-
-void	parse(char *line, t_line **head, char **env)
+void	parse(char *str, t_line **head, char **env)
 {
 	char	**arg;
+	char	*line;
 
-	if (!checkspaces(line))
+	if (!checkspaces(str))
 		return ;
-	if (!checkquotes(line))
+	if (!checkquotes(str))
 		return ;
+	line = spacing(str);
 	arg = ft_split(line, ' ');
 	if (!arg)
 		return ;
-	spacing(line);
 	lexer(arg, head);
 	get_env(head, env);
 	// expand(head);

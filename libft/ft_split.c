@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 20:49:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/08/14 09:26:47 by mouad            ###   ########.fr       */
+/*   Updated: 2024/09/27 03:20:53 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ char	**ft_split(char const *s, char c)
 			s++;
 	}
 	split[i] = NULL;
+	free(s);
 	return (split);
 }

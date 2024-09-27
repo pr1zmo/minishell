@@ -1,6 +1,7 @@
 NAME	=	minishell
 PARS_F	=	minishell.c parsing/parsing.c parsing/lexer.c \
-		parsing/tokenize.c parsing/utils.c
+		parsing/tokenize.c parsing/utils.c parsing/checker.c \
+		parsing/environment.c parsing/spacing.c
 # EXEC_F	=	minishell.c builtins/echo.c builtins/cd.c \
 # 		builtins/pwd.c builtins/export.c builtins/unset.c \
 # 		builtins/env.c builtins/exit.c execution/execution.c \

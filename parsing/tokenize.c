@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:58 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/26 03:38:26 by mouad            ###   ########.fr       */
+/*   Updated: 2024/09/27 02:13:34 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,33 +75,6 @@ void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c)
 	tmp->type = ARG;
 	tmp->next = NULL;
 }
-// void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c)
-// {
-// 	int		count;
-// 	int		j;
-
-// 	count = count_args(arg, *i, c);
-// 	j = 0;
-// 	tmp->str = malloc(sizeof(char *) * (count + 1));
-// 	tmp->str[j] = ft_strdup(arg[*i]);
-// 	j++;
-// 	*i += 1;
-// 	while (arg[*i] && !ft_strchr(arg[*i], c))
-// 	{
-// 		tmp->str[j] = ft_strdup(arg[*i]);
-// 		j++;
-// 		*i += 1;
-// 	}
-// 	if (arg[*i])
-// 	{
-// 		tmp->str[j] = ft_strdup(arg[*i]);
-// 		j++;
-// 		*i += 1;
-// 	}
-// 	tmp->str[j] = NULL;
-// 	tmp->type = ARG;
-// 	tmp->next = NULL;
-// }
 
 void	tokenize_arg(char **arg, int *i, t_line *tmp)
 {
@@ -140,20 +113,17 @@ void	tokenize(char *arg, t_line *tmp)
 void	tokenize_cmd(char *str, t_line *tmp)
 {
 	int	i;
-	int	size;
 	int	j;
 
 	i = 0;
-	size = 0;
 	j = 0;
-	while (str[size] && check_token(str[size]))
-		size++;
 	tmp->str = malloc(sizeof(char *) * 2);
-	tmp->str[0] = malloc(size + 1);
-	while (str[i] && check_token(str[i]))
+	tmp->str[0] = malloc(ft_strlen(str) + 1);
+	while (str[i])
 		tmp->str[0][j++] = str[i++];
 	tmp->str[0][j] = '\0';
 	tmp->str[1] = NULL;
 	tmp->type = CMD;
 	tmp->next = NULL;
+	printf("str == %s, tmp == %s\n", str, tmp->str[0]);
 }
