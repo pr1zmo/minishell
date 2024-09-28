@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/29 14:11:51 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/27 14:36:27 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	main(int ac, char **av, char **env)
 	if (ac != 1)
 		return (printf("minishell doesn't take any arguments\n"), 1);
 	program.envp = set_env(env);
+	program.status = 1;
 	minishell(&program);
 	return (0);
 }

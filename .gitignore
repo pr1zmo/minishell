@@ -4,6 +4,8 @@
 minishell
 /_*
 .*
+test.c
+a.out
 /example
 /.vscode
 /pipex

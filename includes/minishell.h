@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/27 01:40:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/27 17:18:36 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,13 @@ typedef struct s_data
 // 	bool					reset;
 // }	t_tools;
 
-int	minishell(t_data *data);
+int		minishell(t_data *data);
 void	free_arr(char **arr);
-int	ft_pwd(t_data *data, char **cmd);
-int	ft_env(t_data *data, char **cmd);
-int	ft_echo(t_data *data, char **cmd);
-void	set_env_var(t_data *data, char *value, char *old_value);
+int		ft_pwd(t_data *data, char **cmd);
+int		ft_env(t_data *data, char **cmd);
+int		ft_echo(t_data *data, char **cmd);
+int		ft_cd(t_data *data, char **cmd);
+int		modify_env_value(char *name, char *new_value, t_data *data);
+int		ft_change(t_data *data, char **cmd);
 
 #endif

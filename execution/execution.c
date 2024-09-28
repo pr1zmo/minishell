@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/27 01:03:04 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/27 21:22:09 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,22 @@ int	reset_shell(t_data *data)
 	}
 	// rl_clear_history();
 	// minishell(data);
+	return (1);
+}
+
+void	set_env_var(t_data *data, char *value, char *old_value);
+
+int	modify_env_value(char *name, char *new_value, t_data *data)
+{
+	char *str;
+
+	str = getenv(name);
+	if (!str)
+		perror("getenv");
+	else
+	{
+		set_env_var(data, name, new_value);
+	}
 	return (1);
 }
 
@@ -52,12 +68,16 @@ int	exec_builtin(t_data *data, char **cmd)
 {
 	int	res;
 
+	res = 0;
+	printf("Executing the builtins\n");
 	if (ft_strncmp(cmd[0], "pwd", 0) == 0)
 		res = ft_pwd(data, cmd);
 	else if (ft_strncmp(cmd[0], "env", 0) == 0)
 		res = ft_env(data, cmd);
 	else if (ft_strncmp(cmd[0], "echo", 0) == 0)
 		res = ft_echo(data, cmd);
+	else if (ft_strncmp(cmd[0], "cd", 0) == 0)
+		res = ft_cd(data, cmd);
 	return (res);
 }
 
@@ -78,9 +98,23 @@ int	ft_error(int error, t_data *data)
 	return (EXIT_FAILURE);
 }
 
-void	set_env_var(t_data *data, char *value, char *old_value)
+void	set_env_var(t_data *data, char *name, char *new_value)
 {
-	//
+	int		i;
+	char	*temp;
+
+	i = 0;
+	while (data->envp[i])
+	{
+		if (ft_strncmp(data->envp[i], name, 0) == 0)
+		{
+			temp = ft_strjoin(name, "=");
+			data->envp[i] = ft_strjoin(temp, new_value);
+			free(temp);
+			break ;
+		}
+		i++;
+	}
 }
 
 void	printa(char *message, char **str)
@@ -124,11 +158,12 @@ void	debug()
 static char	*get_full_cmd(char *av, char **env)
 {
 	int		i;
-	char	*result;
+	// char	*result;
 	char	*full_cmd;
 	char	**path;
 
 	i = 0;
+	(void)env;
 	path = ft_split(getenv("PATH"), ':');
 	if (!path)
 		perror("Path error");
@@ -393,7 +428,8 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data) {
 	int	pid;
 	int	pipefd[2];
 	int	in_fd;
-	
+
+	(void)envp;
 	in_fd = STDIN_FILENO;
 	while (cmd_list)
 	{
@@ -463,7 +499,6 @@ int	minishell(t_data *data)
 		add_history(data->arg);
 		parse(data->arg, &data->head, data->envp);
 		handle_input(data);
-		reset_shell(data);
 		if (data->status == 0)
 			break ;
 	}

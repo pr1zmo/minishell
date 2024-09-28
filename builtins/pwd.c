@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:47:27 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/26 22:05:53 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/27 21:21:01 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 
 int ft_pwd(t_data *data, char **cmd)
 {
-    char	buff[MAX_PATH];
-	char	*pwd;
+	char	buff[MAX_PATH];
 
 	if (cmd[1])
 		return (printf("pwd: too many arguments\n"), EXIT_FAILURE);
