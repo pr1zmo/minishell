@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/27 21:22:09 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/28 09:56:54 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ int	reset_shell(t_data *data)
 	// minishell(data);
 	return (1);
 }
-
-void	set_env_var(t_data *data, char *value, char *old_value);
 
 int	modify_env_value(char *name, char *new_value, t_data *data)
 {
@@ -98,15 +96,20 @@ int	ft_error(int error, t_data *data)
 	return (EXIT_FAILURE);
 }
 
+void	printa(char *message, char **arr);
+void	debug();
+
 void	set_env_var(t_data *data, char *name, char *new_value)
 {
 	int		i;
 	char	*temp;
+	int		len;
 
 	i = 0;
+	len = ft_strlen(name);
 	while (data->envp[i])
 	{
-		if (ft_strncmp(data->envp[i], name, 0) == 0)
+		if (ft_strncmp(data->envp[i], name, ft_strlen(name)) == 0)
 		{
 			temp = ft_strjoin(name, "=");
 			data->envp[i] = ft_strjoin(temp, new_value);
@@ -281,6 +284,8 @@ char	*new_strjoin(char *s1, char *s2)
 			return (ft_strdup(s1));
 		if (s2)
 			return (ft_strdup(s2));
+		else
+			return (NULL);
 	}
 	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 2);
 	while (*s1)
@@ -292,18 +297,6 @@ char	*new_strjoin(char *s1, char *s2)
 	*result = '\0';
 	return (result);
 }
-
-// t_cmd *create_node(char *cmd, int type)
-// {
-// 	t_cmd *node;
-
-// 	node = (t_cmd *)malloc(sizeof(t_cmd));
-// 	node->str = ft_strdup(cmd);
-// 	node->type = type;
-// 	node->priority = 0;
-// 	node->next = NULL;
-// 	return (node);
-// }
 
 int	single_command(t_data *data, char *cmd)
 {
