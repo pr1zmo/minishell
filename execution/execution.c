@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/28 09:56:54 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/28 14:55:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,10 @@ void	set_env_var(t_data *data, char *name, char *new_value)
 	{
 		if (ft_strncmp(data->envp[i], name, ft_strlen(name)) == 0)
 		{
+			printf("Name: %s\nthe new value: %s\n", name, new_value);
 			temp = ft_strjoin(name, "=");
+			debug();
+			printf("The temp: %s\n", temp);
 			data->envp[i] = ft_strjoin(temp, new_value);
 			free(temp);
 			break ;

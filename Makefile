@@ -10,10 +10,7 @@ OBJS	=	$(FILES:.c=.o)
 LIBFT	=	libft/libft.a
 FLAGS	=	-g -fsanitize=address  -Wall -Wextra -Werror
 
-all: welcome $(NAME)
-
-welcome:
-	@echo "$(WELCOME_MSG)"
+all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
 	@echo "$(GREEN_BOLD)Linking $(NAME)...$(RESET)"
