@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:49 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/25 04:05:32 by mouad            ###   ########.fr       */
+/*   Updated: 2024/09/28 04:06:08 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,5 @@ void	lexer(char **arg, t_line **head)
 			tokenize_arg(arg, &i, tmp);
 		lstadd_back(head, tmp);
 	}
+	ft_free(arg);
 }

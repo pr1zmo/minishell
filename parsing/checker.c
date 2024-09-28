@@ -31,9 +31,10 @@ int	checkquotes(char *line)
 	while (line[i])
 	{
 		if (line[i] == '$' && quotes_open(line, i) != 1)
-			line[i] == -1;
+			line[i] = -1;
 		i++;
 	}
+	printf("%s\n", line)
 	if (quotes_open(line, i) == 1)
 		return (ft_putstr_fd("minishell: syntax error near unexpected token '\''\n", 2),0);
 	if (quotes_open(line, i) == 2)

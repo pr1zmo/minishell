@@ -6,7 +6,7 @@
 /*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:58 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/27 02:13:34 by mouad            ###   ########.fr       */
+/*   Updated: 2024/09/28 04:05:15 by mouad            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ void	tokenize_arg(char **arg, int *i, t_line *tmp)
 	}
 	j = 0;
 	tmp->str = malloc(sizeof(char *) * (count + 1));
-	while (arg[*i] && get_token(arg[*i]) == NONE)
+	while (arg[*i] && get_token(arg[*i]) == NONE \
+	&& !ft_strchr(arg[*i], '\'') && !ft_strchr(arg[*i], '\"'))
 	{
 		tmp->str[j] = ft_strdup(arg[*i]);
 		j++;
