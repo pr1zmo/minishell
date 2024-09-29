@@ -6,22 +6,38 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/28 14:55:17 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/29 23:50:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+char *ft_getenv(char *name, t_data *data)
+{
+	int i;
+
+	if (!name || !data || !data->envp)
+		return NULL;
+	i = 0;
+	while (data->envp[i])
+	{
+		if (ft_strncmp(data->envp[i], name, ft_strlen(name)) == 0 && data->envp[i][ft_strlen(name)] == '=')
+			return (ft_substr(data->envp[i], ft_strlen(name) + 1, ft_strlen(data->envp[i]) - ft_strlen(name) - 1));
+		i++;
+	}
+	return (NULL);
+}
 
 int	reset_shell(t_data *data)
 {
 	// data->head = data->head->next;
 	if (data->arg)
 	{
-		// free(data->arg);
+		free(data->arg);
 		data->arg = NULL;
 	}
 	// rl_clear_history();
-	// minishell(data);
+	minishell(data);
 	return (1);
 }
 
@@ -99,25 +115,27 @@ int	ft_error(int error, t_data *data)
 void	printa(char *message, char **arr);
 void	debug();
 
-void	set_env_var(t_data *data, char *name, char *new_value)
+void set_env_var(t_data *data, char *name, char *new_value)
 {
-	int		i;
-	char	*temp;
-	int		len;
+	int i;
+	char *temp;
+	int len;
 
 	i = 0;
 	len = ft_strlen(name);
 	while (data->envp[i])
 	{
-		if (ft_strncmp(data->envp[i], name, ft_strlen(name)) == 0)
+		if (ft_strncmp(data->envp[i], name, len) == 0 && data->envp[i][len] == '=')
 		{
-			printf("Name: %s\nthe new value: %s\n", name, new_value);
 			temp = ft_strjoin(name, "=");
-			debug();
-			printf("The temp: %s\n", temp);
+			if (!temp)
+			{
+				ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
+				return;
+			}
 			data->envp[i] = ft_strjoin(temp, new_value);
 			free(temp);
-			break ;
+			break;
 		}
 		i++;
 	}
@@ -491,7 +509,7 @@ int	minishell(t_data *data)
 		data->head = NULL;
 		data->arg = readline(READLINE_MSG);
 		if (data->arg == NULL || data->arg[0] == '\0')
-			return (reset_shell(data));
+			reset_shell(data);
 		add_history(data->arg);
 		parse(data->arg, &data->head, data->envp);
 		handle_input(data);

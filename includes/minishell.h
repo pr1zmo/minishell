@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/28 14:47:08 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/29 23:36:12 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,6 @@ int		ft_echo(t_data *data, char **cmd);
 int		ft_cd(t_data *data, char **cmd);
 int		modify_env_value(char *name, char *new_value, t_data *data);
 void	set_env_var(t_data *data, char *value, char *old_value);
+char	*ft_getenv(char *name, t_data *data);
 
 #endif
