@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/29 23:36:12 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:50:23 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,19 @@ typedef struct s_cmd {
 // 	struct s_cmd	*next;
 // }					t_cmd;
 
+typedef struct s_env
+{
+	char			*value;
+	struct s_env	*next;
+}	t_env;
 
 typedef struct s_data
 {
 	t_line		*head; // parsed and tokenized user input
 	char		*arg;  // This is the return of the readline function
 	int			status;	// Shell status (1=running | 0=stopped)
-	char		**envp; // an array of the envirement variables
+	// t_env		*envp; // an array of the envirement variables
+	char		**envp;
 	char		*curr_dir;
 	char		*old_dir;
 	int			pipe_count;
@@ -78,7 +84,7 @@ typedef struct s_data
 // 	char					*args;
 // 	char					**paths;
 // 	char					**envp;
-	// struct s_simple_cmds	*simple_cmds;
+// struct s_simple_cmds		*simple_cmds;
 // 	t_lexer					*lexer_list;
 // 	char					*pwd;
 // 	char					*old_pwd;
@@ -94,8 +100,13 @@ int		ft_pwd(t_data *data, char **cmd);
 int		ft_env(t_data *data, char **cmd);
 int		ft_echo(t_data *data, char **cmd);
 int		ft_cd(t_data *data, char **cmd);
+int		ft_exit(t_data *data, char **cmd);
+int		ft_export(t_data *data, char **cmd);
+int		ft_unset(t_data *data, char **cmd);
 int		modify_env_value(char *name, char *new_value, t_data *data);
 void	set_env_var(t_data *data, char *value, char *old_value);
 char	*ft_getenv(char *name, t_data *data);
+void	add_env_value(t_data *data, char *value);
+char	**realloc_env(t_data *data, int size);
 
 #endif

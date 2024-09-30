@@ -6,11 +6,36 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/29 23:50:17 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/30 20:18:15 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	printa(char *message, char **arr);
+
+char	**realloc_env(t_data *data, int size)
+{
+	char	**new_env;
+	int		i;
+
+	new_env = malloc((size + 1) * sizeof * new_env);
+	if (!new_env)
+		return (NULL);
+	i = 0;
+	while (data->envp[i] && i < size)
+	{
+		new_env[i] = ft_strdup(data->envp[i]);
+		if (data->envp[i])
+		{
+			free(data->envp[i]);
+			data->envp[i] = NULL;
+		}
+		i++;
+	}
+	free(data->envp);
+	return (new_env);
+}
 
 char *ft_getenv(char *name, t_data *data)
 {
@@ -49,9 +74,7 @@ int	modify_env_value(char *name, char *new_value, t_data *data)
 	if (!str)
 		perror("getenv");
 	else
-	{
 		set_env_var(data, name, new_value);
-	}
 	return (1);
 }
 
@@ -92,6 +115,9 @@ int	exec_builtin(t_data *data, char **cmd)
 		res = ft_echo(data, cmd);
 	else if (ft_strncmp(cmd[0], "cd", 0) == 0)
 		res = ft_cd(data, cmd);
+ 
+	else if (ft_strncmp(cmd[0], "export", 0) == 0)
+		res = ft_export(data, cmd);
 	return (res);
 }
 
@@ -112,7 +138,6 @@ int	ft_error(int error, t_data *data)
 	return (EXIT_FAILURE);
 }
 
-void	printa(char *message, char **arr);
 void	debug();
 
 void set_env_var(t_data *data, char *name, char *new_value)

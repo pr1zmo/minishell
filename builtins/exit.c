@@ -6,14 +6,15 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:48:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/30 16:31:44 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/09/30 16:24:10 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int ft_exit(void)
+int ft_exit(t_data *data, char **cmd)
 {
-    //
+    (void)data;
+	(void)cmd;
 	return (0);
 }
