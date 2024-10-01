@@ -6,28 +6,11 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:47:56 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/01 20:42:50 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 23:45:33 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-static	char	*find_value(char *name, t_list *envp)
-{
-	int		i;
-	char	*key;
-	t_list	*temp = envp;
-
-	i = 0;
-	key = ft_strchr(name, '=');
-	while (temp)
-	{
-		if (ft_strncmp(key, temp->content, ft_strlen(key)) == 0)
-			return (temp->content);
-		temp = temp->next;
-	}
-	return (NULL);
-}
 
 char	*new_substr(const char *str, int c)
 {
@@ -46,7 +29,25 @@ char	*new_substr(const char *str, int c)
 		result[i] = str[i];
 		i++;
 	}
+	result[i] = '\0';
 	return (result);
+}
+
+static	char	*find_value(char *name, t_list *envp)
+{
+	int		i;
+	char	*key;
+	t_list	*temp = envp;
+
+	i = 0;
+	key = new_substr(name, '=');
+	while (temp)
+	{
+		if (ft_strncmp(key, temp->content, ft_strlen(key)) == 0)
+			return (temp->content);
+		temp = temp->next;
+	}
+	return (NULL);
 }
 
 t_list *create_env_node(const char *key)
@@ -81,6 +82,7 @@ int ft_export(t_data *data, char **cmd)
 {
 	char	*value;
 	char	*env_var;
+	char	*new_value;
 
 	if (!cmd[1])
 		ft_env(data, cmd);
@@ -90,7 +92,8 @@ int ft_export(t_data *data, char **cmd)
 	else
 	{
 		env_var = new_substr(cmd[1], '=');
-		modify_env_value(env_var, ft_strchr(cmd[1], '='), data);
+		new_value = ft_strchr(cmd[1], '=');
+		modify_env_value(env_var, new_value + 1, data);
 	}
 	return (0);
 }

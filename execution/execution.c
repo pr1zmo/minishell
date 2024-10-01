@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/01 20:05:11 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 23:53:47 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,26 +143,31 @@ void	debug();
 
 void set_list_var(t_data *data, char *name, char *new_value)
 {
-	t_list	*temp_env = data->envp;
 	int 	len;
+	t_list *current;
+	char	*temp;
 
 	len = ft_strlen(name);
-	while (temp_env)
+	current = data->envp;
+	while (current)
 	{
-		if (ft_strncmp(temp_env->content, name, len))
+		if (ft_strncmp(current->content, name, len) == 0)
 		{
-			free(temp_env->content);
-			temp_env->content = ft_strdup(new_value);
-			if (!temp_env->content)
+			free(current->content);
+			current->content = NULL;
+			temp = ft_strjoin(name, "=");
+			current->content = ft_strjoin(temp, new_value);
+			if (!current->content)
 			{
 				ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
 				return;
 			}
 			break;
 		}
-		temp_env = temp_env->next;
+		current = current->next;
 	}
 }
+
 
 void	printa(char *message, char **str)
 {
