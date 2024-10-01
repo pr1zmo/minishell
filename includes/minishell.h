@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/01 16:06:58 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 18:59:45 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,19 @@ typedef struct s_cmd {
 // 	struct s_cmd	*next;
 // }					t_cmd;
 
-typedef struct s_env
-{
-	char			*value;
-	struct s_env	*next;
-}	t_env;
+// typedef struct s_env
+// {
+// 	char			*value;
+// 	struct s_env	*next;
+// }	t_env;
 
 typedef struct s_data
 {
 	t_line		*head; // parsed and tokenized user input
 	char		*arg;  // This is the return of the readline function
 	int			status;	// Shell status (1=running | 0=stopped)
-	// t_env		*envp; // an array of the envirement variables
-	char		**envp;
+	t_list		*envp; // an array of the envirement variables
+	char		**envp_arr;
 	char		*curr_dir;
 	char		*old_dir;
 	int			pipe_count;
@@ -109,5 +109,6 @@ void	set_env_var(t_data *data, char *value, char *old_value);
 char	*ft_getenv(char *name, t_data *data);
 void	add_env_value(t_data *data, char *value);
 char	**realloc_env(t_data *data, int size);
+void	set_list_var(t_data *data, char *name, char *new_value);
 
 #endif

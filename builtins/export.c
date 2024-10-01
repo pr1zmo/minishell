@@ -6,48 +6,91 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:47:56 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/30 20:50:05 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 20:42:50 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static	char	*find_value(char *name, char **envp)
+static	char	*find_value(char *name, t_list *envp)
 {
 	int		i;
 	char	*key;
+	t_list	*temp = envp;
 
 	i = 0;
 	key = ft_strchr(name, '=');
-	while (envp[i])
+	while (temp)
 	{
-		if (ft_strncmp(key, envp[i], ft_strlen(key)) == 0)
-			return (envp[i]);
-		i++;
+		if (ft_strncmp(key, temp->content, ft_strlen(key)) == 0)
+			return (temp->content);
+		temp = temp->next;
 	}
 	return (NULL);
 }
 
-void	add_env_value(t_data *data, char *key, char *value)
+char	*new_substr(const char *str, int c)
 {
-	// need some understanding
 	int		i;
-	char	**new_env;
-	char	*temp;
-	char	*old_value;
+	char	*result;
 
-	// if (!value)
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (str[i] != c)
+		i++;
+	result = malloc(sizeof(char) * (i + 1));
+	i = 0;
+	while (str[i] != c)
+	{
+		result[i] = str[i];
+		i++;
+	}
+	return (result);
+}
+
+t_list *create_env_node(const char *key)
+{
+	t_list *new_node = (t_list *)malloc(sizeof(t_list));
+	if (!new_node)
+		return NULL;
+	new_node->content = strdup(key);
+	if (!new_node->content)
+		return (free(new_node), NULL);
+	new_node->next = NULL;
+	return new_node;
+}
+
+void create_env_value(t_data *data, char *key)
+{
+	t_list *new_node = create_env_node(key);
+	if (!new_node)
+		return;
+	if (data->envp == NULL)
+		data->envp = new_node;
+	else
+	{
+		t_list *temp = data->envp;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = new_node;
+	}
 }
 
 int ft_export(t_data *data, char **cmd)
 {
 	char	*value;
+	char	*env_var;
 
 	if (!cmd[1])
 		ft_env(data, cmd);
 	value = find_value(cmd[1], data->envp);
-	add_env_value(data, cmd[1], value);
-	// add_env_value(data, cmd[1]);
-	// value = find_value(cmd[1], data->envp);
+	if (!value)
+		create_env_value(data, cmd[1]);
+	else
+	{
+		env_var = new_substr(cmd[1], '=');
+		modify_env_value(env_var, ft_strchr(cmd[1], '='), data);
+	}
 	return (0);
 }

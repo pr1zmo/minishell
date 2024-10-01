@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/29 13:03:12 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 19:02:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	checkspaces(char *line)
 	return (1);
 }
 
-void	get_env(t_line **head, char **env)
+static void	get_env(t_line **head, char **env)
 {
 	int		i;
 	char	**tmp;

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/30 20:18:15 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 20:05:11 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,42 @@
 
 void	printa(char *message, char **arr);
 
-char	**realloc_env(t_data *data, int size)
-{
-	char	**new_env;
-	int		i;
+// char	**realloc_env(t_data *data, int size)
+// {
+// 	char	**new_env;
+// 	int		i;
 
-	new_env = malloc((size + 1) * sizeof * new_env);
-	if (!new_env)
-		return (NULL);
-	i = 0;
-	while (data->envp[i] && i < size)
-	{
-		new_env[i] = ft_strdup(data->envp[i]);
-		if (data->envp[i])
-		{
-			free(data->envp[i]);
-			data->envp[i] = NULL;
-		}
-		i++;
-	}
-	free(data->envp);
-	return (new_env);
-}
+// 	new_env = malloc((size + 1) * sizeof * new_env);
+// 	if (!new_env)
+// 		return (NULL);
+// 	i = 0;
+// 	while (data->envp[i] && i < size)
+// 	{
+// 		new_env[i] = ft_strdup(data->envp[i]);
+// 		if (data->envp[i])
+// 		{
+// 			free(data->envp[i]);
+// 			data->envp[i] = NULL;
+// 		}
+// 		i++;
+// 	}
+// 	free(data->envp);
+// 	return (new_env);
+// }
 
 char *ft_getenv(char *name, t_data *data)
 {
-	int i;
+	int 	i;
+	t_list	*temp = data->envp;
 
 	if (!name || !data || !data->envp)
 		return NULL;
 	i = 0;
-	while (data->envp[i])
+	while (temp)
 	{
-		if (ft_strncmp(data->envp[i], name, ft_strlen(name)) == 0 && data->envp[i][ft_strlen(name)] == '=')
-			return (ft_substr(data->envp[i], ft_strlen(name) + 1, ft_strlen(data->envp[i]) - ft_strlen(name) - 1));
-		i++;
+		if (ft_strncmp(temp->content, name, ft_strlen(name)))
+			return (ft_strdup(temp->content));
+		temp = temp->next;
 	}
 	return (NULL);
 }
@@ -74,7 +75,7 @@ int	modify_env_value(char *name, char *new_value, t_data *data)
 	if (!str)
 		perror("getenv");
 	else
-		set_env_var(data, name, new_value);
+		set_list_var(data, name, new_value);
 	return (1);
 }
 
@@ -140,29 +141,26 @@ int	ft_error(int error, t_data *data)
 
 void	debug();
 
-void set_env_var(t_data *data, char *name, char *new_value)
+void set_list_var(t_data *data, char *name, char *new_value)
 {
-	int i;
-	char *temp;
-	int len;
+	t_list	*temp_env = data->envp;
+	int 	len;
 
-	i = 0;
 	len = ft_strlen(name);
-	while (data->envp[i])
+	while (temp_env)
 	{
-		if (ft_strncmp(data->envp[i], name, len) == 0 && data->envp[i][len] == '=')
+		if (ft_strncmp(temp_env->content, name, len))
 		{
-			temp = ft_strjoin(name, "=");
-			if (!temp)
+			free(temp_env->content);
+			temp_env->content = ft_strdup(new_value);
+			if (!temp_env->content)
 			{
 				ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
 				return;
 			}
-			data->envp[i] = ft_strjoin(temp, new_value);
-			free(temp);
 			break;
 		}
-		i++;
+		temp_env = temp_env->next;
 	}
 }
 
@@ -357,7 +355,7 @@ int	single_command(t_data *data, char *cmd)
 		if (pid == -1)
 			return (ft_error(1, data));
 		if (pid == 0)
-			exec_cmd(cmd, data->envp, data);
+			exec_cmd(cmd, data->envp_arr, data);
 		waitpid(0, NULL, 0);
 		temp = temp->next;
 	}
@@ -510,7 +508,7 @@ void	complex_command(t_data *data)
 	cmd_list = build_cmd_list(temp);
 	show_cmd(cmd_list);
 	if (cmd_list)
-		execute_cmds(cmd_list, data->envp, data);
+		execute_cmds(cmd_list, data->envp_arr, data);
 }
 
 int	handle_input(t_data *data)
@@ -527,16 +525,37 @@ int	handle_input(t_data *data)
 	return (0);
 }
 
+char	**set_list_arra(t_list *env)
+{
+	char	**result;
+	t_list	*temp = env;
+	
+	int i = ft_lstsize(env);
+	result = malloc(sizeof(char *) * (i + 1));
+	if (!result)
+		return NULL;
+	result[i] = NULL; // Null-terminate the array
+	i = 0;
+	while (temp)
+	{
+		result[i] = temp->content;
+		temp = temp->next;
+		i++;
+	}
+	return (result);
+}
+
 int	minishell(t_data *data)
 {
 	while (1)
 	{
 		data->head = NULL;
 		data->arg = readline(READLINE_MSG);
+		data->envp_arr = set_list_arra(data->envp);
 		if (data->arg == NULL || data->arg[0] == '\0')
 			reset_shell(data);
 		add_history(data->arg);
-		parse(data->arg, &data->head, data->envp);
+		parse(data->arg, &data->head, data->envp_arr);
 		handle_input(data);
 		if (data->status == 0)
 			break ;

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/01 16:09:11 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 19:03:08 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,20 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
-t_env	*set_env(char **envp)
+t_list	*set_env(char **envp)
 {
-	t_env	*env;
-	t_env	*new;
+	t_list	*env;
+	t_list	*new;
 	int		i;
 
 	i = 0;
 	env = NULL;
 	while (envp[i])
 	{
-		new = malloc(sizeof(t_env));
+		new = malloc(sizeof(t_list));
 		if (!new)
 			return (NULL);
-		new->value = ft_strdup(envp[i]);
+		new->content = ft_strdup(envp[i]);
 		new->next = env;
 		env = new;
 		i++;
