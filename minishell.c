@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/27 14:36:27 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:09:11 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,25 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
-char	**set_env(char **envp)
+t_env	*set_env(char **envp)
 {
-	char	**rtn;
-	size_t	i;
+	t_env	*env;
+	t_env	*new;
+	int		i;
 
 	i = 0;
-	while (envp[i] != NULL)
-		i++;
-	rtn = ft_calloc(sizeof(char *), i + 1);
-	if (!rtn)
-		return (NULL);
-	i = 0;
-	while (envp[i] != NULL)
+	env = NULL;
+	while (envp[i])
 	{
-		rtn[i] = ft_strdup(envp[i]);
-		if (rtn[i] == NULL)
-		{
-			free_arr(rtn);
-			return (rtn);
-		}
+		new = malloc(sizeof(t_env));
+		if (!new)
+			return (NULL);
+		new->value = ft_strdup(envp[i]);
+		new->next = env;
+		env = new;
 		i++;
 	}
-	return (rtn);
+	return (env);
 }
 
 int	main(int ac, char **av, char **env)

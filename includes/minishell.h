@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/30 20:50:23 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:06:58 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 # define MAX_PATH 4096
 
 typedef struct s_token t_line;
+
 typedef struct s_builtin
 {
 	char		*command;
