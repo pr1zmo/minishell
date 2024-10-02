@@ -6,36 +6,13 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/01 23:53:47 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:02:46 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 void	printa(char *message, char **arr);
-
-// char	**realloc_env(t_data *data, int size)
-// {
-// 	char	**new_env;
-// 	int		i;
-
-// 	new_env = malloc((size + 1) * sizeof * new_env);
-// 	if (!new_env)
-// 		return (NULL);
-// 	i = 0;
-// 	while (data->envp[i] && i < size)
-// 	{
-// 		new_env[i] = ft_strdup(data->envp[i]);
-// 		if (data->envp[i])
-// 		{
-// 			free(data->envp[i]);
-// 			data->envp[i] = NULL;
-// 		}
-// 		i++;
-// 	}
-// 	free(data->envp);
-// 	return (new_env);
-// }
 
 char *ft_getenv(char *name, t_data *data)
 {
@@ -116,7 +93,8 @@ int	exec_builtin(t_data *data, char **cmd)
 		res = ft_echo(data, cmd);
 	else if (ft_strncmp(cmd[0], "cd", 0) == 0)
 		res = ft_cd(data, cmd);
- 
+	else if (ft_strncmp(cmd[0], "unset", 0) == 0)
+		res = ft_unset(data, cmd);
 	else if (ft_strncmp(cmd[0], "export", 0) == 0)
 		res = ft_export(data, cmd);
 	return (res);

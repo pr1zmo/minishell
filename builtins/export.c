@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:47:56 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/01 23:45:33 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:05:30 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,26 @@
 char	*new_substr(const char *str, int c)
 {
 	int		i;
+	int		j;
 	char	*result;
 
+	j = 0;
 	i = 0;
 	if (!str)
 		return (NULL);
-	while (str[i] != c)
+	while (str[i] && str[i] != c)
 		i++;
 	result = malloc(sizeof(char) * (i + 1));
-	i = 0;
-	while (str[i] != c)
+	while (j < i)
 	{
-		result[i] = str[i];
-		i++;
+		result[j] = str[j];
+		j++;
 	}
 	result[i] = '\0';
 	return (result);
 }
 
-static	char	*find_value(char *name, t_list *envp)
+char	*find_value(char *name, t_list *envp)
 {
 	int		i;
 	char	*key;
@@ -50,7 +51,7 @@ static	char	*find_value(char *name, t_list *envp)
 	return (NULL);
 }
 
-t_list *create_env_node(const char *key)
+static t_list	*create_env_node(const char *key)
 {
 	t_list *new_node = (t_list *)malloc(sizeof(t_list));
 	if (!new_node)

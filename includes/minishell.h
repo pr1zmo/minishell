@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/01 18:59:45 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/02 11:43:15 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,46 +54,17 @@ typedef struct s_cmd {
 	struct s_cmd	*next;
 }					t_cmd;
 
-// typedef struct s_cmd
-// {
-// 	char			**str;
-// 	int				type;
-// 	int				priority;
-// 	struct s_cmd	*next;
-// }					t_cmd;
-
-// typedef struct s_env
-// {
-// 	char			*value;
-// 	struct s_env	*next;
-// }	t_env;
-
 typedef struct s_data
 {
-	t_line		*head; // parsed and tokenized user input
-	char		*arg;  // This is the return of the readline function
-	int			status;	// Shell status (1=running | 0=stopped)
-	t_list		*envp; // an array of the envirement variables
+	t_line		*head;
+	char		*arg;
+	int			status;
+	t_list		*envp;
 	char		**envp_arr;
 	char		*curr_dir;
 	char		*old_dir;
 	int			pipe_count;
 }				t_data;
-
-// typedef struct s_tools
-// {
-// 	char					*args;
-// 	char					**paths;
-// 	char					**envp;
-// struct s_simple_cmds		*simple_cmds;
-// 	t_lexer					*lexer_list;
-// 	char					*pwd;
-// 	char					*old_pwd;
-// 	int						pipes;
-// 	int						*pid;
-// 	bool					heredoc;
-// 	bool					reset;
-// }	t_tools;
 
 int		minishell(t_data *data);
 void	free_arr(char **arr);
@@ -107,8 +78,9 @@ int		ft_unset(t_data *data, char **cmd);
 int		modify_env_value(char *name, char *new_value, t_data *data);
 void	set_env_var(t_data *data, char *value, char *old_value);
 char	*ft_getenv(char *name, t_data *data);
-void	add_env_value(t_data *data, char *value);
-char	**realloc_env(t_data *data, int size);
+void	create_env_value(t_data *data, char *key);
 void	set_list_var(t_data *data, char *name, char *new_value);
+char	*find_value(char *name, t_list *envp);
+char	*new_substr(const char *str, int c);
 
 #endif
