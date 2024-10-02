@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/28 04:56:41 by mouad            ###   ########.fr       */
+/*   Updated: 2024/10/02 09:49:26 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	parse(char *str, t_line **head, char **env)
+void	parse(char *str, t_line **head, char **env, t_parse *data)
 {
-	t_line	*tmp;
 	char	**arg;
 	char	*line;
 
@@ -23,15 +22,12 @@ void	parse(char *str, t_line **head, char **env)
 	if (!checkquotes(str))
 		return ;
 	line = spacing(str);
+	init(data, env);
+	printf("%s\n", line);
+	line = find_and_replace(line, data->env);
+	printf("%s\n", line);
 	arg = ft_split(line, ' ');
 	if (!arg)
 		return ;
-	lexer(arg, head);
-	get_env(head, env);
-	tmp = *head;
-	while (tmp)
-	{
-		expand(tmp->str, tmp->env);
-		tmp = tmp->next;
-	}
+	lexer(arg, head, data);
 }

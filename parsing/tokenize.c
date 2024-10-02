@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:58 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/28 04:05:15 by mouad            ###   ########.fr       */
+/*   Updated: 2024/10/02 09:26:09 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c)
 
 	tmp->str = malloc(sizeof(char *) * 2);
 	argument = malloc(sizeof(char) * (count_args(arg, *i, c) + 1));
+	if (!tmp->str || !argument)
+		return ;
 	found[0] = 0;
 	found[1] = 0;
 	k = 0;
@@ -90,6 +92,8 @@ void	tokenize_arg(char **arg, int *i, t_line *tmp)
 	}
 	j = 0;
 	tmp->str = malloc(sizeof(char *) * (count + 1));
+	if (!tmp->str)
+		return ;
 	while (arg[*i] && get_token(arg[*i]) == NONE \
 	&& !ft_strchr(arg[*i], '\'') && !ft_strchr(arg[*i], '\"'))
 	{
@@ -105,6 +109,8 @@ void	tokenize_arg(char **arg, int *i, t_line *tmp)
 void	tokenize(char *arg, t_line *tmp)
 {
 	tmp->str = malloc(sizeof(char *) * 2);
+	if (!tmp->str)
+		return ;
 	tmp->str[0] = ft_strdup(arg);
 	tmp->str[1] = NULL;
 	tmp->type = get_token(arg);
@@ -119,7 +125,11 @@ void	tokenize_cmd(char *str, t_line *tmp)
 	i = 0;
 	j = 0;
 	tmp->str = malloc(sizeof(char *) * 2);
+	if (!tmp->str)
+		return ;
 	tmp->str[0] = malloc(ft_strlen(str) + 1);
+	if (!tmp->str[0])
+		return ;
 	while (str[i])
 		tmp->str[0][j++] = str[i++];
 	tmp->str[0][j] = '\0';

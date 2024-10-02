@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/09/25 04:28:47 by mouad            ###   ########.fr       */
+/*   Updated: 2024/10/02 10:12:46 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	main(int ac, char **av, char **env)
 {
 	(void)av;
 	char	*str;
+	t_parse	data;
 	t_line	*head;
 
 	if (ac != 1)
@@ -27,7 +28,7 @@ int	main(int ac, char **av, char **env)
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
-			parse(str, &head, env);
+			parse(str, &head, env, &data);
 			while (head)
 			{
 				printf("  this is a node\n");

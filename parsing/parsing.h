@@ -22,22 +22,28 @@ typedef enum
 	CMD			// 8
 }	t_token;
 
+typedef struct s_parsing_data
+{
+	int		SHLVL;
+	char	**env;
+}	t_parse;
+
 typedef struct s_token
 {
 	char 			**str;
-	char			**env;
 	t_token			type;
+	t_parse			*data;
 	struct s_token	*next;
 }	t_line;
 
-void	lexer(char **arg, t_line **head);
+void	ft_free(char **arg);
+void	lexer(char **arg, t_line **head, t_parse *data);
 void	tokenize_cmd(char *str, t_line *tmp);
 void	tokenize(char *arg, t_line *tmp);
 void	tokenize_arg(char **arg, int *i, t_line *tmp);
 void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c);
-void	parse(char *line, t_line **head, char **env);
-void	get_env(t_line **head, char **env);
-void	expand(t_line **head);
+void	parse(char *line, t_line **head, char **env, t_parse *data);
+void	init(t_parse *data, char **env);
 int		check_token(int c);
 int		special_char(char *str, int i);
 int		checkquotes(char *line);
@@ -46,6 +52,8 @@ int		quotes_open(char *s, int i);
 int		is_space(char c);
 int		checkspaces(char *line);
 int		checkquotes(char *line);
+int		check_case_1(char c);
+char	*find_and_replace(char *line, char **env);
 char	*spacing(char *line);
 t_token	get_token(char *str);
 

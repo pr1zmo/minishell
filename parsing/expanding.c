@@ -1,63 +1,107 @@
 #include "parsing.h"
 
-int	find(char *str, int k,char **env)
+static int	check_case(char *str, int i)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	j = k + 1;
-	while (str[j] && !is_space(str[j]) && str[j] != '\"' && str[j] != '\'')
-		j++;
-	while (env[i])
-	{
-		if (!ft_strncmp(env, str, j))
-			return (i);
-		i++;
-	}
+	if (!str[i] || isspace(str[i]) || str[i] == '=' \
+	|| str[i] == '\'' || str[i] == '\"')
+		return (1);
 	return (0);
 }
 
-char	*replace(str, i,env, j)
+int	find(char *tmp, int i, char **env, int *size)
 {
-	char	*tmp;
-	int		len;
+	int	j;
 
-	len = 0;
-	while (str[len])
+	j = 0;
+	*size = 0;
+	i++;
+	while (tmp[i + *size] && !check_case(tmp, i + *size))
+		*size += 1;
+	tmp += i;
+	while (env[j])
+	{
+		if (!ft_strncmp(tmp, env[j], *size) && env[j][*size] == '=')
+			return (j);
+		j++;
+	}
+	return (-1);
 }
 
-char 	*find_and_replace(char *str, int i,char **env)
+char	*replace(char *tmp, int k, char **env, int size)
 {
-	char	*tmp;
-	int		condition;
-
-	condition = find(str, i , env);
-	if (condition)
-		tmp = replace(str, i, env, condition);
-	else if (!condition)
-		tmp = delete(str, i)
-	return (tmp);
-}
-
-void	expand(char **str, char **env)
-{
-	char	*tmp;
+	char	*new;
 	int		i;
 	int		j;
+	int		env_len;
 
+	i = 0;
+	env_len = 0;
+	while (env[k][env_len] && env[k][env_len] != '=')
+		env_len++;
+	env_len++;
+	new = malloc(ft_strlen(tmp) + ft_strlen(env[k] + env_len) - size + 1);
+	if (!new)
+		return (NULL);
+	while (tmp[i] && tmp[i] != -1)
+	{
+		new[i] = tmp[i];
+		i++;
+	}
+	j = i + size + 1;
+	while (env[k][env_len])
+		new[i++] = env[k][env_len++];
+	while (tmp[j])
+		new[i++] = tmp[j++];
+	new[i] = '\0';
+	free(tmp);
+	return (new);
+}
+
+char	*delete(char *tmp, int size)
+{
+	char	*new;
+	int		j;
+	int		i;
+
+	new = malloc(ft_strlen(tmp) - size + 1);
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (tmp[i] && tmp[i] != -1)
+	{
+		new[i] = tmp[i];
+		i++;
+	}
+	j = i;
+	i = i + size + 1;
+	while (tmp[i])
+		new[j++] = tmp[i++];
+	new[j] = '\0';
+	free(tmp);
+	return (new);
+}
+
+char	*find_and_replace(char *str, char **env)
+{
+	int		i;
+	int		size;
+	int		ca;
+	char	*tmp;
+
+	tmp = ft_strdup(str);
 	i = 0;
 	while (str[i])
 	{
-		j = 0;
-		while (str[i][j])
+		if (str[i] == -1)
 		{
-			if (str[i][j] == -1 && (str[i + 1] == ' ' || \
-			get_token(str[i + 1]) || str[i + 1] == '$'))
-				str[i][j] == '$';
-			else if (str[i][j] == -1 && find())
-			j++;
+			ca = find(str, i, env, &size);
+			if (ca >= 0)
+				tmp = replace(tmp, ca, env, size);
+			else
+				tmp = delete(tmp, size);
 		}
 		i++;
 	}
+	free(str);
+	return (tmp);
 }

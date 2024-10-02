@@ -52,6 +52,8 @@ char	*spacing(char *line)
 	i = 0;
 	j = 0;
 	str = malloc(count_spaced_string(line) + 1);
+	if (!str)
+		return (NULL);
 	while (line[i])
 	{
 		if (i && left_space(line, i))

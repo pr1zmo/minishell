@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 20:49:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/09/27 03:20:53 by mouad            ###   ########.fr       */
+/*   Updated: 2024/10/02 06:39:15 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,5 @@ char	**ft_split(char const *s, char c)
 			s++;
 	}
 	split[i] = NULL;
-	free(s);
 	return (split);
 }
