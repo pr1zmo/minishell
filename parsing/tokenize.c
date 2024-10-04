@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/10/04 13:18:36 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:09:31 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../includes/minishell.h"
 
@@ -137,5 +136,4 @@ void	tokenize_cmd(char *str, t_line *tmp)
 	tmp->str[1] = NULL;
 	tmp->type = CMD;
 	tmp->next = NULL;
-	printf("str == %s, tmp == %s\n", str, tmp->str[0]);
 }

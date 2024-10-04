@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/04 13:16:41 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:09:15 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ int	count_pipes(t_data *data)
 void	debug()
 {
 	static int count;
-	
+
 	count += 1;
 	printf("Here: %d\n", count);
 }
@@ -277,7 +277,7 @@ char	*array_to_string(t_line *temp)
 		for (size_t i = 0; current->str[i]; i++)
 		{
 			ft_strlcat(cmd, current->str[i], cmd_size);
-			if (current->str[i + 1] || (current->next && 
+			if (current->str[i + 1] || (current->next &&
 				(current->next->type == 7 || current->next->type == 8)))
 				ft_strlcat(cmd, " ", cmd_size);
 		}
@@ -512,7 +512,7 @@ char	**set_list_arra(t_list *env)
 {
 	char	**result;
 	t_list	*temp = env;
-	
+
 	int i = ft_lstsize(env);
 	result = malloc(sizeof(char *) * (i + 1));
 	if (!result)
@@ -530,15 +530,19 @@ char	**set_list_arra(t_list *env)
 
 int	minishell(t_data *data)
 {
+	t_line	*head;
+	t_parse	p_data;
+
 	while (1)
 	{
-		data->head = NULL;
+		head = NULL;
 		data->arg = readline(READLINE_MSG);
 		data->envp_arr = set_list_arra(data->envp);
 		if (data->arg == NULL || data->arg[0] == '\0')
 			reset_shell(data);
 		add_history(data->arg);
-		parse(data->arg, &data->head, data->envp_arr);
+		parse(data->arg, &head, data->envp_arr, &p_data);
+		data->head = head;
 		handle_input(data);
 		if (data->status == 0)
 			break ;

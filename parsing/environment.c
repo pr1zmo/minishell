@@ -1,4 +1,5 @@
-#include "parsing.h"
+// #include "parsing.h"
+#include "../includes/minishell.h"
 
 void	init(t_parse *data, char **env)
 {

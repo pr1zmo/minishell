@@ -1,4 +1,5 @@
-#include "parsing.h"
+// #include "parsing.h"
+#include "../includes/minishell.h"
 
 int	check_dollar(char *s, int i)
 {

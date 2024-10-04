@@ -1,4 +1,5 @@
-#include "parsing.h"
+// #include "parsing.h"
+#include "../includes/minishell.h"
 
 static int	check_case(char *str, int i)
 {
