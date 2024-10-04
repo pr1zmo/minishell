@@ -4,3 +4,6 @@
 minishell
 .*
 /example
+/_*
+/pipex
+test*
