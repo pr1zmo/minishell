@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:57:36 by mel-bouh          #+#    #+#             */
-/*   Updated: 2023/11/06 22:36:33 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/02 06:40:23 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *s1)
 	int		i;
 
 	i = 0;
+	if (!s1)
+		return (NULL);
 	s2 = (char *)malloc(ft_strlen(s1) + 1);
 	if (s2 == NULL)
 		return (NULL);

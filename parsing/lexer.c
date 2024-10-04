@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:49 by prizmo            #+#    #+#             */
-/*   Updated: 2024/08/26 15:13:11 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/04 13:18:26 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	is_command(char **arg, int i)
 		return (0);
 }
 
-void	lexer(char **arg, t_line **head)
+void	lexer(char **arg, t_line **head, t_parse *data)
 {
 	t_line	*tmp;
 	int		i;
@@ -76,6 +76,8 @@ void	lexer(char **arg, t_line **head)
 			tokenize(arg[i++], tmp);
 		else
 			tokenize_arg(arg, &i, tmp);
+		tmp->data = data;
 		lstadd_back(head, tmp);
 	}
+	ft_free(arg);
 }
