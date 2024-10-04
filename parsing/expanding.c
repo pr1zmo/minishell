@@ -5,6 +5,8 @@ static int	check_case(char *str, int i)
 	if (!str[i] || isspace(str[i]) || str[i] == '=' \
 	|| str[i] == '\'' || str[i] == '\"')
 		return (1);
+	if (check_token(str[i]))
+		return (1);
 	return (0);
 }
 
@@ -15,7 +17,7 @@ int	find(char *tmp, int i, char **env, int *size)
 	j = 0;
 	*size = 0;
 	i++;
-	while (tmp[i + *size] && !check_case(tmp, i + *size))
+	while (!check_case(tmp, i + *size))
 		*size += 1;
 	tmp += i;
 	while (env[j])
