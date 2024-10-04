@@ -10,7 +10,7 @@ PARS_F	= parsing/parsing.c parsing/lexer.c \
 FILES	= $(PARS_F) $(EXEC_F)
 OBJS	=	$(FILES:.c=.o)
 LIBFT	=	libft/libft.a
-FLAGS	= #-Wall -Wextra -Werror -g
+FLAGS	= -fsanitize=address #-Wall -Wextra -Werror -g
 
 all: $(NAME)
 
