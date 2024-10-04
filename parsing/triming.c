@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   triming.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 11:18:29 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/04 14:38:37 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/04 20:33:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static char	*trim(char *str)
 	{
 		if (check_trim(str, i))
 			i++;
+		if (!str[i])
+			break ;
 		new[j++] = str[i++];
 	}
 	new[j] = '\0';
