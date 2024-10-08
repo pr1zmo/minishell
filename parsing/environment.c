@@ -78,7 +78,7 @@ void	init(t_env **data, char **env)
 	int		i;
 
 	i = 0;
-	if (!env)
+	if (!env[0])
 		create_env(data);
 	else
 		set_env(data, env);
