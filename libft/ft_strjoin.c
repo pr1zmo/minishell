@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 16:40:33 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/09/29 22:04:41 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/08 16:06:09 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*ft_strjoin(char *line, char *buf)
 {
-	char	*str;
+	char	*join;
 	int		i;
 	int		j;
 
@@ -22,20 +22,14 @@ char	*ft_strjoin(char *line, char *buf)
 	j = 0;
 	if (!line || !buf)
 		return (NULL);
-	str = (char *)malloc(ft_strlen(line) + ft_strlen(buf) + 1);
-	if (!str)
+	join = (char *)malloc(ft_strlen(line) + ft_strlen(buf) + 1);
+	if (!join)
 		return (NULL);
-	while (line[i])
-	{
-		str[i] = line[i];
-		i++;
-	}
-	while (buf[j])
-	{
-		str[i] = buf[j];
-		i++;
-		j++;
-	}
-	str[i] = '\0';
-	return (str);
+	if (line)
+		ft_strlcat(join, line, ft_strlen(line) + 1);
+	if (buf)
+		ft_strlcat(join, buf, ft_strlen(buf) + ft_strlen(line) + 1);
+	if (!join[0])
+		return (free(join), NULL);
+	return (free(line), join);
 }
