@@ -1474,18 +1474,15 @@
 		{
 			"id": "pointer:pointer",
 			"typeName": "pointer",
-			"x": 1582.735655288213,
-			"y": 1733.0824390452444,
-			"lastActivityTimestamp": 1727723970389,
+			"x": 1447.0964804662713,
+			"y": 1500.86691341205,
+			"lastActivityTimestamp": 1728067756668,
 			"meta": {}
 		},
 		{
 			"followingUserId": null,
 			"opacityForNextShape": 1,
-			"stylesForNextShape": {
-				"tldraw:color": "black",
-				"tldraw:font": "sans"
-			},
+			"stylesForNextShape": {},
 			"brush": null,
 			"scribbles": [],
 			"cursor": {
@@ -1499,8 +1496,8 @@
 			"screenBounds": {
 				"x": 0,
 				"y": 0,
-				"w": 1330,
-				"h": 1224
+				"w": 988,
+				"h": 907
 			},
 			"insets": [
 				false,
@@ -1515,7 +1512,7 @@
 			"isChatting": false,
 			"highlightedUserIds": [],
 			"isFocused": true,
-			"devicePixelRatio": 2,
+			"devicePixelRatio": 1,
 			"isCoarsePointer": false,
 			"isHoveringCanvas": true,
 			"openMenus": [],
@@ -1528,12 +1525,10 @@
 			"typeName": "instance"
 		},
 		{
-			"editingShapeId": "shape:7P44fsplHa9KC7bBQxPks",
+			"editingShapeId": null,
 			"croppingShapeId": null,
-			"selectedShapeIds": [
-				"shape:7P44fsplHa9KC7bBQxPks"
-			],
-			"hoveredShapeId": "shape:7P44fsplHa9KC7bBQxPks",
+			"selectedShapeIds": [],
+			"hoveredShapeId": null,
 			"erasingShapeIds": [],
 			"hintingShapeIds": [],
 			"focusedGroupId": null,
@@ -1543,35 +1538,12 @@
 			"typeName": "instance_page_state"
 		},
 		{
-			"x": -839.7356552882129,
-			"y": -1210.0824390452444,
-			"z": 1,
+			"x": -323.98552097355514,
+			"y": -316.68043346353676,
+			"z": 0.29471709558377496,
 			"meta": {},
 			"id": "camera:page:page",
 			"typeName": "camera"
-		},
-		{
-			"x": 1208.805967788213,
-			"y": 969.9134937327444,
-			"rotation": 0,
-			"isLocked": false,
-			"opacity": 1,
-			"meta": {},
-			"id": "shape:7P44fsplHa9KC7bBQxPks",
-			"type": "text",
-			"props": {
-				"color": "black",
-				"size": "m",
-				"w": 1603.5078125,
-				"text": "NVM_INC=/Users/zelbassa/.nvm/versions/node/v20.16.0/include/node\nTERM_PROGRAM=iTerm.app\nNVM_CD_FLAGS=-q\n_P9K_TTY=/dev/ttys000\nTERM=xterm-256color\nSHELL=/bin/zsh\nTMPDIR=/var/folders/zz/zyxvpxvq6csfxvn_n000cgc80033v2/T/\nTERM_PROGRAM_VERSION=3.4.16\nTERM_SESSION_ID=w0t0p1:64D22903-CA0A-4752-A9C9-0CB61158F2A3\nZSH=/Users/zelbassa/.oh-my-zsh\nNVM_DIR=/Users/zelbassa/.nvm\nUSER=zelbassa\nLD_LIBRARY_PATH=/Users/zelbassa/local/lib:\nLS_COLORS=di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43\nCOMMAND_MODE=unix2003\nSSH_AUTH_SOCK=/private/tmp/com.apple.launchd.CJeBJpnB9s/Listeners\n__CF_USER_TEXT_ENCODING=0x0:0:0\nPAGER=less\nLSCOLORS=Gxfxcxdxbxegedabagacad\nPATH=/Users/zelbassa/.nvm/versions/node/v20.16.0/bin:/Users/zelbassa/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki\nLaunchInstanceID=31C9CCD5-9236-4B0D-A008-FCB4FF3E23CA\nPWD=/Users/zelbassa\nP9K_SSH=0\nzizi=\nP9K_TTY=old\nLANG=en_US.UTF-8\nITERM_PROFILE=Default\nXPC_FLAGS=0x0\nXPC_SERVICE_NAME=0\nSHLVL=2\nHOME=/Users/zelbassa\nCOLORFGBG=7;0\nLC_TERMINAL_VERSION=3.4.16\nDYLD_LIBRARY_PATH=/Users/zelbassa/local/lib:\nITERM_SESSION_ID=w0t0p1:64D22903-CA0A-4752-A9C9-0CB61158F2A3\nLESS=-R\nLOGNAME=zelbassa\nNVM_BIN=/Users/zelbassa/.nvm/versions/node/v20.16.0/bin\n_P9K_SSH_TTY=/dev/ttys000\nLC_TERMINAL=iTerm2\nSECURITYSESSIONID=186a3\nCOLORTERM=truecolor\n_=/usr/bin/env",
-				"font": "sans",
-				"textAlign": "start",
-				"autoSize": true,
-				"scale": 1
-			},
-			"parentId": "page:page",
-			"index": "aKB1a",
-			"typeName": "shape"
 		}
 	]
 }

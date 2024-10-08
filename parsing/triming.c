@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 11:18:29 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/04 20:30:35 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/08 15:51:52 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static char	*trim(char *str)
 	{
 		if (check_trim(str, i))
 			i++;
+		if (!str[i])
+			break ;
 		if (!str[i])
 			break ;
 		new[j++] = str[i++];
