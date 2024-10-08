@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/02 10:12:46 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:23:03 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	main(int ac, char **av, char **env)
 		{
 			add_history(str);
 			parse(str, &head, env, &data);
+			printf("%p\n", data.env);
 			while (head)
 			{
 				printf("  this is a node\n");

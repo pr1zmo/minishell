@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 16:40:33 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/08/12 15:57:54 by mouad            ###   ########.fr       */
+/*   Updated: 2024/10/07 15:00:42 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ char	*ft_strjoin(char *line, char *buf)
 		ft_strlcat(join, buf, ft_strlen(buf) + ft_strlen(line) + 1);
 	if (!join[0])
 		return (free(join), NULL);
-	return (free(line), join);
+	return (join);
 }
