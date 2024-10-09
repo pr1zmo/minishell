@@ -23,6 +23,16 @@ typedef enum
 	CMD			// 8
 }	t_token;
 
+typedef struct	s_cmd
+{
+	char			**argv;
+	char			*input_file;
+	char			*output_file;
+	int				type;
+	int				*pipe_fd;
+	struct s_cmd	*next;
+}	t_cmd;
+
 typedef struct	s_env
 {
 	char			*content;
@@ -52,6 +62,8 @@ void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c);
 void	parse(char *line, t_line **head, char **env, t_parse *data);
 void	init(t_env **data, char **env);
 void	triming_quotes(t_line *head);
+void	get_final_list(t_line **head, t_cmd **cmd);
+void	free_line(t_line **head);
 int		check_token(int c);
 int		special_char(char *str, int i);
 int		checkquotes(char *line);
