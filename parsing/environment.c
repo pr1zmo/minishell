@@ -16,7 +16,7 @@ static void	env_lstadd_back(t_env **head, t_env *new)
 	tmp->next = new;
 }
 
-void	set_env(t_env **head, char **envp)
+static void	set_env(t_env **head, char **envp)
 {
 	t_env	*new;
 	int		i;

@@ -9,6 +9,7 @@
 # include <readline/history.h>
 # include "minishell.h"
 
+
 # define PATH_MAX 4096
 typedef enum
 {
@@ -23,15 +24,7 @@ typedef enum
 	CMD			// 8
 }	t_token;
 
-typedef struct	s_cmd
-{
-	char			**argv;
-	char			*input_file;
-	char			*output_file;
-	int				type;
-	int				*pipe_fd;
-	struct s_cmd	*next;
-}	t_cmd;
+typedef struct s_cmd t_cmd;
 
 typedef struct	s_env
 {

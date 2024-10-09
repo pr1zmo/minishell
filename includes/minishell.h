@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/02 11:43:15 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/09 18:21:57 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_cmd {
 	char			*input_file;  
 	char			*output_file;
 	int				type;
+	int				*pipe_fd;
 	struct s_cmd	*next;
 }					t_cmd;
 

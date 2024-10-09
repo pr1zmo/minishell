@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/10/09 18:02:43 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/09 18:24:11 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,12 @@
 
 char	*ft_strjoin(char *line, char *buf)
 {
-	char	*str;
-	int		i;
-	int		j;
+	char	*join;
 
-	i = 0;
-	j = 0;
-	if (!line || !buf)
+	if (!line && !buf)
 		return (NULL);
-	str = (char *)malloc(ft_strlen(line) + ft_strlen(buf) + 1);
-	if (!str)
+	join = (char *)malloc(ft_strlen(line) + ft_strlen(buf) + 1);
+	if (!join)
 		return (NULL);
 	join[0] = '\0';
 	if (line)
