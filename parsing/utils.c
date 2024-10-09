@@ -1,18 +1,5 @@
 #include "../includes/parsing.h"
 
-void	ft_free(char **arg)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		free(arg[i]);
-		i++;
-	}
-	free(arg);
-}
-
 int	is_space(char c)
 {
 	if ((c >= 9 && c <= 13) || c == 32)

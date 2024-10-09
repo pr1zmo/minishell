@@ -11,7 +11,7 @@ static int	check_case(char *str, int i)
 	return (0);
 }
 
-int	find(char *tmp, int i, char **env, int *size)
+int	find(char *tmp, int i, t_env *env, int *size)
 {
 	int	j;
 
@@ -21,16 +21,17 @@ int	find(char *tmp, int i, char **env, int *size)
 	while (!check_case(tmp, i + *size))
 		*size += 1;
 	tmp += i;
-	while (env[j])
+	while (env)
 	{
-		if (!ft_strncmp(tmp, env[j], *size) && env[j][*size] == '=')
+		if (!ft_strncmp(tmp, env->content, *size) && env->content[*size] == '=')
 			return (j);
+		env = env->next;
 		j++;
 	}
 	return (-1);
 }
 
-char	*replace(char *tmp, int k, char **env, int size)
+char	*replace(char *tmp, int k, t_env *env, int size)
 {
 	char	*new;
 	int		i;
@@ -39,10 +40,12 @@ char	*replace(char *tmp, int k, char **env, int size)
 
 	i = 0;
 	env_len = 0;
-	while (env[k][env_len] && env[k][env_len] != '=')
+	while (k--)
+		env = env->next;
+	while (env->content[env_len] && env->content[env_len] != '=')
 		env_len++;
 	env_len++;
-	new = malloc(ft_strlen(tmp) + ft_strlen(env[k] + env_len) - size + 1);
+	new = malloc(ft_strlen(tmp) + ft_strlen(env->content + env_len) - size + 1);
 	if (!new)
 		return (NULL);
 	while (tmp[i] && tmp[i] != -1)
@@ -51,8 +54,8 @@ char	*replace(char *tmp, int k, char **env, int size)
 		i++;
 	}
 	j = i + size + 1;
-	while (env[k][env_len])
-		new[i++] = env[k][env_len++];
+	while (env->content[env_len])
+		new[i++] = env->content[env_len++];
 	while (tmp[j])
 		new[i++] = tmp[j++];
 	new[i] = '\0';
@@ -84,7 +87,7 @@ char	*delete(char *tmp, int size)
 	return (new);
 }
 
-char	*find_and_replace(char *str, char **env)
+char	*find_and_replace(char *str, t_env *env)
 {
 	int		i;
 	int		size;
