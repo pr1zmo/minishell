@@ -6,7 +6,7 @@ minishell
 .*
 test.c
 a.out
-/example
+/example*
 /.vscode
 /pipex
 test.sh
