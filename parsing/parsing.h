@@ -41,7 +41,7 @@ typedef struct	s_env
 
 typedef struct	s_parsing_data
 {
-	int		SHLVL;
+	int		exit;
 	t_env	*env;
 }	t_parse;
 
@@ -59,11 +59,11 @@ void	tokenize_cmd(char *str, t_line *tmp);
 void	tokenize(char *arg, t_line *tmp);
 void	tokenize_arg(char **arg, int *i, t_line *tmp);
 void	tokenize_quotarg(char **arg, int *i, t_line *tmp, char c);
-void	parse(char *line, t_line **head, char **env, t_parse *data);
 void	init(t_env **data, char **env);
 void	triming_quotes(t_line *head);
 void	get_final_list(t_line **head, t_cmd **cmd);
 void	free_line(t_line **head);
+int		parse(char *line, t_line **head, char **env, t_parse *data);
 int		check_token(int c);
 int		special_char(char *str, int i);
 int		checkquotes(char *line);
@@ -73,7 +73,7 @@ int		is_space(char c);
 int		checkspaces(char *line);
 int		checkquotes(char *line);
 int		check_case_1(char c);
-char	*find_and_replace(char *line, t_env *env);
+char	*find_and_replace(char *line, t_parse *data);
 char	*spacing(char *line);
 t_token	get_token(char *str);
 

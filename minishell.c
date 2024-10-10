@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mouad <mouad@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/09 17:22:35 by mouad            ###   ########.fr       */
+/*   Updated: 2024/10/10 16:20:47 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,18 @@ int	main(int ac, char **av, char **env)
 		return (printf("minishell doesn't take any arguments\n"), 1);
 	head = NULL;
 	cmd = NULL;
+	data.exit = 0;
+	data.env = NULL;
+	init(&data.env, env);
 	while (1)
 	{
 		str = readline("\x1b[36mminishell->\x1b[0m ");
 		if (ft_strlen(str) > 0)
 		{
 			add_history(str);
-			parse(str, &head, env, &data);
-			get_final_list(&head, &cmd);
+			data.exit = parse(str, &head, env, &data);
+			if (!data.exit && head)
+				get_final_list(&head, &cmd);
 			while (cmd)
 			{
 				printf("  this is a node\n");

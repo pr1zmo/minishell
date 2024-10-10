@@ -86,18 +86,83 @@ char	*delete(char *tmp, int size)
 	return (new);
 }
 
-char	*find_and_replace(char *str, t_env *env)
+int	alloc_exit(char *str, int exit)
+{
+	int	size;
+	int	len;
+
+	len = 1;
+	while (exit)
+	{
+		len++;
+		exit /= 10;
+	}
+	size = ft_strlen(str) + len - 2;
+	return (size);
+}
+
+void	fill_exit(char *new, int j, int exit)
+{
+	if (exit == 0)
+	{
+		new[j] = '0';
+		return ;
+	}
+	while (exit)
+	{
+		if (exit < 10)
+		{
+			new[j] = exit + '0';
+			break ;
+		}
+		new[j++] = exit % 10 + '0';
+		exit /= 10;
+	}
+}
+
+char	*expand_exit(char *str, int i, int exit)
+{
+	int		size;
+	int		j;
+	char	*new;
+
+	size = alloc_exit(str, exit);
+	new = malloc(size + 1);
+	if (!new)
+		return (NULL);
+	j = 0;
+	while (j < i)
+	{
+		new[j] = str[j];
+		j++;
+	}
+	fill_exit(new, j++, exit);
+	i += 2;
+	while (str[i])
+		new[j++] = str[i++];
+	new[j] = '\0';
+	free(str);
+	return (new);
+}
+
+char	*find_and_replace(char *str, t_parse *data)
 {
 	int		i;
 	int		size;
 	int		ca;
 	char	*tmp;
+	t_env	*env;
 
+	if (!str)
+		return (NULL);
 	tmp = ft_strdup(str);
+	env = data->env;
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == -1)
+		if (str[i] == -1 && str[i + 1] == '?')
+			tmp = expand_exit(tmp, i, data->exit);
+		else if (str[i] == -1)
 		{
 			ca = find(str, i, env, &size);
 			if (ca >= 0)
@@ -105,6 +170,8 @@ char	*find_and_replace(char *str, t_env *env)
 			else
 				tmp = delete(tmp, size);
 		}
+		if (tmp == NULL)
+			return (free(str), NULL);
 		i++;
 	}
 	free(str);
