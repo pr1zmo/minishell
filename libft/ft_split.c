@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 20:49:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/10 16:13:32 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:59:00 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	**ft_split(char const *s, char c)
 	counter = count_words(s, c);
 	split = (char **)malloc(sizeof(char *) * (counter + 1));
 	if (split == NULL)
-		return (free(s), NULL);
+		return (NULL);
 	while (i < counter)
 	{
 		while (*s == c && *s)
@@ -86,7 +86,7 @@ char	**ft_split(char const *s, char c)
 		{
 			split[i] = cat_words(s, c);
 			if (!split[i])
-				return (ft_free(split, i), free(s), NULL);
+				return (ft_free(split, i), NULL);
 			i++;
 		}
 		while (*s != c && *s)

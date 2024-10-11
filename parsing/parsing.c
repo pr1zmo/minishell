@@ -6,16 +6,59 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/10 17:47:20 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:59:18 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-// int	parse_error(t_line *head)
-// {
+int	print_error(char *str)
+{
+	ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
+	ft_putstr_fd("'", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd("'", 2);
+	ft_putstr_fd("\n", 2);
+	return (2);
+}
 
-// }
+int	redir_error(t_line *head)
+{
+	while (head)
+	{
+		if (check_token(head->str[0][0]) == 2 && \
+		(!head->next || head->next->type == PIPE))
+			return (print_error("newline"));
+		if (check_token(head->str[0][0]) == 2 && check_token(head->next->str[0][0]) == 2)
+			return (print_error(head->next->str[0]));
+		head = head->next;
+	}
+	return (0);
+}
+
+int	pipe_error(t_line *head)
+{
+	if (head->type == PIPE)
+		return (1);
+	while (head)
+	{
+		if (head->type == PIPE && !head->next)
+			return (1);
+		if (head->type == PIPE && head->next->type == PIPE)
+			return (1);
+		head = head->next;
+	}
+	return (0);
+}
+
+int	parse_error(t_line *head)
+{
+	if (pipe_error(head))
+		return (print_error("|"));
+	if (redir_error(head))
+		return (2);
+	return (0);
+}
 
 int	parse(char *str, t_line **head, char **env, t_parse *data)
 {
@@ -29,9 +72,9 @@ int	parse(char *str, t_line **head, char **env, t_parse *data)
 	line = spacing(str);
 	line = find_and_replace(line, data);
 	arg = ft_split(line, ' ');
+	free(line);
 	if (!arg)
 		return (139);
-	free(line);
 	lexer(arg, head, data);
 	triming_quotes(*head);
 	return (parse_error(*head));

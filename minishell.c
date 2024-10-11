@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/10 16:20:47 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:26:37 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,16 @@ int	main(int ac, char **av, char **env)
 			data.exit = parse(str, &head, env, &data);
 			if (!data.exit && head)
 				get_final_list(&head, &cmd);
-			while (cmd)
+			while (head)
 			{
 				printf("  this is a node\n");
 				printf("------------------\n");
-				for (int i = 0;cmd->argv[i];i++)
-					printf("str: %s\n", cmd->argv[i]);
-				printf("type: %i\n", cmd->type);
-				cmd = cmd->next;
+				for (int i = 0;head->str[i];i++)
+					printf("str: %s\n", head->str[i]);
+				printf("type: %i\n", head->type);
+				head = head->next;
 			}
 			free_line(&head);
-			// while (head)
-			// {
-			// 	printf("  this is a node\n");
-			// 	printf("------------------\n");
-			// 	for (int i = 0;head->str[i];i++)
-			// 		printf("str: %s\n", head->str[i]);
-			// 	printf("type: %i\n", head->type);
-			// 	head = head->next;
-			// }
 		}
 	}
 	return (0);

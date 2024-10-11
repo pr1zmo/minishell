@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:49 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/02 09:23:41 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:01:58 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	lexer(char **arg, t_line **head, t_parse *data)
 		tmp = malloc(sizeof(t_line));
 		if (!tmp)
 			return ;
-		if (is_command(arg, i))
+		if (is_command(arg, i) && !check_token(arg[i][0]))
 			tokenize_cmd(arg[i++], tmp);
 		else if (ft_strchr(arg[i], '\"'))
 			tokenize_quotarg(arg, &i, tmp, '\"');
