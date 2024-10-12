@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:00 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/11 15:56:00 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/12 15:32:30 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	checkquotes(char *line)
 	hdoc = 0;
 	while (line[i])
 	{
-		if (line[i] == '<' && line[i + 1] == '<')
+		if (line[i] == '<' && line[i + 1] == '<' && !quotes_open(line, i))
 			hdoc++;
 		if (line[i] == '$' && !check_dollar(line ,i) && !hdoc)
 			line[i] = -1;

@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:21 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/11 15:56:21 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/12 15:39:27 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	size_to_alloc(t_line *node)
 		size++;
 		node = node->next;
 	}
-	while (node && !get_token(node->str[0]))
+	while (node && (node->type == 7 || node->type == 8))
 	{
 		i = 0;
 		while (node->str[i])
@@ -69,7 +69,7 @@ t_cmd	*get_current(t_line **node)
 		tmp->type = (*node)->type;
 		(*node) = (*node)->next;
 	}
-	while ((*node) && (*node)->type == 7)
+	while ((*node) && ((*node)->type == 7 || (*node)->type == 8))
 	{
 		j = 0;
 		while ((*node)->str[j])

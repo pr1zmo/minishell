@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/11 15:59:18 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/12 15:27:02 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	parse(char *str, t_line **head, char **env, t_parse *data)
 	free(line);
 	if (!arg)
 		return (139);
+	for (int i = 0; arg[i]; i++)
+		printf("str = %s\n", arg[i]);
 	lexer(arg, head, data);
 	triming_quotes(*head);
 	return (parse_error(*head));
