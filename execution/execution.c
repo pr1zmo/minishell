@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/04 15:09:15 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/15 14:11:23 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int	exec_builtin(t_data *data, char **cmd)
 	int	res;
 
 	res = 0;
-	printf("Executing the builtins\n");
 	if (ft_strncmp(cmd[0], "pwd", 0) == 0)
 		res = ft_pwd(data, cmd);
 	else if (ft_strncmp(cmd[0], "env", 0) == 0)
@@ -149,9 +148,15 @@ void set_list_var(t_data *data, char *name, char *new_value)
 
 void	printa(char *message, char **str)
 {
+	int	i;
+
+	i = 0;
 	printf("%s: ", message);
-	for (int i = 0; str[i]; i++)
-		printf("%s\n", str[i]);
+	while (str[i])
+	{
+		printf("%s ", str[i]);
+		i++;
+	}
 }
 
 int	count_pipes(t_data *data)
@@ -199,7 +204,6 @@ static char	*get_full_cmd(char *av, char **env)
 		perror("Path error");
 	while (path[i])
 	{
-		// result = ft_strjoin(path[i], "/");
 		full_cmd = ft_strjoin(ft_strjoin(path[i], "/"), av);
 		// free(result);
 		if (access(full_cmd, X_OK | F_OK) == 0)
@@ -229,20 +233,11 @@ void	exec_cmd(char *av, char **env, t_data *data)
 		path = get_full_cmd(cmd[0], env);
 	}
 	if (!path)
-	{
-		// cmd = NULL;
-		// free_arr(cmd);
 		perror(cmd[0]);
-		// exit(1);
-	}
-	// printf("here ;");
+	printf("The command to execute: %s\n", path);
+	printa("The command:", cmd);
 	if (execve(path, cmd, env) == -1)
-	{
-		// cmd = NULL;
-		// free_arr(cmd);
-		// perror("execve");
 		return ;
-	}
 }
 
 char	*array_to_string(t_line *temp)
@@ -345,21 +340,6 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
-char	*ft_strcat(char *s1, char *s2)
-{
-	char	*dest;
-	int		i;
-
-	i = 0;
-	dest = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	while (s1 && *s1)
-		*dest++ = *s1++;
-	while(s2 && *s2)
-		*dest++ = *s2++;
-	*dest = '\0';
-	return (dest);
-}
-
 void execute_command(t_cmd *cmd, char **envp)
 {
 	if (cmd->input_file)
@@ -430,57 +410,140 @@ t_cmd	*build_cmd_list(t_line *data)
 	return (head);
 }
 
-void	show_cmd(t_cmd *cmd_list)
+void show_cmd(t_cmd *cmd_list)
 {
-	int	i = 0;
-	t_cmd	*temp = cmd_list;
-	while (temp)
-	{
-		printf("Count: %d\n----------------------------\n", i);
-		printa("The command", temp->argv);
-		printf("The command: %s\nThe output file: %s\nThe input file %d\n", temp->output_file, temp->input_file, temp->type);
-		temp = temp->next;
-		i++;
-	}
+    int i = 0;
+    t_cmd *temp = cmd_list;
+    while (temp)
+    {
+        printf("Count: %d\n----------------------------\n", i);
+        if (temp->argv)
+            printa("The command", temp->argv);
+        
+        // Ensure temp->io_fds is not null before accessing its members
+        if (temp->io_fds)
+        {
+            printf("The output file: %s\n", temp->io_fds->outfile ? temp->io_fds->outfile : "No output file");
+            printf("The input file: %s\n", temp->io_fds->infile ? temp->io_fds->infile : "No input file");
+        }
+        else
+        {
+            printf("The output file: No output file\n");
+            printf("The input file: No input file\n");
+        }
+        
+        printf("The command type: %d\n", temp->type);
+        temp = temp->next;
+        i++;
+    }
 }
 
-int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data) {
-	int	pid;
-	int	pipefd[2];
-	int	in_fd;
+char	*ft_strcat(char *s1, char *s2)
+{
+	char	*dest;
+	int		i;
 
-	(void)envp;
-	in_fd = STDIN_FILENO;
+	i = 0;
+	if (!s1 || !s2)
+	{
+		if (s1)
+			return (ft_strdup(s1));
+		if (s2)
+			return (ft_strdup(s2));
+		else
+			return (NULL);
+	}
+	dest = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	while (s1 && *s1)
+		*dest++ = *s1++;
+	while(s2 && *s2)
+		*dest++ = *s2++;
+	*dest = '\0';
+	return (dest);
+}
+
+char	*to_str(char **arr)
+{
+	char	*result;
+	int		i;
+
+	i = 0;
+	result = NULL;
+	while (arr[i])
+	{
+		result = ft_strcat(result, arr[i]);
+		if (arr[i + 1])
+			result = ft_strcat(result, " ");
+		i++;
+	}
+	return (result);
+}
+
+int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
+{
 	while (cmd_list)
 	{
-		if (cmd_list->next && cmd_list->next->type == PIPE)
-			pipe(pipefd);
-		else
-			pipefd[1] = STDOUT_FILENO;
-
-		pid = fork();
-		if (pid == -1)
-			return ft_error(1, data);
-		if (pid == 0)
-		{
-			dup2(in_fd, STDIN_FILENO);
-			if (pipefd[1] != STDOUT_FILENO)
-			{
-				dup2(pipefd[1], STDOUT_FILENO);
-				close(pipefd[1]);
-			}
-			// show_cmd(cmd_list);
-			// execute_command(cmd_list, envp);
-		}
-		else
-		{
-			waitpid(pid, NULL, 0);
-			close(pipefd[1]);
-			in_fd = pipefd[0];
-		}
+		if (cmd_list->type == CMD)
+			single_command(data, to_str(cmd_list->argv));
 		cmd_list = cmd_list->next;
 	}
 	return 0;
+}
+
+void	init_io(t_cmd *cmd)
+{
+	if (!cmd->io_fds)
+	{
+		cmd->io_fds = malloc(sizeof * cmd->io_fds);
+		if (!cmd->io_fds)
+			return ;
+		cmd->io_fds->infile = NULL;
+		cmd->io_fds->outfile = NULL;
+		cmd->io_fds->heredoc_name = NULL;
+		cmd->io_fds->in_fd = 0;
+		cmd->io_fds->out_fd = 1;
+	}
+}
+
+static void	pipe_init(t_cmd **cmd)
+{
+	int		pipe_fds[2];
+
+	if (!cmd || !(*cmd) || !(*cmd)->next)
+		return ;
+	return ;
+	init_io(*cmd);
+	if (pipe(pipe_fds) == -1)
+		return ;
+	if ((*cmd)->next)
+	{
+		init_io((*cmd)->next);
+		if (dup2(pipe_fds[1], (*cmd)->io_fds->out_fd) == -1)
+		{
+			perror("dup2");
+			return ;
+		}
+		if (dup2(pipe_fds[0], (*cmd)->next->io_fds->in_fd) == -1)
+		{
+			perror("dup2");
+			return ;
+		}
+		close(pipe_fds[0]);
+		close(pipe_fds[1]);
+	}
+	return ;
+}
+
+void	create_files(t_cmd **cmd)
+{
+	t_cmd	*temp = *cmd;
+
+	while (temp)
+	{
+		if (temp->next)
+			pipe_init(&temp);
+		temp = temp->next;
+	}
 }
 
 void	complex_command(t_data *data)
@@ -488,10 +551,16 @@ void	complex_command(t_data *data)
 	t_cmd	*cmd_list;
 	t_line	*temp = data->head;
 
-	cmd_list = build_cmd_list(temp);
-	show_cmd(cmd_list);
+	// cmd_list = build_cmd_list(temp);
+	cmd_list = NULL;
+	get_final_list(&data->head, &cmd_list);
+	// show_cmd(cmd_list);
+	printf("The next command: %s\n", to_str(cmd_list->next->argv));
 	if (cmd_list)
+	{
+		create_files(&cmd_list);
 		execute_cmds(cmd_list, data->envp_arr, data);
+	}
 }
 
 int	handle_input(t_data *data)

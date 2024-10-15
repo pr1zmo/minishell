@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/09 18:21:57 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/15 13:41:39 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,22 @@ typedef struct s_builtin
 	char		*argument;
 }				t_builtin;
 
+typedef	struct	s_io_fds
+{
+	int		in_fd;
+	int		out_fd;
+	char	*infile;
+	char	*outfile;
+	char	*heredoc_name;
+}			t_io_fds;
+
 typedef struct s_cmd {
 	char			**argv;
-	char			*input_file;  
+	char			*input_file;
 	char			*output_file;
 	int				type;
 	int				*pipe_fd;
+	t_io_fds		*io_fds;
 	struct s_cmd	*next;
 }					t_cmd;
 
@@ -67,6 +77,7 @@ typedef struct s_data
 	int			pipe_count;
 }				t_data;
 
+char	*ft_strcat(char *dest, char *src);
 int		minishell(t_data *data);
 void	free_arr(char **arr);
 int		ft_pwd(t_data *data, char **cmd);
