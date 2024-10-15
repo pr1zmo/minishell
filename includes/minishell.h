@@ -94,5 +94,7 @@ void	create_env_value(t_data *data, char *key);
 void	set_list_var(t_data *data, char *name, char *new_value);
 char	*find_value(char *name, t_list *envp);
 char	*new_substr(const char *str, int c);
+void	printa(char *str, char **arr);
+char	*to_str(char **arr);
 
 #endif

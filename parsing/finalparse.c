@@ -58,12 +58,12 @@ t_cmd	*get_current(t_line **node)
 	int		size;
 	int		j;
 
-	tmp = malloc(sizeof(t_cmd));
+	tmp = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!tmp)
 		return (NULL);
 	tmp->argv = malloc(sizeof(char *) * (size_to_alloc((*node)) + 1));
 	i = 0;
-	if ((*node)->type != PIPE)
+	while ((*node)->type != PIPE)
 	{
 		tmp->argv[i++] = ft_strdup((*node)->str[0]);
 		tmp->type = (*node)->type;
@@ -95,8 +95,6 @@ void	get_final_list(t_line **head, t_cmd **cmd)
 		if (!tmp)
 			break ;
 		new = get_current(&tmp);
-		new->input_file = NULL;
-		new->output_file = NULL;
 		new->pipe_fd = NULL;
 		lstadd_back(cmd, new);
 	}

@@ -186,8 +186,10 @@ void	debug()
 {
 	static int count;
 
-	count += 1;
+	if (!count)
+		count = 0;
 	printf("Here: %d\n", count);
+	count++;
 }
 
 static char	*get_full_cmd(char *av, char **env)
@@ -234,7 +236,6 @@ void	exec_cmd(char *av, char **env, t_data *data)
 	}
 	if (!path)
 		perror(cmd[0]);
-	printf("The command to execute: %s\n", path);
 	printa("The command:", cmd);
 	if (execve(path, cmd, env) == -1)
 		return ;
@@ -340,35 +341,6 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
-void execute_command(t_cmd *cmd, char **envp)
-{
-	if (cmd->input_file)
-	{
-		int fd = open(cmd->input_file, O_RDONLY);
-		if (fd < 0)
-		{
-			perror("open");
-			exit(EXIT_FAILURE);
-		}
-		// dup2(fd, STDIN_FILENO);
-		close(fd);
-	}
-	if (cmd->output_file)
-	{
-		int fd = open(cmd->output_file, O_WRONLY | O_CREAT | (cmd->type==4 ? O_APPEND : O_TRUNC), 0644);
-		if (fd < 0)
-		{
-			perror("open");
-			exit(EXIT_FAILURE);
-		}
-		// dup2(fd, STDOUT_FILENO);
-		close(fd);
-	}
-	execve(cmd->argv[0], cmd->argv, envp);
-	perror("execve");
-	exit(EXIT_FAILURE);
-}
-
 t_cmd	*build_cmd_list(t_line *data)
 {
 	t_cmd	*cmd = NULL;
@@ -416,10 +388,10 @@ void show_cmd(t_cmd *cmd_list)
     t_cmd *temp = cmd_list;
     while (temp)
     {
-        printf("Count: %d\n----------------------------\n", i);
+        printf("Count: %d\n----------------------------", i);
         if (temp->argv)
             printa("The command", temp->argv);
-        
+        printf("\n");
         // Ensure temp->io_fds is not null before accessing its members
         if (temp->io_fds)
         {
@@ -479,12 +451,29 @@ char	*to_str(char **arr)
 	return (result);
 }
 
+void	execute_command(t_data *data, t_cmd *cmd)
+{
+	int		pid;
+	char	*cmd_str;
+
+	cmd_str = to_str(cmd->argv);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		return ;
+	}
+	if (pid == 0)
+		exec_cmd(cmd_str, data->envp_arr, data);
+	waitpid(0, NULL, 0);
+}
+
 int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 {
 	while (cmd_list)
 	{
 		if (cmd_list->type == CMD)
-			single_command(data, to_str(cmd_list->argv));
+			execute_command(data, cmd_list);
 		cmd_list = cmd_list->next;
 	}
 	return 0;
@@ -546,16 +535,25 @@ void	create_files(t_cmd **cmd)
 	}
 }
 
+void	show_cmds(t_cmd *cmd)
+{
+	t_cmd *temp = cmd;
+	while (temp)
+	{
+		printf("The commands are: %s\n", to_str(temp->argv));
+		temp = temp->next;
+	}
+}
+
 void	complex_command(t_data *data)
 {
 	t_cmd	*cmd_list;
 	t_line	*temp = data->head;
 
 	// cmd_list = build_cmd_list(temp);
-	cmd_list = NULL;
+	cmd_list = (t_cmd *)malloc(sizeof(t_cmd));
 	get_final_list(&data->head, &cmd_list);
-	// show_cmd(cmd_list);
-	printf("The next command: %s\n", to_str(cmd_list->next->argv));
+	show_cmds(cmd_list);
 	if (cmd_list)
 	{
 		create_files(&cmd_list);
