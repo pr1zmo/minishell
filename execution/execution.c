@@ -541,6 +541,7 @@ void	show_cmds(t_cmd *cmd)
 	while (temp)
 	{
 		printf("The commands are: %s\n", to_str(temp->argv));
+		printf("End of the node\n");
 		temp = temp->next;
 	}
 }
@@ -555,6 +556,45 @@ void	init_cmd(t_cmd *cmd)
 	cmd->prev = NULL;
 }
 
+void	get_list(t_line **head, t_cmd **cmd)
+{
+	t_line	*temp = *head;
+	t_cmd	*new_node;
+	int		i;
+	t_cmd	*current;
+
+	while (temp)
+	{
+		new_node = (t_cmd *)malloc(sizeof(t_cmd));
+		if (!new_node)
+		{
+			perror("malloc");
+			return ;
+		}
+		init_cmd(new_node);
+		i = 0;
+		new_node->type = temp->type;
+		while (temp && (temp->type == 7 || temp->type == 8))
+		{
+			// new_node->argv[i] = ft_strdup(temp->str[i]);
+			new_node->argv[i] = ft_strcat(new_node->argv[i], temp->str[i]);
+			i++;
+			temp = temp->next;
+		}
+		if (!(*cmd))
+			*cmd = new_node;
+		else
+		{
+			current = *cmd;
+			while (current->next)
+				current = current->next;
+			current->next = new_node;
+			new_node->prev = current;
+		}
+		temp = temp->next;
+	}
+}
+
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
@@ -562,7 +602,7 @@ void	complex_command(t_data *data)
 	// cmd_list = build_cmd_list(temp);
 	// cmd_list = (t_cmd *)malloc(sizeof(t_cmd));
 	data->cmd = NULL;
-	get_final_list(&data->head, &data->cmd);
+	get_list(&data->head, &data->cmd);
 	show_cmds(data->cmd);
 	if (data->cmd)
 	{
