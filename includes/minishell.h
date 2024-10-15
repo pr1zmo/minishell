@@ -57,12 +57,11 @@ typedef	struct	s_io_fds
 
 typedef struct s_cmd {
 	char			**argv;
-	char			*input_file;
-	char			*output_file;
 	int				type;
 	int				*pipe_fd;
 	t_io_fds		*io_fds;
 	struct s_cmd	*next;
+	struct s_cmd	*prev;
 }					t_cmd;
 
 typedef struct s_data

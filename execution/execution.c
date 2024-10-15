@@ -545,13 +545,24 @@ void	show_cmds(t_cmd *cmd)
 	}
 }
 
+void	init_cmd(t_cmd *cmd)
+{
+	cmd->argv = NULL;
+	cmd->pipe_fd = NULL;
+	cmd->io_fds = NULL;
+	cmd->type = 0;
+	cmd->next = NULL;
+	cmd->prev = NULL;
+}
+
 void	complex_command(t_data *data)
 {
 	t_cmd	*cmd_list;
 	t_line	*temp = data->head;
 
 	// cmd_list = build_cmd_list(temp);
-	cmd_list = (t_cmd *)malloc(sizeof(t_cmd));
+	// cmd_list = (t_cmd *)malloc(sizeof(t_cmd));
+	init_cmd(cmd_list);
 	get_final_list(&data->head, &cmd_list);
 	show_cmds(cmd_list);
 	if (cmd_list)
