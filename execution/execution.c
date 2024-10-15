@@ -557,18 +557,16 @@ void	init_cmd(t_cmd *cmd)
 
 void	complex_command(t_data *data)
 {
-	t_cmd	*cmd_list;
 	t_line	*temp = data->head;
 
 	// cmd_list = build_cmd_list(temp);
 	// cmd_list = (t_cmd *)malloc(sizeof(t_cmd));
-	init_cmd(cmd_list);
-	get_final_list(&data->head, &cmd_list);
-	show_cmds(cmd_list);
-	if (cmd_list)
+	get_final_list(&data->head, &data->cmd);
+	show_cmds(data->cmd);
+	if (data->cmd)
 	{
-		create_files(&cmd_list);
-		execute_cmds(cmd_list, data->envp_arr, data);
+		create_files(&data->cmd);
+		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 }
 

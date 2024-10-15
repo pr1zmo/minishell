@@ -70,6 +70,7 @@ typedef struct s_data
 	char		*arg;
 	int			status;
 	t_list		*envp;
+	t_cmd		*cmd;
 	char		**envp_arr;
 	char		*curr_dir;
 	char		*old_dir;
