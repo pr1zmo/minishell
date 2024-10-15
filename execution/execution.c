@@ -561,6 +561,7 @@ void	complex_command(t_data *data)
 
 	// cmd_list = build_cmd_list(temp);
 	// cmd_list = (t_cmd *)malloc(sizeof(t_cmd));
+	data->cmd = NULL;
 	get_final_list(&data->head, &data->cmd);
 	show_cmds(data->cmd);
 	if (data->cmd)
