@@ -4,7 +4,7 @@
 minishell
 /_*
 .*
-test.c
+test*
 a.out
 /example*
 /.vscode
