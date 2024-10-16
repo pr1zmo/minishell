@@ -341,73 +341,17 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
-t_cmd	*build_cmd_list(t_line *data)
-{
-	t_cmd	*cmd = NULL;
-	t_cmd	*head = NULL;
-	t_cmd	*new_node;
-	int		i;
-
-	i = 0;
-	while (data)
-	{
-		new_node = (t_cmd *)malloc(sizeof(t_cmd));
-		if (!new_node)
-		{
-			perror("malloc");
-			return (NULL);
-		}
-		new_node->argv = data->str;
-		new_node->type = data->type;
-		new_node->next = NULL;
-		if (!cmd)
-			head = new_node;
-		else
-			cmd->next = new_node;
-		cmd = new_node;
-		while (data)
-		{
-			if (data->type == 7 || data->type == 8)
-			{
-				data = data->next;
-				i++;
-			}
-			else
-			{
-				data = data->next;
-				break;
-			}
-		}
-	}
-	return (head);
-}
-
 void show_cmd(t_cmd *cmd_list)
 {
-    int i = 0;
-    t_cmd *temp = cmd_list;
-    while (temp)
-    {
-        printf("Count: %d\n----------------------------", i);
-        if (temp->argv)
-            printa("The command", temp->argv);
-        printf("\n");
-        // Ensure temp->io_fds is not null before accessing its members
-        if (temp->io_fds)
-        {
-            printf("The output file: %s\n", temp->io_fds->outfile ? temp->io_fds->outfile : "No output file");
-            printf("The input file: %s\n", temp->io_fds->infile ? temp->io_fds->infile : "No input file");
-        }
-        else
-        {
-            printf("The output file: No output file\n");
-            printf("The input file: No input file\n");
-        }
-        
-        printf("The command type: %d\n", temp->type);
-        temp = temp->next;
-        i++;
-    }
+    int 	i = 0;
+    t_cmd	*temp = cmd_list;
+
+	while (temp)
+	{
+		printf("The command is: %s\n", temp->cmd);
+		printf("The type is: %i\n", temp->type);
+		temp = temp->next;
+	}
 }
 
 char	*ft_strcat(char *s1, char *s2)
@@ -558,81 +502,123 @@ void	init_cmd(t_cmd *cmd)
 	cmd->prev = NULL;
 }
 
-void	show_head(t_line *head)
+void	show_head(t_line *head, t_data *data, t_cmd **cmd)
 {
-	t_line	*temp = head;
-	int		i = 0;
+	if (!data->status && head)
+		get_final_list(&head, cmd);
+	while (head)
+	{
+		printf("this is a node\n");
+		printf("------------------\n");
+		for (int i = 0;head->str[i];i++)
+			printf("str: %s\n", head->str[i]);
+		printf("type: %i\n", head->type);
+		head = head->next;
+	}
+	free_line(&head);
+}
+
+void ft_putstr_color_fd(char *str, int fd, char *color_code)
+{
+	ft_putstr_fd(color_code, fd);  // Set color
+	ft_putstr_fd(str, fd);         // Print string
+	ft_putstr_fd("\033[0m", fd);   // Reset color
+	ft_putchar_fd('\n', fd);
+}
+
+t_cmd *build_cmd_list(t_line *data)
+{
+	t_cmd	*cmd = NULL;
+	t_cmd	*head = NULL;
+	t_cmd	*new_node;
+	t_line	*temp = data;
+	int		i;
 
 	while (temp)
 	{
-		printf("The type is: %d\n", temp->type);
-		while (temp->str[i])
+		new_node = (t_cmd *)malloc(sizeof(t_cmd));
+		if (!new_node)
 		{
-			printf("The string is: %s\n", temp->str[i]);
-			i++;
+			perror("malloc");
+			return NULL;
 		}
-		temp = temp->next;
-	}
-}
-
-void get_list(t_line **head, t_cmd **cmd)
-{
-	t_cmd	*temp;
-	int		i;
-	char	*cmd_str;
-
-	temp = (t_cmd *)malloc(sizeof(t_cmd));
-	show_head(*head);
-	exit(0);
-	while (*head)
-	{
-		init_cmd(temp);
-		temp->type = (*head)->type;
+		init_cmd(new_node);
+		if (!temp->str)
+			return (free(new_node), NULL);
+		new_node->argv = (char **)malloc(sizeof(char *) * 2);
+		if (!new_node->argv)
+		{
+			perror("malloc");
+			free(new_node);
+			return NULL;
+		}
 		i = 0;
-		while ((*head)->type != 7 && (*head)->type != 8)
+		new_node->type = temp->type;
+		char type_str[10];
+		// ft_putstr_color_fd(type_str, 1, "\033[1;32m");
+		printf("Str type: ");
+		printf("%s\n\033[1;32m", type_str);
+		while (temp && temp->type != PIPE)
 		{
-			cmd_str = ft_strjoin(cmd_str, (*head)->str[i]);
-			if ((*head)->next)
+			new_node->argv = (char **)realloc(new_node->argv, sizeof(char *) * (i + 2));
+			if (!new_node->argv)
 			{
-				cmd_str = ft_strjoin(cmd_str, " ");
-				i++;
+				perror("realloc");
+				free(new_node);
+				return NULL;
 			}
-			(*head) = (*head)->next;
+			new_node->argv[i] = ft_strdup(temp->str[0]);
+			if (!new_node->argv[i])
+			{
+				for (int j = 0; j < i; j++)
+					free(new_node->argv[j]);
+				free(new_node->argv);
+				free(new_node);
+				return NULL;
+			}
+			ft_putstr_color_fd(new_node->argv[i], 1, "\033[1;32m");
+			i++;
+			temp = temp->next;
 		}
-		if (cmd_str)
-			printf("The command is: %s\n", cmd_str);
-		else
-			printf("Wa l3fou\n");
-		exit(0);
-		temp->argv = ft_split(cmd_str, ' ');
-		temp->cmd = ft_strdup(cmd_str);
-		free(cmd_str);
-		cmd_str = NULL;
-		if (!(*cmd))
-			*cmd = temp;
+		new_node->argv[i] = NULL;
+		new_node->cmd = to_str(new_node->argv);
+		ft_putstr_color_fd(new_node->cmd, 1, "\033[1;32m");
+		if (!head)
+		{
+			head = new_node;
+			char head_str[20];
+			ft_putstr_color_fd(head_str, 1, "\033[1;32m");
+		}
 		else
 		{
-			(*cmd)->next = temp;
-			temp->prev = *cmd;
-			*cmd = temp;
+			t_cmd *current = head;
+			while (current->next)
+				current = current->next;
+			current->next = new_node;
+			new_node->prev = current;
+			char new_node_str[20];
+			ft_putstr_color_fd(new_node_str, 1, "\033[1;32m");
 		}
-		*head = (*head)->next;
+		if (temp && temp->type == PIPE)
+			temp = temp->next;
 	}
+	char head_final_str[20];
+	ft_putstr_color_fd(head_final_str, 1, "\033[1;32m");
+	return head;
 }
 
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
 
-	// cmd_list = build_cmd_list(temp);
-	// cmd_list = (t_cmd *)malloc(sizeof(t_cmd));
-	data->cmd = NULL;
-	get_list(&data->head, &data->cmd);
-	show_cmds(data->cmd);
+	data->cmd = build_cmd_list(temp);
+	if (data->cmd)
+		show_cmd(data->cmd);
+	else
+		printf("Bro....\n");
 	if (data->cmd)
 	{
 		create_files(&data->cmd);
-		// execute_cmds(data->cmd, data->envp_arr, data);
 	}
 }
 
@@ -669,6 +655,8 @@ char	**set_list_arra(t_list *env)
 	}
 	return (result);
 }
+
+
 
 int	minishell(t_data *data)
 {
