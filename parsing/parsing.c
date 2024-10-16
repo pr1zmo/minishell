@@ -75,8 +75,6 @@ int	parse(char *str, t_line **head, char **env, t_parse *data)
 	free(line);
 	if (!arg)
 		return (139);
-	for (int i = 0; arg[i]; i++)
-		printf("str = %s\n", arg[i]);
 	lexer(arg, head, data);
 	triming_quotes(*head);
 	return (parse_error(*head));

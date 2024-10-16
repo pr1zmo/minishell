@@ -209,7 +209,9 @@ static char	*get_full_cmd(char *av, char **env)
 		full_cmd = ft_strjoin(ft_strjoin(path[i], "/"), av);
 		// free(result);
 		if (access(full_cmd, X_OK | F_OK) == 0)
+		{
 			return (full_cmd);
+		}
 		// free(full_cmd);
 		i++;
 	}
@@ -236,7 +238,6 @@ void	exec_cmd(char *av, char **env, t_data *data)
 	}
 	if (!path)
 		perror(cmd[0]);
-	printa("The command:", cmd);
 	if (execve(path, cmd, env) == -1)
 		return ;
 }
@@ -348,9 +349,7 @@ void show_cmd(t_cmd *cmd_list)
 
 	while (temp)
 	{
-		// printf("The command is: %s\n", temp->cmd);
-		for (int i = 0; temp->argv[i]; i++)
-			printf("The argv is: %s\n", temp->argv[i]);
+		printf("The command is: %s\n", temp->cmd);
 		printf("The type is: %i\n", temp->type);
 		temp = temp->next;
 	}
@@ -481,43 +480,15 @@ void	create_files(t_cmd **cmd)
 	}
 }
 
-void	show_cmds(t_cmd *cmd)
-{
-	int	i = 0;
-	t_cmd *temp = cmd;
-	while (temp && i < 10)
-	{
-		printf("The full command is: %s\n", temp->cmd);
-		printf("End of the node\n");
-		temp = temp->next;
-		i++;
-	}
-}
-
 void	init_cmd(t_cmd *cmd)
 {
 	cmd->argv = NULL;
+	cmd->cmd = NULL;
 	cmd->pipe_fd = NULL;
 	cmd->io_fds = NULL;
 	cmd->type = 0;
 	cmd->next = NULL;
 	cmd->prev = NULL;
-}
-
-void	show_head(t_line *head, t_data *data, t_cmd **cmd)
-{
-	if (!data->status && head)
-		get_final_list(&head, cmd);
-	while (head)
-	{
-		printf("this is a node\n");
-		printf("------------------\n");
-		for (int i = 0;head->str[i];i++)
-			printf("str: %s\n", head->str[i]);
-		printf("type: %i\n", head->type);
-		head = head->next;
-	}
-	free_line(&head);
 }
 
 void ft_putstr_color_fd(char *str, int fd, char *color_code)
@@ -528,101 +499,63 @@ void ft_putstr_color_fd(char *str, int fd, char *color_code)
 	ft_putchar_fd('\n', fd);
 }
 
-t_cmd *build_cmd_list(t_line *data)
-{
-	t_cmd	*cmd = NULL;
-	t_cmd	*head = NULL;
-	t_cmd	*new_node;
-	t_line	*temp = data;
-	int		i;
-
-	while (temp)
-	{
-		new_node = (t_cmd *)malloc(sizeof(t_cmd));
-		if (!new_node)
-		{
-			perror("malloc");
-			return NULL;
-		}
-		init_cmd(new_node);
-		if (!temp->str)
-			return (free(new_node), NULL);
-		new_node->argv = (char **)malloc(sizeof(char *) * 2);
-		if (!new_node->argv)
-		{
-			perror("malloc");
-			free(new_node);
-			return NULL;
-		}
-		i = 0;
-		new_node->type = temp->type;
-		char type_str[10];
-		// ft_putstr_color_fd(type_str, 1, "\033[1;32m");
-		printf("Str type: ");
-		printf("%s\n\033[1;32m", type_str);
-		while (temp && temp->type != PIPE)
-		{
-			new_node->argv = (char **)realloc(new_node->argv, sizeof(char *) * (i + 2));
-			if (!new_node->argv)
-			{
-				perror("realloc");
-				free(new_node);
-				return NULL;
-			}
-			new_node->argv[i] = ft_strdup(temp->str[0]);
-			if (!new_node->argv[i])
-			{
-				for (int j = 0; j < i; j++)
-					free(new_node->argv[j]);
-				free(new_node->argv);
-				free(new_node);
-				return NULL;
-			}
-			ft_putstr_color_fd(new_node->argv[i], 1, "\033[1;32m");
-			i++;
-			temp = temp->next;
-		}
-		new_node->argv[i] = NULL;
-		new_node->cmd = to_str(new_node->argv);
-		ft_putstr_color_fd(new_node->cmd, 1, "\033[1;32m");
-		if (!head)
-		{
-			head = new_node;
-			char head_str[20];
-			ft_putstr_color_fd(head_str, 1, "\033[1;32m");
-		}
-		else
-		{
-			t_cmd *current = head;
-			while (current->next)
-				current = current->next;
-			current->next = new_node;
-			new_node->prev = current;
-			char new_node_str[20];
-			ft_putstr_color_fd(new_node_str, 1, "\033[1;32m");
-		}
-		if (temp && temp->type == PIPE)
-			temp = temp->next;
-	}
-	char head_final_str[20];
-	ft_putstr_color_fd(head_final_str, 1, "\033[1;32m");
-	return head;
-}
-
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
 
-	// data->cmd = build_cmd_list(temp);
-	get_final_list(&temp, &data->cmd);
-	if (data->cmd)
-		show_cmd(data->cmd);
-	else
-		printf("Bro....\n");
 	if (data->cmd)
 	{
 		create_files(&data->cmd);
 	}
+}
+
+char *concatenate_argv(char **argv)
+{
+    size_t total_length = 0;
+    int i = 0;
+
+    // Calculate the total length needed for the result string
+    while (argv[i]) {
+        total_length += strlen(argv[i]) + 1; // +1 for space or null terminator
+        i++;
+    }
+
+    // Allocate memory for the result string
+    char *result = (char *)malloc(total_length + 1); // +1 for null terminator
+    if (!result) {
+        perror("malloc");
+        return NULL;
+    }
+    result[0] = '\0'; // Initialize the result string
+
+    // Concatenate the strings in argv into result
+    i = 0;
+    while (argv[i]) {
+        result = ft_strcat(result, argv[i]);
+        if (argv[i + 1]) {
+            result = ft_strcat(result, " ");
+        }
+        i++;
+    }
+
+    return result;
+}
+
+void set_cmd_strings(t_cmd **cmd_list)
+{
+    t_cmd *current = (*cmd_list);
+
+    while (current)
+	{
+        if (current->argv)
+		{
+            current->cmd = concatenate_argv(current->argv);
+            if (!current->cmd)
+                return;
+        }
+        current = current->next;
+    }
+	(*cmd_list) = current;
 }
 
 int	handle_input(t_data *data)
@@ -631,11 +564,20 @@ int	handle_input(t_data *data)
 	char	*cmd;
 
 	int i = count_symbols(data);
-	cmd = array_to_string(temp);
 	if (i == 0)
+	{
+		cmd = array_to_string(temp);
 		single_command(data, cmd);
+	}
 	else
+	{
+		printf("Here\n");
+		set_cmd_strings(&data->cmd);
+		printf("Here\n");
+		show_cmd(data->cmd);
+		printf("Here\n");
 		complex_command(data);
+	}
 	return (0);
 }
 
@@ -648,7 +590,7 @@ char	**set_list_arra(t_list *env)
 	result = malloc(sizeof(char *) * (i + 1));
 	if (!result)
 		return NULL;
-	result[i] = NULL; // Null-terminate the array
+	result[i] = NULL;
 	i = 0;
 	while (temp)
 	{
@@ -658,8 +600,6 @@ char	**set_list_arra(t_list *env)
 	}
 	return (result);
 }
-
-
 
 int	minishell(t_data *data)
 {
@@ -678,11 +618,9 @@ int	minishell(t_data *data)
 		add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
 		data->head = head;
-		printf("%p\n", head);
 		get_final_list(&head, &cmd);
-		// data->cmd = cmd;
+		data->cmd = cmd;
 		// show_cmd(data->cmd);
-		show_cmd(cmd);
 		handle_input(data);
 		if (data->status == 0)
 			break ;
