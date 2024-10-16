@@ -6,9 +6,10 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 16:40:33 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/08 16:06:09 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:34:02 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "libft.h"
 
@@ -18,10 +19,10 @@ char	*ft_strjoin(char *line, char *buf)
 	int		i;
 	int		j;
 
-	i = 0;
-	j = 0;
-	if (!line || !buf)
+	if (!line && !buf)
 		return (NULL);
+	join = (char *)malloc(ft_strlen(line) + ft_strlen(buf) + 1);
+	if (!join)
 	join = (char *)malloc(ft_strlen(line) + ft_strlen(buf) + 1);
 	if (!join)
 		return (NULL);

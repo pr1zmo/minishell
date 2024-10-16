@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/02 11:43:15 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:57:24 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,23 @@ typedef struct s_builtin
 	char		*argument;
 }				t_builtin;
 
+typedef	struct	s_io_fds
+{
+	int		in_fd;
+	int		out_fd;
+	char	*infile;
+	char	*outfile;
+	char	*heredoc_name;
+}			t_io_fds;
+
 typedef struct s_cmd {
 	char			**argv;
-	char			*input_file;  
-	char			*output_file;
+	char		*cmd;
 	int				type;
+	int				*pipe_fd;
+	t_io_fds		*io_fds;
 	struct s_cmd	*next;
+	struct s_cmd	*prev;
 }					t_cmd;
 
 typedef struct s_data
@@ -60,12 +71,14 @@ typedef struct s_data
 	char		*arg;
 	int			status;
 	t_list		*envp;
+	t_cmd		*cmd;
 	char		**envp_arr;
 	char		*curr_dir;
 	char		*old_dir;
 	int			pipe_count;
 }				t_data;
 
+char	*ft_strcat(char *dest, char *src);
 int		minishell(t_data *data);
 void	free_arr(char **arr);
 int		ft_pwd(t_data *data, char **cmd);
@@ -82,5 +95,7 @@ void	create_env_value(t_data *data, char *key);
 void	set_list_var(t_data *data, char *name, char *new_value);
 char	*find_value(char *name, t_list *envp);
 char	*new_substr(const char *str, int c);
+void	printa(char *str, char **arr);
+char	*to_str(char **arr);
 
 #endif

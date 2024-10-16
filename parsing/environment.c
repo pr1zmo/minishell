@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:08:01 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/08 16:08:03 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:33:14 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	env_lstadd_back(t_env **head, t_env *new)
 	tmp->next = new;
 }
 
-void	set_env(t_env **head, char **envp)
+static void	set_env(t_env **head, char **envp)
 {
 	t_env	*new;
 	int		i;

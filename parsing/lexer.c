@@ -66,7 +66,7 @@ void	lexer(char **arg, t_line **head, t_parse *data)
 		tmp = malloc(sizeof(t_line));
 		if (!tmp)
 			return ;
-		if (is_command(arg, i))
+		if (is_command(arg, i) && !check_token(arg[i][0]))
 			tokenize_cmd(arg[i++], tmp);
 		else if (ft_strchr(arg[i], '\"'))
 			tokenize_quotarg(arg, &i, tmp, '\"');

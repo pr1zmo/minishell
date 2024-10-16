@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 11:45:30 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/04 13:15:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/15 13:18:26 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	print_reverse(t_list *envp)
 {
 	if (envp == NULL)
 		return;
-	print_reverse(envp->next);
+	if (envp->next)
+		print_reverse(envp->next);
 	printf("%s\n", (char *)envp->content);
 }
 
