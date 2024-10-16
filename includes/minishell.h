@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/15 13:41:39 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/16 11:57:24 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef	struct	s_io_fds
 
 typedef struct s_cmd {
 	char			**argv;
+	char		*cmd;
 	int				type;
 	int				*pipe_fd;
 	t_io_fds		*io_fds;

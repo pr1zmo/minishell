@@ -537,12 +537,14 @@ void	create_files(t_cmd **cmd)
 
 void	show_cmds(t_cmd *cmd)
 {
+	int	i = 0;
 	t_cmd *temp = cmd;
-	while (temp)
+	while (temp && i < 10)
 	{
-		printf("The commands are: %s\n", to_str(temp->argv));
+		printf("The full command is: %s\n", temp->cmd);
 		printf("End of the node\n");
 		temp = temp->next;
+		i++;
 	}
 }
 
@@ -556,42 +558,65 @@ void	init_cmd(t_cmd *cmd)
 	cmd->prev = NULL;
 }
 
-void	get_list(t_line **head, t_cmd **cmd)
+void	show_head(t_line *head)
 {
-	t_line	*temp = *head;
-	t_cmd	*new_node;
-	int		i;
-	t_cmd	*current;
+	t_line	*temp = head;
+	int		i = 0;
 
 	while (temp)
 	{
-		new_node = (t_cmd *)malloc(sizeof(t_cmd));
-		if (!new_node)
+		printf("The type is: %d\n", temp->type);
+		while (temp->str[i])
 		{
-			perror("malloc");
-			return ;
-		}
-		init_cmd(new_node);
-		i = 0;
-		new_node->type = temp->type;
-		while (temp && (temp->type == 7 || temp->type == 8))
-		{
-			// new_node->argv[i] = ft_strdup(temp->str[i]);
-			new_node->argv[i] = ft_strcat(new_node->argv[i], temp->str[i]);
+			printf("The string is: %s\n", temp->str[i]);
 			i++;
-			temp = temp->next;
-		}
-		if (!(*cmd))
-			*cmd = new_node;
-		else
-		{
-			current = *cmd;
-			while (current->next)
-				current = current->next;
-			current->next = new_node;
-			new_node->prev = current;
 		}
 		temp = temp->next;
+	}
+}
+
+void get_list(t_line **head, t_cmd **cmd)
+{
+	t_cmd	*temp;
+	int		i;
+	char	*cmd_str;
+
+	temp = (t_cmd *)malloc(sizeof(t_cmd));
+	show_head(*head);
+	exit(0);
+	while (*head)
+	{
+		init_cmd(temp);
+		temp->type = (*head)->type;
+		i = 0;
+		while ((*head)->type != 7 && (*head)->type != 8)
+		{
+			cmd_str = ft_strjoin(cmd_str, (*head)->str[i]);
+			if ((*head)->next)
+			{
+				cmd_str = ft_strjoin(cmd_str, " ");
+				i++;
+			}
+			(*head) = (*head)->next;
+		}
+		if (cmd_str)
+			printf("The command is: %s\n", cmd_str);
+		else
+			printf("Wa l3fou\n");
+		exit(0);
+		temp->argv = ft_split(cmd_str, ' ');
+		temp->cmd = ft_strdup(cmd_str);
+		free(cmd_str);
+		cmd_str = NULL;
+		if (!(*cmd))
+			*cmd = temp;
+		else
+		{
+			(*cmd)->next = temp;
+			temp->prev = *cmd;
+			*cmd = temp;
+		}
+		*head = (*head)->next;
 	}
 }
 
@@ -607,7 +632,7 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(&data->cmd);
-		execute_cmds(data->cmd, data->envp_arr, data);
+		// execute_cmds(data->cmd, data->envp_arr, data);
 	}
 }
 
