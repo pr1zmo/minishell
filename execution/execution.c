@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/15 14:11:23 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/16 15:37:41 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -670,6 +670,7 @@ int	minishell(t_data *data)
 	while (1)
 	{
 		head = NULL;
+		cmd = NULL;
 		data->arg = readline(READLINE_MSG);
 		data->envp_arr = set_list_arra(data->envp);
 		if (data->arg == NULL || data->arg[0] == '\0')
@@ -677,6 +678,7 @@ int	minishell(t_data *data)
 		add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
 		data->head = head;
+		printf("%p\n", head);
 		get_final_list(&head, &cmd);
 		// data->cmd = cmd;
 		// show_cmd(data->cmd);
