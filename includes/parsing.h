@@ -38,15 +38,7 @@ typedef enum
 
 #define BUFFER_SIZE	2097152
 
-typedef struct	s_cmd
-{
-	char			**argv;
-	char			*input_file;
-	char			*output_file;
-	int				type;
-	int				*pipe_fd;
-	struct s_cmd	*next;
-}	t_cmd;
+typedef struct s_cmd t_cmd;
 
 typedef struct	s_env
 {

@@ -348,7 +348,9 @@ void show_cmd(t_cmd *cmd_list)
 
 	while (temp)
 	{
-		printf("The command is: %s\n", temp->cmd);
+		// printf("The command is: %s\n", temp->cmd);
+		for (int i = 0; temp->argv[i]; i++)
+			printf("The argv is: %s\n", temp->argv[i]);
 		printf("The type is: %i\n", temp->type);
 		temp = temp->next;
 	}
@@ -663,6 +665,7 @@ int	minishell(t_data *data)
 {
 	t_line	*head;
 	t_parse	p_data;
+	t_cmd	*cmd;
 
 	while (1)
 	{
@@ -674,6 +677,10 @@ int	minishell(t_data *data)
 		add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
 		data->head = head;
+		get_final_list(&head, &cmd);
+		// data->cmd = cmd;
+		// show_cmd(data->cmd);
+		show_cmd(cmd);
 		handle_input(data);
 		if (data->status == 0)
 			break ;
