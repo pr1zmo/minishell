@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   finalparse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/09 18:06:57 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/09 18:22:07 by zelbassa         ###   ########.fr       */
+/*   Created: 2024/10/11 15:56:21 by mel-bouh          #+#    #+#             */
+/*   Updated: 2024/10/12 15:39:27 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	size_to_alloc(t_line *node)
 		size++;
 		node = node->next;
 	}
-	while (node && !get_token(node->str[0]))
+	while (node && (node->type == 7 || node->type == 8))
 	{
 		i = 0;
 		while (node->str[i])
@@ -58,18 +58,18 @@ t_cmd	*get_current(t_line **node)
 	int		size;
 	int		j;
 
-	tmp = (t_cmd *)malloc(sizeof(t_cmd));
+	tmp = malloc(sizeof(t_cmd));
 	if (!tmp)
 		return (NULL);
 	tmp->argv = malloc(sizeof(char *) * (size_to_alloc((*node)) + 1));
 	i = 0;
-	while ((*node)->type != PIPE)
+	if ((*node)->type != PIPE)
 	{
 		tmp->argv[i++] = ft_strdup((*node)->str[0]);
 		tmp->type = (*node)->type;
 		(*node) = (*node)->next;
 	}
-	while ((*node) && (*node)->type == 7)
+	while ((*node) && ((*node)->type == 7 || (*node)->type == 8))
 	{
 		j = 0;
 		while ((*node)->str[j])
@@ -95,7 +95,6 @@ void	get_final_list(t_line **head, t_cmd **cmd)
 		if (!tmp)
 			break ;
 		new = get_current(&tmp);
-		new->pipe_fd = NULL;
 		lstadd_back(cmd, new);
 	}
 }

@@ -611,7 +611,8 @@ void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
 
-	data->cmd = build_cmd_list(temp);
+	// data->cmd = build_cmd_list(temp);
+	get_final_list(&temp, &data->cmd);
 	if (data->cmd)
 		show_cmd(data->cmd);
 	else
