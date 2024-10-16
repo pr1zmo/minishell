@@ -555,7 +555,6 @@ void set_cmd_strings(t_cmd **cmd_list)
         }
         current = current->next;
     }
-	(*cmd_list) = current;
 }
 
 int	handle_input(t_data *data)
@@ -571,11 +570,9 @@ int	handle_input(t_data *data)
 	}
 	else
 	{
-		printf("Here\n");
 		set_cmd_strings(&data->cmd);
-		printf("Here\n");
 		show_cmd(data->cmd);
-		printf("Here\n");
+		printf("The first command is: %s\n", data->cmd->cmd);
 		complex_command(data);
 	}
 	return (0);
