@@ -1,5 +1,16 @@
-// #include "parsing.h"
-#include "../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/11 15:56:00 by mel-bouh          #+#    #+#             */
+/*   Updated: 2024/10/12 15:32:30 by mel-bouh         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/parsing.h"
 
 int	check_dollar(char *s, int i)
 {
@@ -21,7 +32,7 @@ int	check_token(int c)
 
 int	checkspaces(char *line)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	if (!line)
@@ -29,18 +40,22 @@ int	checkspaces(char *line)
 	while (is_space(line[i]))
 		i++;
 	if (!line[i])
-		return (0);
+		return (free(line), 0);
 	return (1);
 }
 
 int	checkquotes(char *line)
 {
 	int	i;
+	int	hdoc;
 
 	i = 0;
+	hdoc = 0;
 	while (line[i])
 	{
-		if (line[i] == '$' && !check_dollar(line ,i))
+		if (line[i] == '<' && line[i + 1] == '<' && !quotes_open(line, i))
+			hdoc++;
+		if (line[i] == '$' && !check_dollar(line ,i) && !hdoc)
 			line[i] = -1;
 		i++;
 	}

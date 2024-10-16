@@ -1,5 +1,16 @@
-// #include "parsing.h"
-#include "../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environment.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/11 15:56:07 by mel-bouh          #+#    #+#             */
+/*   Updated: 2024/10/11 15:56:07 by mel-bouh         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/parsing.h"
 
 static void	env_lstadd_back(t_env **head, t_env *new)
 {
