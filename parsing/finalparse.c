@@ -95,6 +95,9 @@ void	get_final_list(t_line **head, t_cmd **cmd)
 		if (!tmp)
 			break ;
 		new = get_current(&tmp);
+		// new->input_file = NULL;
+		// new->output_file = NULL;
+		// new->pipe_fd = NULL;
 		lstadd_back(cmd, new);
 	}
 }
