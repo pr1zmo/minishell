@@ -13,6 +13,16 @@
 #include "libft.h"
 #include <stdio.h>
 
+static void	ft_free(char **arr, int i)
+{
+	while (i >= 0)
+	{
+		free(arr[i]);
+		i--;
+	}
+	free(arr);
+}
+
 static int	count_words(const char *s, char c)
 {
 	int	i;
