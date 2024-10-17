@@ -425,59 +425,73 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 void init_io(t_cmd *cmd)
 {
     if (!cmd->io_fds)
-	{
-        cmd->io_fds = malloc(sizeof(t_io_fds)); // Ensure correct allocation
+    {
+        cmd->io_fds = malloc(sizeof(t_io_fds)); // Attempt to allocate memory
         if (!cmd->io_fds)
-            return; // Handle allocation failure
-        cmd->io_fds->infile = NULL;
-        cmd->io_fds->outfile = NULL;
-        cmd->io_fds->heredoc_name = NULL;
-        cmd->io_fds->in_fd = 0; // Default input file descriptor
-        cmd->io_fds->out_fd = 1; // Default output file descriptor
+            return; // Exit if allocation fails
     }
+    // Initialize fields
+    cmd->io_fds->infile = NULL;
+    cmd->io_fds->outfile = NULL;
+    cmd->io_fds->heredoc_name = NULL;
+    cmd->io_fds->in_fd = 0; // Default input file descriptor
+    cmd->io_fds->out_fd = 1; // Default output file descriptor
+	printf("The output file descriptor is: %d\n", cmd->io_fds->out_fd);
 }
-static void pipe_init(t_cmd **cmd)
+
+static void pipe_init(t_cmd *cmd)
 {
 	int pipe_fds[2];
 
-	if (!(*cmd) || !(*cmd)->next)
+	if (!cmd || !cmd->next)
 		return;
-	init_io(*cmd);
+	init_io(cmd);
+	printf("io_fds address: %p\n", (void *)cmd->io_fds);
+	printf("out_fd: %d, in_fd: %d\n", cmd->io_fds->out_fd, cmd->next->io_fds->in_fd);
 	if (pipe(pipe_fds) == -1)
 	{
 		perror("pipe");
 		return;
 	}
-	if ((*cmd)->next)
+	init_io(cmd->next);
+	// Duplicate the write-end of the pipe onto the command's out_fd
+	if (dup2(pipe_fds[1], cmd->io_fds->out_fd) == -1)
 	{
-		init_io((*cmd)->next);
-		if (dup2(pipe_fds[1], (*cmd)->io_fds->out_fd) == -1)
-		{
-			perror("dup2");
-			return;
-		}
-		if (dup2(pipe_fds[0], (*cmd)->next->io_fds->in_fd) == -1)
-		{
-			perror("dup2");
-			return;
-		}
-		close(pipe_fds[0]);
+		perror("dup2");
+		close(pipe_fds[0]); // Close the pipe fds on error
 		close(pipe_fds[1]);
+		return;
 	}
+	close(pipe_fds[1]); // Close the original write-end as it's now duplicated
+	if (dup2(pipe_fds[0], cmd->next->io_fds->in_fd) == -1)
+	{
+		perror("dup2");
+		close(pipe_fds[0]); // Close the read-end as well, though it should be closed already
+		return;
+	}
+	close(pipe_fds[0]); // Close the original read-end as it's now duplicated
 }
 
-void	create_files(t_cmd **cmd)
+void	create_files(t_cmd *cmd)
 {
-	t_cmd	*temp = *cmd;
-
-	while (temp)
+	while (cmd)
 	{
-		if (temp->next)
+		if (cmd->next)
 		{
-			// printf("Here\n");
-			pipe_init(&temp);
+			pipe_init(cmd);
+			ft_putstr_fd("The input file is: ", 2);
+			if (cmd->io_fds->infile)
+				ft_putstr_fd(cmd->io_fds->infile, 2);
+			else
+				ft_putstr_fd("NULL", 2);
+			ft_putchar_fd('\n', 2);
+			ft_putstr_fd("The output file is: ", 2);
+			if (cmd->io_fds->outfile)
+				ft_putstr_fd(cmd->io_fds->outfile, 2);
+			else
+				ft_putstr_fd("NULL", 2);
 		}
-		temp = temp->next;
+		cmd = cmd->next;
 	}
 }
 
@@ -494,9 +508,9 @@ void	init_cmd(t_cmd *cmd)
 
 void ft_putstr_color_fd(char *str, int fd, char *color_code)
 {
-	ft_putstr_fd(color_code, fd);  // Set color
-	ft_putstr_fd(str, fd);         // Print string
-	ft_putstr_fd("\033[0m", fd);   // Reset color
+	ft_putstr_fd(color_code, fd);
+	ft_putstr_fd(str, fd);
+	ft_putstr_fd("\033[0m", fd);
 	ft_putchar_fd('\n', fd);
 }
 
@@ -506,34 +520,34 @@ void	complex_command(t_data *data)
 
 	if (data->cmd)
 	{
-		create_files(&data->cmd);
+		create_files(data->cmd);
 	}
 }
 
 void set_cmd_strings(t_cmd *cmd)
 {
-    t_cmd *current = cmd;
+	t_cmd *current = cmd;
 
-    while (current != NULL)
+	while (current != NULL)
 	{
-        size_t total_length = 0;
-        for (int i = 0; current->argv[i] != NULL; i++)
-            total_length += ft_strlen(current->argv[i]) + 1;
-        current->cmd = malloc(total_length * sizeof(char));
-        if (current->cmd == NULL)
+		size_t total_length = 0;
+		for (int i = 0; current->argv[i] != NULL; i++)
+			total_length += ft_strlen(current->argv[i]) + 1;
+		current->cmd = malloc(total_length * sizeof(char));
+		if (current->cmd == NULL)
 		{
-            perror("Failed to allocate memory");
-            exit(EXIT_FAILURE);
-        }
-        current->cmd[0] = '\0';
-        for (int i = 0; current->argv[i] != NULL; i++)
+			perror("Failed to allocate memory");
+			exit(EXIT_FAILURE);
+		}
+		current->cmd[0] = '\0';
+		for (int i = 0; current->argv[i] != NULL; i++)
 		{
-            strcat(current->cmd, current->argv[i]);
-            if (current->argv[i + 1] != NULL)
-                strcat(current->cmd, " ");
-        }
-        current = current->next;
-    }
+			strcat(current->cmd, current->argv[i]);
+			if (current->argv[i + 1] != NULL)
+				strcat(current->cmd, " ");
+		}
+		current = current->next;
+	}
 }
 
 int	handle_input(t_data *data)
