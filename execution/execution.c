@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/16 15:37:41 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/10/17 01:46:05 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,28 +355,26 @@ void show_cmd(t_cmd *cmd_list)
 	}
 }
 
-char	*ft_strcat(char *s1, char *s2)
+char *ft_strcat(char *s1, char *s2)
 {
-	char	*dest;
-	int		i;
+	size_t	len1;
+	size_t	len2;
 
-	i = 0;
-	if (!s1 || !s2)
-	{
-		if (s1)
-			return (ft_strdup(s1));
-		if (s2)
-			return (ft_strdup(s2));
-		else
-			return (NULL);
-	}
-	dest = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	while (s1 && *s1)
-		*dest++ = *s1++;
-	while(s2 && *s2)
-		*dest++ = *s2++;
-	*dest = '\0';
-	return (dest);
+	if (!s1 && !s2)
+		return (NULL); // Both are NULL
+	if (!s1)
+		return (strdup(s2)); // s1 is NULL, return a copy of s2
+	if (!s2)
+		return (strdup(s1)); // s2 is NULL, return a copy of s1
+	len1 = strlen(s1);
+	len2 = strlen(s2);
+	char *dest = malloc(len1 + len2 + 1);
+	if (!dest)
+		return (NULL); // Check for allocation failure
+	memcpy(dest, s1, len1);
+	memcpy(dest + len1, s2, len2);
+	dest[len1 + len2] = '\0';
+	return (dest); // Return the pointer to the new string
 }
 
 char	*to_str(char **arr)
@@ -424,48 +422,48 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	return 0;
 }
 
-void	init_io(t_cmd *cmd)
+void init_io(t_cmd *cmd)
 {
-	if (!cmd->io_fds)
+    if (!cmd->io_fds)
 	{
-		cmd->io_fds = malloc(sizeof * cmd->io_fds);
-		if (!cmd->io_fds)
-			return ;
-		cmd->io_fds->infile = NULL;
-		cmd->io_fds->outfile = NULL;
-		cmd->io_fds->heredoc_name = NULL;
-		cmd->io_fds->in_fd = 0;
-		cmd->io_fds->out_fd = 1;
-	}
+        cmd->io_fds = malloc(sizeof(t_io_fds)); // Ensure correct allocation
+        if (!cmd->io_fds)
+            return; // Handle allocation failure
+        cmd->io_fds->infile = NULL;
+        cmd->io_fds->outfile = NULL;
+        cmd->io_fds->heredoc_name = NULL;
+        cmd->io_fds->in_fd = 0; // Default input file descriptor
+        cmd->io_fds->out_fd = 1; // Default output file descriptor
+    }
 }
-
-static void	pipe_init(t_cmd **cmd)
+static void pipe_init(t_cmd **cmd)
 {
-	int		pipe_fds[2];
+	int pipe_fds[2];
 
-	if (!cmd || !(*cmd) || !(*cmd)->next)
-		return ;
-	return ;
+	if (!(*cmd) || !(*cmd)->next)
+		return;
 	init_io(*cmd);
 	if (pipe(pipe_fds) == -1)
-		return ;
+	{
+		perror("pipe");
+		return;
+	}
 	if ((*cmd)->next)
 	{
 		init_io((*cmd)->next);
 		if (dup2(pipe_fds[1], (*cmd)->io_fds->out_fd) == -1)
 		{
 			perror("dup2");
-			return ;
+			return;
 		}
 		if (dup2(pipe_fds[0], (*cmd)->next->io_fds->in_fd) == -1)
 		{
 			perror("dup2");
-			return ;
+			return;
 		}
 		close(pipe_fds[0]);
 		close(pipe_fds[1]);
 	}
-	return ;
 }
 
 void	create_files(t_cmd **cmd)
@@ -475,7 +473,10 @@ void	create_files(t_cmd **cmd)
 	while (temp)
 	{
 		if (temp->next)
+		{
+			// printf("Here\n");
 			pipe_init(&temp);
+		}
 		temp = temp->next;
 	}
 }
@@ -509,49 +510,27 @@ void	complex_command(t_data *data)
 	}
 }
 
-char *concatenate_argv(char **argv)
+void set_cmd_strings(t_cmd *cmd)
 {
-    size_t total_length = 0;
-    int i = 0;
+    t_cmd *current = cmd;
 
-    // Calculate the total length needed for the result string
-    while (argv[i]) {
-        total_length += strlen(argv[i]) + 1; // +1 for space or null terminator
-        i++;
-    }
-
-    // Allocate memory for the result string
-    char *result = (char *)malloc(total_length + 1); // +1 for null terminator
-    if (!result) {
-        perror("malloc");
-        return NULL;
-    }
-    result[0] = '\0'; // Initialize the result string
-
-    // Concatenate the strings in argv into result
-    i = 0;
-    while (argv[i]) {
-        result = ft_strcat(result, argv[i]);
-        if (argv[i + 1]) {
-            result = ft_strcat(result, " ");
-        }
-        i++;
-    }
-
-    return result;
-}
-
-void set_cmd_strings(t_cmd **cmd_list)
-{
-    t_cmd *current = (*cmd_list);
-
-    while (current)
+    while (current != NULL)
 	{
-        if (current->argv)
+        size_t total_length = 0;
+        for (int i = 0; current->argv[i] != NULL; i++)
+            total_length += ft_strlen(current->argv[i]) + 1;
+        current->cmd = malloc(total_length * sizeof(char));
+        if (current->cmd == NULL)
 		{
-            current->cmd = concatenate_argv(current->argv);
-            if (!current->cmd)
-                return;
+            perror("Failed to allocate memory");
+            exit(EXIT_FAILURE);
+        }
+        current->cmd[0] = '\0';
+        for (int i = 0; current->argv[i] != NULL; i++)
+		{
+            strcat(current->cmd, current->argv[i]);
+            if (current->argv[i + 1] != NULL)
+                strcat(current->cmd, " ");
         }
         current = current->next;
     }
@@ -570,9 +549,7 @@ int	handle_input(t_data *data)
 	}
 	else
 	{
-		set_cmd_strings(&data->cmd);
-		show_cmd(data->cmd);
-		printf("The first command is: %s\n", data->cmd->cmd);
+		set_cmd_strings(data->cmd);
 		complex_command(data);
 	}
 	return (0);
