@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/17 01:46:05 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/18 17:42:07 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -397,18 +397,32 @@ char	*to_str(char **arr)
 void	execute_command(t_data *data, t_cmd *cmd)
 {
 	int		pid;
-	char	*cmd_str;
+	int		status;
+	int		pipe_fds[2];
 
-	cmd_str = to_str(cmd->argv);
-	pid = fork();
-	if (pid == -1)
+	if (cmd->next)
 	{
-		perror("fork");
-		return ;
+		if (pipe(pipe_fds) == -1)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+		cmd->pipe_fd = pipe_fds;
+		if (dup2(pipe_fds[1], STDOUT_FILENO) == -1)
+		{
+			perror("dup2");
+			exit(EXIT_FAILURE);
+		}
+		if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			exit(EXIT_FAILURE);
+		}
 	}
-	if (pid == 0)
-		exec_cmd(cmd_str, data->envp_arr, data);
-	waitpid(0, NULL, 0);
+	if (cmd->type == CMD)
+	{
+		exec_cmd(cmd->cmd, data->envp_arr, data);
+	}
 }
 
 int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
@@ -444,21 +458,24 @@ static void	show_io_fds(t_io_fds *io_fds)
 
 static void	handle_write_to(t_cmd **cmd, t_data *data)
 {
-	t_cmd	*current = *cmd;
-	t_cmd	*temp;
-	t_io_fds	*io_fds;
-
-	while (current)
+	(*cmd)->io_fds = malloc(sizeof(t_io_fds));
+	if (!(*cmd)->io_fds)
 	{
-		io_fds = malloc(sizeof(t_io_fds));
-		if (!io_fds)
-		{
-			perror("Failed to allocate memory");
-			exit(EXIT_FAILURE);
-		}
-		init_io(io_fds);
-		current->io_fds = io_fds;
-		current->io_fds->outfile = current->argv[1];
+		perror("Failed to allocate memory");
+		exit(EXIT_FAILURE);
+	}
+	init_io((*cmd)->io_fds);
+	(*cmd)->io_fds->outfile = ft_strdup((*cmd)->argv[1]);
+	if (!(*cmd)->io_fds->outfile)
+	{
+		perror("Failed to allocate memory");
+		exit(EXIT_FAILURE);
+	}
+	(*cmd)->io_fds->out_fd = open((*cmd)->io_fds->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if ((*cmd)->io_fds->out_fd == -1)
+	{
+		perror("Failed to open file");
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -524,12 +541,7 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(&data->cmd, data);
-		if (data->cmd->type == CMD)
-		{
-			ft_putstr_fd("Executing command: ", 2);
-			ft_putstr_fd(data->cmd->cmd, 2);
-			execute_cmds(data->cmd, data->envp_arr, data);
-		}
+		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 }
 
