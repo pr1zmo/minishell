@@ -413,71 +413,88 @@ void	execute_command(t_data *data, t_cmd *cmd)
 
 int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 {
-	while (cmd_list)
-	{
-		if (cmd_list->type == CMD)
-			execute_command(data, cmd_list);
-		cmd_list = cmd_list->next;
-	}
-	return 0;
-}
-
-void init_io(t_cmd *cmd)
-{
-    if (!cmd->io_fds)
-	{
-        cmd->io_fds = malloc(sizeof(t_io_fds)); // Ensure correct allocation
-        if (!cmd->io_fds)
-            return; // Handle allocation failure
-        cmd->io_fds->infile = NULL;
-        cmd->io_fds->outfile = NULL;
-        cmd->io_fds->heredoc_name = NULL;
-        cmd->io_fds->in_fd = 0; // Default input file descriptor
-        cmd->io_fds->out_fd = 1; // Default output file descriptor
-    }
-}
-static void pipe_init(t_cmd **cmd)
-{
-	int pipe_fds[2];
-
-	if (!(*cmd) || !(*cmd)->next)
-		return;
-	init_io(*cmd);
-	if (pipe(pipe_fds) == -1)
-	{
-		perror("pipe");
-		return;
-	}
-	if ((*cmd)->next)
-	{
-		init_io((*cmd)->next);
-		if (dup2(pipe_fds[1], (*cmd)->io_fds->out_fd) == -1)
-		{
-			perror("dup2");
-			return;
-		}
-		if (dup2(pipe_fds[0], (*cmd)->next->io_fds->in_fd) == -1)
-		{
-			perror("dup2");
-			return;
-		}
-		close(pipe_fds[0]);
-		close(pipe_fds[1]);
-	}
-}
-
-void	create_files(t_cmd **cmd)
-{
-	t_cmd	*temp = *cmd;
+	t_cmd	*temp = cmd_list;
 
 	while (temp)
 	{
-		if (temp->next)
-		{
-			// printf("Here\n");
-			pipe_init(&temp);
-		}
+		execute_command(data, temp);
 		temp = temp->next;
+	}
+	return (0);
+}
+
+static void	init_io(t_io_fds *io_fds)
+{
+	io_fds->in_fd = STDIN_FILENO;
+	io_fds->out_fd = STDOUT_FILENO;
+	io_fds->infile = NULL;
+	io_fds->outfile = NULL;
+	io_fds->heredoc_name = NULL;
+}
+
+static void	show_io_fds(t_io_fds *io_fds)
+{
+	ft_putstr_fd("in_fd: ", 2);
+	ft_putnbr_fd(io_fds->in_fd, 2);
+	ft_putchar_fd('\n', 2);
+	ft_putstr_fd("out_fd: ", 2);
+	ft_putnbr_fd(io_fds->out_fd, 2);
+	ft_putchar_fd('\n', 2);
+}
+
+static void	handle_write_to(t_cmd **cmd, t_data *data)
+{
+	t_cmd	*current = *cmd;
+	t_cmd	*temp;
+	t_io_fds	*io_fds;
+
+	while (current)
+	{
+		io_fds = malloc(sizeof(t_io_fds));
+		if (!io_fds)
+		{
+			perror("Failed to allocate memory");
+			exit(EXIT_FAILURE);
+		}
+		init_io(io_fds);
+		current->io_fds = io_fds;
+		current->io_fds->outfile = current->argv[1];
+	}
+}
+
+void create_files(t_cmd **cmd, t_data *data)
+{
+	t_cmd	*current = *cmd;
+	t_cmd	*temp;
+	t_io_fds	*io_fds;
+
+	while (current)
+	{
+		io_fds = malloc(sizeof(t_io_fds));
+		if (!io_fds)
+		{
+			perror("Failed to allocate memory");
+			exit(EXIT_FAILURE);
+		}
+		init_io(io_fds);
+		current->io_fds = io_fds;
+		if (current->type == REDIR_OUT)
+		{
+			handle_write_to(&current, data);
+		}
+		else if (current->type == REDIR_IN)
+		{
+			// handle_read_from(&current, data);
+		}
+		else if (current->type == APPEND)
+		{
+			// handle_append(&current, data);
+		}
+		else if (current->type == HEREDOC)
+		{
+			// handle_heredoc(&current, data);
+		}
+		current = current->next;
 	}
 }
 
@@ -506,7 +523,13 @@ void	complex_command(t_data *data)
 
 	if (data->cmd)
 	{
-		create_files(&data->cmd);
+		create_files(&data->cmd, data);
+		if (data->cmd->type == CMD)
+		{
+			ft_putstr_fd("Executing command: ", 2);
+			ft_putstr_fd(data->cmd->cmd, 2);
+			execute_cmds(data->cmd, data->envp_arr, data);
+		}
 	}
 }
 

@@ -22,7 +22,7 @@
 # include "minishell.h"
 
 
-# define PATH_MAX 4096
+// # define PATH_MAX 4096
 typedef enum
 {
 	NONE,		// 0
