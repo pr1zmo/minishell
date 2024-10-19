@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/16 11:57:24 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/19 18:19:45 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ typedef struct s_data
 	int			pipe_count;
 }				t_data;
 
+void	show_command_ios(t_cmd *cmd);
 char	*ft_strcat(char *dest, char *src);
 int		minishell(t_data *data);
 void	free_arr(char **arr);
@@ -90,7 +91,6 @@ int		ft_exit(t_data *data, char **cmd);
 int		ft_export(t_data *data, char **cmd);
 int		ft_unset(t_data *data, char **cmd);
 int		modify_env_value(char *name, char *new_value, t_data *data);
-void	set_env_var(t_data *data, char *value, char *old_value);
 char	*ft_getenv(char *name, t_data *data);
 void	create_env_value(t_data *data, char *key);
 void	set_list_var(t_data *data, char *name, char *new_value);
@@ -98,5 +98,22 @@ char	*find_value(char *name, t_list *envp);
 char	*new_substr(const char *str, int c);
 void	printa(char *str, char **arr);
 char	*to_str(char **arr);
+int reset_shell(t_data *data);
+int		builtin(char *cmd);
+int exec_builtin(t_data *data, char **cmd);
+int ft_error(int error, t_data *data);
+int count_pipes(t_data *data);
+void debug(void);
+char *get_full_cmd(char *av, char **env);
+char *array_to_string(t_line *head);
+int	count_symbols(t_data *data);
+void show_cmd(t_cmd *cmd_list);
+char *ft_strcat(char *s1, char *s2);
+char *to_str(char **arr);
+char *new_strjoin(char *s1, char *s2);
+void show_command_info(t_cmd *cmd_list);
+void show_io_fds(t_io_fds *io_fds);
+void set_cmd_strings(t_cmd *cmd);
+char **set_list_arra(t_list *envp);
 
 #endif

@@ -6,227 +6,24 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/19 02:47:56 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/19 19:11:56 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	printa(char *message, char **arr);
-
-char *ft_getenv(char *name, t_data *data)
-{
-	int 	i;
-	t_list	*temp = data->envp;
-
-	if (!name || !data || !data->envp)
-		return NULL;
-	i = 0;
-	while (temp)
-	{
-		if (ft_strncmp(temp->content, name, ft_strlen(name)))
-			return (ft_strdup(temp->content));
-		temp = temp->next;
-	}
-	return (NULL);
-}
-
-int	reset_shell(t_data *data)
-{
-	// data->head = data->head->next;
-	if (data->arg)
-	{
-		free(data->arg);
-		data->arg = NULL;
-	}
-	// rl_clear_history();
-	minishell(data);
-	return (1);
-}
-
-int	modify_env_value(char *name, char *new_value, t_data *data)
-{
-	char *str;
-
-	str = getenv(name);
-	if (!str)
-		perror("getenv");
-	else
-		set_list_var(data, name, new_value);
-	return (1);
-}
-
-int	builtin(char *cmd)
-{
-	char	*builtin[8];
-	int		i;
-
-	i = 0;
-	builtin[0] = "echo";
-	builtin[1] = "cd";
-	builtin[2] = "pwd";
-	builtin[3] = "export";
-	builtin[4] = "unset";
-	builtin[5] = "env";
-	builtin[6] = "exit";
-	builtin[7] = NULL;
-	while (i < 7)
-	{
-		if (ft_strncmp(builtin[i], cmd, 0) == 0)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	exec_builtin(t_data *data, char **cmd)
-{
-	int	res;
-
-	res = 0;
-	if (ft_strncmp(cmd[0], "pwd", 0) == 0)
-		res = ft_pwd(data, cmd);
-	else if (ft_strncmp(cmd[0], "env", 0) == 0)
-		res = ft_env(data, cmd);
-	else if (ft_strncmp(cmd[0], "echo", 0) == 0)
-		res = ft_echo(data, cmd);
-	else if (ft_strncmp(cmd[0], "cd", 0) == 0)
-		res = ft_cd(data, cmd);
-	else if (ft_strncmp(cmd[0], "unset", 0) == 0)
-		res = ft_unset(data, cmd);
-	else if (ft_strncmp(cmd[0], "export", 0) == 0)
-		res = ft_export(data, cmd);
-	return (res);
-}
-
-int	ft_error(int error, t_data *data)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	if (error == 0)
-		ft_putstr_fd("syntax error: cannot find a closing quote\n",
-			STDERR_FILENO);
-	else if (error == 1)
-		ft_putstr_fd("error when forking\n",
-			STDERR_FILENO);
-	else if (error == 2)
-		ft_putstr_fd("error finding command\n", STDERR_FILENO);
-	else if (error == 3)
-		ft_putstr_fd("Could not find corresponding path\n", STDERR_FILENO);
-	reset_shell(data);
-	return (EXIT_FAILURE);
-}
-
-void	debug();
-
-void set_list_var(t_data *data, char *name, char *new_value)
-{
-	int 	len;
-	t_list *current;
-	char	*temp;
-
-	len = ft_strlen(name);
-	current = data->envp;
-	while (current)
-	{
-		if (ft_strncmp(current->content, name, len) == 0)
-		{
-			free(current->content);
-			current->content = NULL;
-			temp = ft_strjoin(name, "=");
-			current->content = ft_strjoin(temp, new_value);
-			if (!current->content)
-			{
-				ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
-				return;
-			}
-			break;
-		}
-		current = current->next;
-	}
-}
-
-
-void	printa(char *message, char **str)
-{
-	int	i;
-
-	i = 0;
-	printf("%s: ", message);
-	while (str[i])
-	{
-		printf("%s ", str[i]);
-		i++;
-	}
-}
-
-int	count_pipes(t_data *data)
-{
-	int	i;
-	int	k;
-	t_line	*temp;
-
-	i = 0;
-	k = 0;
-	temp = data->head;
-	while (temp)
-	{
-		while (temp->str[i])
-		{
-			if (temp->type == 1)
-				k++;
-			i++;
-		}
-		temp = temp->next;
-	}
-	// free(temp);
-	return (k);
-}
-
 bool	check_infile_outfile(t_io_fds *io)
 {
 	if (!io || (!io->infile && !io->outfile))
-		return (true);
-	if ((io->infile && io->in_fd == -1)
-		|| (io->outfile && io->out_fd == -1))
-		return (false);
-	return (true);
-}
-
-void	debug()
-{
-	static int count;
-
-	if (!count)
-		count = 0;
-	printf("Here: %d\n", count);
-	count++;
-}
-
-static char	*get_full_cmd(char *av, char **env)
-{
-	int		i;
-	// char	*result;
-	char	*full_cmd;
-	char	**path;
-
-	i = 0;
-	(void)env;
-	path = ft_split(getenv("PATH"), ':');
-	if (!path)
-		perror("Path error");
-	while (path[i])
 	{
-		full_cmd = ft_strjoin(ft_strjoin(path[i], "/"), av);
-		// free(result);
-		if (access(full_cmd, X_OK | F_OK) == 0)
-		{
-			return (full_cmd);
-		}
-		// free(full_cmd);
-		i++;
+		return (true);
 	}
-	// free_arr(path);
-	return (NULL);
+	else if ((io->infile && io->in_fd == -1)
+		|| (io->outfile && io->out_fd == -1))
+		{
+			return (false);
+		}
+	return (true);
 }
 
 void	exec_cmd(char *av, char **env, t_data *data)
@@ -252,86 +49,6 @@ void	exec_cmd(char *av, char **env, t_data *data)
 		return ;
 }
 
-char	*array_to_string(t_line *temp)
-{
-	size_t total_length = 0;
-	char *cmd;
-	size_t cmd_size;
-	t_line *current = temp;
-
-	// Calculate the total length needed
-	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
-	{
-		for (size_t i = 0; current->str[i]; i++)
-			total_length += strlen(current->str[i]) + 1;
-		current = current->next;
-	}
-
-	// Allocate memory for the result string
-	cmd_size = total_length + 1; // +1 for the null terminator
-	cmd = (char *)malloc(cmd_size);
-	if (!cmd)
-	{
-		perror("malloc");
-		return NULL;
-	}
-	cmd[0] = '\0'; // Initialize the result string
-
-	// Concatenate each element with a space
-	current = temp;
-	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
-	{
-		for (size_t i = 0; current->str[i]; i++)
-		{
-			ft_strlcat(cmd, current->str[i], cmd_size);
-			if (current->str[i + 1] || (current->next &&
-				(current->next->type == 7 || current->next->type == 8)))
-				ft_strlcat(cmd, " ", cmd_size);
-		}
-		current = current->next;
-	}
-	return cmd;
-}
-
-int	count_symbols(t_data *data)
-{
-	int		i;
-	t_line	*temp = data->head;
-
-	i = 0;
-	while (temp)
-	{
-		if (temp->type >= 1 && temp->type <= 5)
-			i++;
-		temp = temp->next;
-	}
-	return (i);
-}
-
-char	*new_strjoin(char *s1, char *s2)
-{
-	char	*result;
-
-	if (!s1 || !s2)
-	{
-		if (s1)
-			return (ft_strdup(s1));
-		if (s2)
-			return (ft_strdup(s2));
-		else
-			return (NULL);
-	}
-	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 2);
-	while (*s1)
-		*result++ = *s1++;
-	*result = ' ';
-	result++;
-	while (*s2)
-		*result++ = *s2++;
-	*result = '\0';
-	return (result);
-}
-
 int	single_command(t_data *data, char *cmd)
 {
 	t_line	*temp = data->head;
@@ -352,57 +69,6 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
-void show_cmd(t_cmd *cmd_list)
-{
-    int 	i = 0;
-    t_cmd	*temp = cmd_list;
-
-	while (temp)
-	{
-		printf("The command is: %s\n", temp->cmd);
-		printf("The type is: %i\n", temp->type);
-		temp = temp->next;
-	}
-}
-
-char *ft_strcat(char *s1, char *s2)
-{
-	size_t	len1;
-	size_t	len2;
-
-	if (!s1 && !s2)
-		return (NULL); // Both are NULL
-	if (!s1)
-		return (strdup(s2)); // s1 is NULL, return a copy of s2
-	if (!s2)
-		return (strdup(s1)); // s2 is NULL, return a copy of s1
-	len1 = strlen(s1);
-	len2 = strlen(s2);
-	char *dest = malloc(len1 + len2 + 1);
-	if (!dest)
-		return (NULL); // Check for allocation failure
-	memcpy(dest, s1, len1);
-	memcpy(dest + len1, s2, len2);
-	dest[len1 + len2] = '\0';
-	return (dest); // Return the pointer to the new string
-}
-
-char	*to_str(char **arr)
-{
-	char	*result;
-	int		i;
-
-	i = 0;
-	result = NULL;
-	while (arr[i])
-	{
-		result = ft_strcat(result, arr[i]);
-		if (arr[i + 1])
-			result = ft_strcat(result, " ");
-		i++;
-	}
-	return (result);
-}
 
 void	close_pipe_fds(t_cmd *cmds, t_cmd *skip_cmd)
 {
@@ -441,13 +107,19 @@ void	close_fds(t_cmd *cmds, bool close_backups)
 	close_pipe_fds(cmds, NULL);
 }
 
-static void	init_io(t_io_fds *io_fds)
+static void	init_io(t_io_fds **io_fds)
 {
-	io_fds->in_fd = STDIN_FILENO;
-	io_fds->out_fd = STDOUT_FILENO;
-	io_fds->infile = NULL;
-	io_fds->outfile = NULL;
-	io_fds->heredoc_name = NULL;
+	*io_fds = (t_io_fds *)malloc(sizeof(t_io_fds));
+	if (!(*io_fds))
+	{
+		ft_putstr_fd("Failed to allocate memory\n", 2);
+		return ;
+	}
+	(*io_fds)->in_fd = -1;
+	(*io_fds)->out_fd = -1;
+	(*io_fds)->infile = NULL;
+	(*io_fds)->outfile = NULL;
+	(*io_fds)->heredoc_name = NULL;
 }
 
 bool	redirect_io(t_io_fds *io)
@@ -455,17 +127,24 @@ bool	redirect_io(t_io_fds *io)
 	int	ret;
 
 	ret = true;
+	ft_putstr_fd("redirect_io\n", 2);
 	if (!io)
+	{
+		ft_putstr_fd("io_fds is NULL\n", 2);
 		return (ret);
-	// io = (t_io_fds *)malloc(sizeof(t_io_fds));
-	// init_io(io);
+	}
+	ft_putstr_fd("The io_fds is not NULL\n", 2);
+	ft_putnbr_fd(io->in_fd, 2);
+	ft_putchar_fd('\n', 2);
 	if (io->in_fd != -1)
 	{
+		ft_putstr_fd("in_fd is not yet set\n", 2);
 		if (dup2(io->in_fd, STDIN_FILENO) == -1)
 			ft_putstr_fd("dup2 error\n", 2);
 	}
 	if (io->out_fd != -1)
 	{
+		ft_putstr_fd("out_fd is not yet set\n", 2);
 		if (dup2(io->out_fd, STDOUT_FILENO) == -1)
 			ft_putstr_fd("dup2 error\n", 2);
 	}
@@ -478,8 +157,6 @@ int	execute_command(t_data *data, t_cmd *cmd)
 
 	if (cmd->type != CMD)
 		return (1);
-	// if (!cmd || !cmd->cmd)
-	// 	ft_putstr_fd("Command not found\n", 2);
 	if (!check_infile_outfile(cmd->io_fds))
 		exit(1);
 	set_pipe_fds(data->cmd, cmd);
@@ -496,22 +173,6 @@ int	execute_command(t_data *data, t_cmd *cmd)
 	}
 	ret = single_command(data, cmd->cmd);
 	return (ret);
-}
-
-void	show_command_info(t_cmd *cmd)
-{
-	ft_putstr_fd("Command: ", 2);
-	ft_putstr_fd(cmd->cmd, 2);
-	ft_putchar_fd('\n', 2);
-	ft_putstr_fd("The fd in is: ", 2);
-	ft_putnbr_fd(cmd->io_fds->in_fd, 2);
-	ft_putchar_fd('\n', 2);
-	ft_putstr_fd("The fd out is: ", 2);
-	ft_putnbr_fd(cmd->io_fds->out_fd, 2);
-	ft_putchar_fd('\n', 2);
-	ft_putstr_fd("Type: ", 2);
-	ft_putnbr_fd(cmd->type, 2);
-	ft_putchar_fd('\n', 2);
 }
 
 bool	create_pipes(t_data *data)
@@ -548,7 +209,10 @@ static int	set_values(t_data *data)
 		return (EXIT_SUCCESS);
 	}
 	if (!create_pipes(data))
+	{
+		ft_putstr_fd("Failed to create pipes\n", 2);
 		return (EXIT_FAILURE);
+	}
 	return (127);
 }
 
@@ -576,18 +240,6 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	int		ret;
 
 	ret = set_values(data);
-	// if (ret == 127)
-	// 	return (ft_putstr_fd("Command not found\n", 2), 0);
-	// if (temp->io_fds)
-	// {
-	// 	ft_putstr_fd("The ios are set\n", 2);
-	// 	ft_putstr_fd("The read file of the next command: ", 2);
-	// 	if (temp->io_fds->in_fd != -1)
-	// 		ft_putnbr_fd(temp->io_fds->in_fd, 2);
-	// 	else
-	// 		ft_putstr_fd("No read file\n", 2);
-	// 	ft_putchar_fd('\n', 2);
-	// }
 	if (check_infile_outfile(temp->io_fds))
 	{
 		redirect_io(data->cmd->io_fds);
@@ -596,16 +248,6 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	if (ret == 127)
 		return (ret);
 	return (handle_execute(data));
-}
-
-static void	show_io_fds(t_io_fds *io_fds)
-{
-	ft_putstr_fd("in_fd: ", 2);
-	ft_putnbr_fd(io_fds->in_fd, 2);
-	ft_putchar_fd('\n', 2);
-	ft_putstr_fd("out_fd: ", 2);
-	ft_putnbr_fd(io_fds->out_fd, 2);
-	ft_putchar_fd('\n', 2);
 }
 
 bool	remove_old_file_ref(t_io_fds *io, bool infile)
@@ -623,7 +265,7 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile)
 		free(io->infile);
 		close(io->in_fd);
 	}
-	else if (infile == false && io->outfile)
+	else if (infile == false && (io && io->outfile))
 	{
 		if (io->out_fd == -1 || (io->infile && io->in_fd == -1))
 			return (false);
@@ -650,14 +292,7 @@ static void	open_outfile_trunc(t_io_fds *io, char *file)
 
 static void	handle_write_to(t_cmd **cmd, t_data *data)
 {
-	(*cmd)->io_fds = (t_io_fds *)malloc(sizeof(t_cmd));
-	if (!(*cmd)->io_fds)
-	{
-		ft_putstr_fd("Failed to allocate memory\n", 2);
-		return ;
-	}
-	init_io((*cmd)->io_fds);
-	// printf("The command to run: %s\n", (*cmd)->cmd);
+	init_io(&(*cmd)->io_fds);
 	open_outfile_trunc((*cmd)->io_fds, (*cmd)->argv[1]);
 	(*cmd) = (*cmd)->next;
 }
@@ -665,6 +300,8 @@ static void	handle_write_to(t_cmd **cmd, t_data *data)
 void	handle_pipe(t_cmd **cmd, t_data *data)
 {
 	(*cmd)->pipe_output = 1;
+	init_io(&(*cmd)->io_fds);
+	(*cmd)->pipe_fd = (int *)malloc(sizeof(int) * 2);
 	(*cmd) = (*cmd)->next;
 }
 
@@ -678,12 +315,15 @@ void create_files(t_cmd **cmd, t_data *data)
 		{
 			handle_write_to(&temp, data);
 		}
-		else if (temp->type == CMD && temp->next->type == CMD)
+		else if (temp->type == CMD)
 		{
 			handle_pipe(&temp, data);
 		}
 		else
+		{
+			ft_putstr_fd("Error: Invalid command type\n", 2);
 			temp = temp->next;
+		}
 	}
 }
 
@@ -698,14 +338,6 @@ void	init_cmd(t_cmd *cmd)
 	cmd->prev = NULL;
 }
 
-void ft_putstr_color_fd(char *str, int fd, char *color_code)
-{
-	ft_putstr_fd(color_code, fd);  // Set color
-	ft_putstr_fd(str, fd);         // Print string
-	ft_putstr_fd("\033[0m", fd);   // Reset color
-	ft_putchar_fd('\n', fd);
-}
-
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
@@ -713,49 +345,11 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(&data->cmd, data);
-		if (data->cmd->io_fds)
-		{
-			ft_putstr_fd("The read file of the next command: ", 2);
-			ft_putnbr_fd(data->cmd->next->io_fds->in_fd, 2);
-			ft_putchar_fd('\n', 2);
-			// show_io_fds(data->cmd->io_fds);
-		}
+		// show_command_ios(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
-}
-
-void set_cmd_strings(t_cmd *cmd)
-{
-    t_cmd	*current = cmd;
-	int		i;
-	size_t	total_length;
-
-    while (current != NULL)
-	{
-        total_length = 0;
-		i = 0;
-		while (current->argv[i] != NULL)
-		{
-			total_length += ft_strlen(current->argv[i]) + 1;
-			i++;
-		}
-        current->cmd = malloc(total_length * sizeof(char));
-        if (current->cmd == NULL)
-		{
-            perror("Failed to allocate memory");
-            exit(EXIT_FAILURE);
-        }
-        current->cmd[0] = '\0';
-		i = 0;
-        while (current->argv[i] != NULL)
-		{
-            strcat(current->cmd, current->argv[i]);
-            if (current->argv[i + 1] != NULL)
-                strcat(current->cmd, " ");
-			i++;
-        }
-        current = current->next;
-    }
+	else
+		ft_putstr_fd("No command found\n", 2);
 }
 
 int	handle_input(t_data *data)
@@ -777,25 +371,6 @@ int	handle_input(t_data *data)
 	return (0);
 }
 
-char	**set_list_arra(t_list *env)
-{
-	char	**result;
-	t_list	*temp = env;
-
-	int i = ft_lstsize(env);
-	result = malloc(sizeof(char *) * (i + 1));
-	if (!result)
-		return NULL;
-	result[i] = NULL;
-	i = 0;
-	while (temp)
-	{
-		result[i] = temp->content;
-		temp = temp->next;
-		i++;
-	}
-	return (result);
-}
 
 int	minishell(t_data *data)
 {
