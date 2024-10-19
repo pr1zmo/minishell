@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/19 02:44:07 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/19 02:47:56 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,6 @@ int	count_pipes(t_data *data)
 
 bool	check_infile_outfile(t_io_fds *io)
 {
-	// io = (t_io_fds *)malloc(sizeof(t_io_fds));
 	if (!io || (!io->infile && !io->outfile))
 		return (true);
 	if ((io->infile && io->in_fd == -1)
@@ -652,6 +651,11 @@ static void	open_outfile_trunc(t_io_fds *io, char *file)
 static void	handle_write_to(t_cmd **cmd, t_data *data)
 {
 	(*cmd)->io_fds = (t_io_fds *)malloc(sizeof(t_cmd));
+	if (!(*cmd)->io_fds)
+	{
+		ft_putstr_fd("Failed to allocate memory\n", 2);
+		return ;
+	}
 	init_io((*cmd)->io_fds);
 	// printf("The command to run: %s\n", (*cmd)->cmd);
 	open_outfile_trunc((*cmd)->io_fds, (*cmd)->argv[1]);
