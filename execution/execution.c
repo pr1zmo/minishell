@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/19 19:11:56 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/19 19:22:56 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,14 +127,10 @@ bool	redirect_io(t_io_fds *io)
 	int	ret;
 
 	ret = true;
-	ft_putstr_fd("redirect_io\n", 2);
 	if (!io)
-	{
-		ft_putstr_fd("io_fds is NULL\n", 2);
 		return (ret);
-	}
-	ft_putstr_fd("The io_fds is not NULL\n", 2);
-	ft_putnbr_fd(io->in_fd, 2);
+	ft_putstr_fd("The ouput file is: ", 2);
+	ft_putnbr_fd(io->out_fd, 2);
 	ft_putchar_fd('\n', 2);
 	if (io->in_fd != -1)
 	{
