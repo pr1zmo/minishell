@@ -60,6 +60,7 @@ typedef struct s_cmd {
 	char		*cmd;
 	int				type;
 	int				*pipe_fd;
+	int				pipe_output;
 	t_io_fds		*io_fds;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;

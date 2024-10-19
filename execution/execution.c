@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/18 17:42:07 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/19 02:44:07 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,17 @@ int	count_pipes(t_data *data)
 	}
 	// free(temp);
 	return (k);
+}
+
+bool	check_infile_outfile(t_io_fds *io)
+{
+	// io = (t_io_fds *)malloc(sizeof(t_io_fds));
+	if (!io || (!io->infile && !io->outfile))
+		return (true);
+	if ((io->infile && io->in_fd == -1)
+		|| (io->outfile && io->out_fd == -1))
+		return (false);
+	return (true);
 }
 
 void	debug()
@@ -394,47 +405,41 @@ char	*to_str(char **arr)
 	return (result);
 }
 
-void	execute_command(t_data *data, t_cmd *cmd)
+void	close_pipe_fds(t_cmd *cmds, t_cmd *skip_cmd)
 {
-	int		pid;
-	int		status;
-	int		pipe_fds[2];
-
-	if (cmd->next)
+	while (cmds)
 	{
-		if (pipe(pipe_fds) == -1)
+		if (cmds != skip_cmd && cmds->pipe_fd)
 		{
-			perror("pipe");
-			exit(EXIT_FAILURE);
+			close(cmds->pipe_fd[0]);
+			close(cmds->pipe_fd[1]);
 		}
-		cmd->pipe_fd = pipe_fds;
-		if (dup2(pipe_fds[1], STDOUT_FILENO) == -1)
-		{
-			perror("dup2");
-			exit(EXIT_FAILURE);
-		}
-		if (dup2(pipe_fds[0], STDIN_FILENO) == -1)
-		{
-			perror("dup2");
-			exit(EXIT_FAILURE);
-		}
-	}
-	if (cmd->type == CMD)
-	{
-		exec_cmd(cmd->cmd, data->envp_arr, data);
+		cmds = cmds->next;
 	}
 }
 
-int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
+bool	set_pipe_fds(t_cmd *cmds, t_cmd *c)
 {
-	t_cmd	*temp = cmd_list;
+	if (!c)
+		return (false);
+	if (c->prev && c->prev->pipe_output)
+		dup2(c->prev->pipe_fd[0], STDIN_FILENO);
+	if (c->pipe_output)
+		dup2(c->pipe_fd[1], STDOUT_FILENO);
+	close_pipe_fds(cmds, c);
+	return (true);
+}
 
-	while (temp)
+void	close_fds(t_cmd *cmds, bool close_backups)
+{
+	if (cmds->io_fds)
 	{
-		execute_command(data, temp);
-		temp = temp->next;
+		if (cmds->io_fds->in_fd != -1)
+			close(cmds->io_fds->in_fd);
+		if (cmds->io_fds->out_fd != -1)
+			close(cmds->io_fds->out_fd);
 	}
-	return (0);
+	close_pipe_fds(cmds, NULL);
 }
 
 static void	init_io(t_io_fds *io_fds)
@@ -444,6 +449,154 @@ static void	init_io(t_io_fds *io_fds)
 	io_fds->infile = NULL;
 	io_fds->outfile = NULL;
 	io_fds->heredoc_name = NULL;
+}
+
+bool	redirect_io(t_io_fds *io)
+{
+	int	ret;
+
+	ret = true;
+	if (!io)
+		return (ret);
+	// io = (t_io_fds *)malloc(sizeof(t_io_fds));
+	// init_io(io);
+	if (io->in_fd != -1)
+	{
+		if (dup2(io->in_fd, STDIN_FILENO) == -1)
+			ft_putstr_fd("dup2 error\n", 2);
+	}
+	if (io->out_fd != -1)
+	{
+		if (dup2(io->out_fd, STDOUT_FILENO) == -1)
+			ft_putstr_fd("dup2 error\n", 2);
+	}
+	return (ret);
+}
+
+int	execute_command(t_data *data, t_cmd *cmd)
+{
+	int	ret;
+
+	if (cmd->type != CMD)
+		return (1);
+	// if (!cmd || !cmd->cmd)
+	// 	ft_putstr_fd("Command not found\n", 2);
+	if (!check_infile_outfile(cmd->io_fds))
+		exit(1);
+	set_pipe_fds(data->cmd, cmd);
+	redirect_io(cmd->io_fds);
+	close_fds(data->cmd, false);
+	if (ft_strchr(cmd->cmd, '/') == NULL)
+	{
+		ret = exec_builtin(data, &cmd->cmd);
+		if (ret != 127)
+			exit(1);
+		ret = single_command(data, cmd->cmd);
+		if (ret != 127)
+			exit(1);
+	}
+	ret = single_command(data, cmd->cmd);
+	return (ret);
+}
+
+void	show_command_info(t_cmd *cmd)
+{
+	ft_putstr_fd("Command: ", 2);
+	ft_putstr_fd(cmd->cmd, 2);
+	ft_putchar_fd('\n', 2);
+	ft_putstr_fd("The fd in is: ", 2);
+	ft_putnbr_fd(cmd->io_fds->in_fd, 2);
+	ft_putchar_fd('\n', 2);
+	ft_putstr_fd("The fd out is: ", 2);
+	ft_putnbr_fd(cmd->io_fds->out_fd, 2);
+	ft_putchar_fd('\n', 2);
+	ft_putstr_fd("Type: ", 2);
+	ft_putnbr_fd(cmd->type, 2);
+	ft_putchar_fd('\n', 2);
+}
+
+bool	create_pipes(t_data *data)
+{
+	int			*fd;
+	t_cmd		*tmp;
+
+	tmp = data->cmd;
+	while (tmp)
+	{
+		if (tmp->pipe_fd || (tmp->prev && tmp->prev->pipe_fd))
+		{
+			fd = malloc(sizeof * fd * 2);
+			if (!fd || pipe(fd) != 0)
+			{
+				return (false);
+			}
+			tmp->pipe_fd = fd;
+		}
+		tmp = tmp->next;
+	}
+	return (true);
+}
+
+static int	set_values(t_data *data)
+{
+	if (!data || !data->cmd)
+		return (EXIT_SUCCESS);
+	if (!data->cmd->cmd)
+	{
+		if (data->cmd->io_fds
+			&& !check_infile_outfile(data->cmd->io_fds))
+			return (EXIT_FAILURE);
+		return (EXIT_SUCCESS);
+	}
+	if (!create_pipes(data))
+		return (EXIT_FAILURE);
+	return (127);
+}
+
+static int	handle_execute(t_data *data)
+{
+	t_cmd	*cmd;
+	int		pid;
+
+	cmd = data->cmd;
+	while (pid != 0 && cmd)
+	{
+		pid = fork();
+		if (pid == -1)
+			ft_putstr_fd("fork error\n", 2);
+		else if (pid == 0)
+			execute_command(data, cmd);
+		cmd = cmd->next;
+	}
+	return (1);
+}
+
+int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
+{
+	t_cmd	*temp = cmd_list;
+	int		ret;
+
+	ret = set_values(data);
+	// if (ret == 127)
+	// 	return (ft_putstr_fd("Command not found\n", 2), 0);
+	// if (temp->io_fds)
+	// {
+	// 	ft_putstr_fd("The ios are set\n", 2);
+	// 	ft_putstr_fd("The read file of the next command: ", 2);
+	// 	if (temp->io_fds->in_fd != -1)
+	// 		ft_putnbr_fd(temp->io_fds->in_fd, 2);
+	// 	else
+	// 		ft_putstr_fd("No read file\n", 2);
+	// 	ft_putchar_fd('\n', 2);
+	// }
+	if (check_infile_outfile(temp->io_fds))
+	{
+		redirect_io(data->cmd->io_fds);
+		ret = exec_builtin(data, &temp->cmd);
+	}
+	if (ret == 127)
+		return (ret);
+	return (handle_execute(data));
 }
 
 static void	show_io_fds(t_io_fds *io_fds)
@@ -456,62 +609,77 @@ static void	show_io_fds(t_io_fds *io_fds)
 	ft_putchar_fd('\n', 2);
 }
 
+bool	remove_old_file_ref(t_io_fds *io, bool infile)
+{
+	if (infile == true && io->infile)
+	{
+		if (io->in_fd == -1 || (io->outfile && io->out_fd == -1))
+			return (false);
+		if (io->heredoc_name != NULL)
+		{
+			free(io->heredoc_name);
+			io->heredoc_name = NULL;
+			unlink(io->infile);
+		}
+		free(io->infile);
+		close(io->in_fd);
+	}
+	else if (infile == false && io->outfile)
+	{
+		if (io->out_fd == -1 || (io->infile && io->in_fd == -1))
+			return (false);
+		free(io->outfile);
+		close(io->out_fd);
+	}
+	return (true);
+}
+
+static void	open_outfile_trunc(t_io_fds *io, char *file)
+{
+	if (!remove_old_file_ref(io, false))
+		return ;
+	io->outfile = ft_strdup(file);
+	if (io->outfile == '\0')
+	{
+		ft_putstr_fd("Ambigious redirect\n", 2);
+		return ;
+	}
+	io->out_fd = open(io->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if (io->out_fd == -1)
+		ft_putstr_fd("outfile error\n", 2);
+}
+
 static void	handle_write_to(t_cmd **cmd, t_data *data)
 {
-	(*cmd)->io_fds = malloc(sizeof(t_io_fds));
-	if (!(*cmd)->io_fds)
-	{
-		perror("Failed to allocate memory");
-		exit(EXIT_FAILURE);
-	}
+	(*cmd)->io_fds = (t_io_fds *)malloc(sizeof(t_cmd));
 	init_io((*cmd)->io_fds);
-	(*cmd)->io_fds->outfile = ft_strdup((*cmd)->argv[1]);
-	if (!(*cmd)->io_fds->outfile)
-	{
-		perror("Failed to allocate memory");
-		exit(EXIT_FAILURE);
-	}
-	(*cmd)->io_fds->out_fd = open((*cmd)->io_fds->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if ((*cmd)->io_fds->out_fd == -1)
-	{
-		perror("Failed to open file");
-		exit(EXIT_FAILURE);
-	}
+	// printf("The command to run: %s\n", (*cmd)->cmd);
+	open_outfile_trunc((*cmd)->io_fds, (*cmd)->argv[1]);
+	(*cmd) = (*cmd)->next;
+}
+
+void	handle_pipe(t_cmd **cmd, t_data *data)
+{
+	(*cmd)->pipe_output = 1;
+	(*cmd) = (*cmd)->next;
 }
 
 void create_files(t_cmd **cmd, t_data *data)
 {
-	t_cmd	*current = *cmd;
-	t_cmd	*temp;
-	t_io_fds	*io_fds;
+	t_cmd	*temp = *cmd;
 
-	while (current)
+	while (temp)
 	{
-		io_fds = malloc(sizeof(t_io_fds));
-		if (!io_fds)
+		if (temp->type == REDIR_OUT)
 		{
-			perror("Failed to allocate memory");
-			exit(EXIT_FAILURE);
+			handle_write_to(&temp, data);
 		}
-		init_io(io_fds);
-		current->io_fds = io_fds;
-		if (current->type == REDIR_OUT)
+		else if (temp->type == CMD && temp->next->type == CMD)
 		{
-			handle_write_to(&current, data);
+			handle_pipe(&temp, data);
 		}
-		else if (current->type == REDIR_IN)
-		{
-			// handle_read_from(&current, data);
-		}
-		else if (current->type == APPEND)
-		{
-			// handle_append(&current, data);
-		}
-		else if (current->type == HEREDOC)
-		{
-			// handle_heredoc(&current, data);
-		}
-		current = current->next;
+		else
+			temp = temp->next;
 	}
 }
 
@@ -541,19 +709,32 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(&data->cmd, data);
+		if (data->cmd->io_fds)
+		{
+			ft_putstr_fd("The read file of the next command: ", 2);
+			ft_putnbr_fd(data->cmd->next->io_fds->in_fd, 2);
+			ft_putchar_fd('\n', 2);
+			// show_io_fds(data->cmd->io_fds);
+		}
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 }
 
 void set_cmd_strings(t_cmd *cmd)
 {
-    t_cmd *current = cmd;
+    t_cmd	*current = cmd;
+	int		i;
+	size_t	total_length;
 
     while (current != NULL)
 	{
-        size_t total_length = 0;
-        for (int i = 0; current->argv[i] != NULL; i++)
-            total_length += ft_strlen(current->argv[i]) + 1;
+        total_length = 0;
+		i = 0;
+		while (current->argv[i] != NULL)
+		{
+			total_length += ft_strlen(current->argv[i]) + 1;
+			i++;
+		}
         current->cmd = malloc(total_length * sizeof(char));
         if (current->cmd == NULL)
 		{
@@ -561,11 +742,13 @@ void set_cmd_strings(t_cmd *cmd)
             exit(EXIT_FAILURE);
         }
         current->cmd[0] = '\0';
-        for (int i = 0; current->argv[i] != NULL; i++)
+		i = 0;
+        while (current->argv[i] != NULL)
 		{
             strcat(current->cmd, current->argv[i]);
             if (current->argv[i + 1] != NULL)
                 strcat(current->cmd, " ");
+			i++;
         }
         current = current->next;
     }
