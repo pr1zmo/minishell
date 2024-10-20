@@ -10,7 +10,7 @@ EXEC_F	=	minishell.c builtins/echo.c builtins/cd.c \
 FILES	= $(PARS_F) $(EXEC_F)
 OBJS	=	$(FILES:.c=.o)
 LIBFT	=	libft/libft.a
-FLAGS	= -g -fsanitize=undefined -g #-Wall -Wextra -Werror
+FLAGS	= -g -fsanitize=address #-fsanitize=address -g #-Wall -Wextra -Werror
 
 all: $(NAME)
 

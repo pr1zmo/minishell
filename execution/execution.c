@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/19 19:22:56 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/20 22:49:59 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,6 @@ bool	redirect_io(t_io_fds *io)
 	ret = true;
 	if (!io)
 		return (ret);
-	ft_putstr_fd("The ouput file is: ", 2);
-	ft_putnbr_fd(io->out_fd, 2);
-	ft_putchar_fd('\n', 2);
 	if (io->in_fd != -1)
 	{
 		ft_putstr_fd("in_fd is not yet set\n", 2);
@@ -158,6 +155,8 @@ int	execute_command(t_data *data, t_cmd *cmd)
 	set_pipe_fds(data->cmd, cmd);
 	redirect_io(cmd->io_fds);
 	close_fds(data->cmd, false);
+	// debug();
+	ft_putstr_fd("Reached the execution\n", 2);
 	if (ft_strchr(cmd->cmd, '/') == NULL)
 	{
 		ret = exec_builtin(data, &cmd->cmd);
@@ -218,13 +217,16 @@ static int	handle_execute(t_data *data)
 	int		pid;
 
 	cmd = data->cmd;
+	pid = -1;
 	while (pid != 0 && cmd)
 	{
 		pid = fork();
 		if (pid == -1)
 			ft_putstr_fd("fork error\n", 2);
 		else if (pid == 0)
+		{
 			execute_command(data, cmd);
+		}
 		cmd = cmd->next;
 	}
 	return (1);
@@ -236,6 +238,7 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	int		ret;
 
 	ret = set_values(data);
+	// show_command_info(temp);
 	if (check_infile_outfile(temp->io_fds))
 	{
 		redirect_io(data->cmd->io_fds);
@@ -243,6 +246,7 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	}
 	if (ret == 127)
 		return (ret);
+	ft_putstr_fd("\033[31mexecute_cmds function\033[0m\n", 2);
 	return (handle_execute(data));
 }
 
@@ -271,28 +275,6 @@ bool	remove_old_file_ref(t_io_fds *io, bool infile)
 	return (true);
 }
 
-static void	open_outfile_trunc(t_io_fds *io, char *file)
-{
-	if (!remove_old_file_ref(io, false))
-		return ;
-	io->outfile = ft_strdup(file);
-	if (io->outfile == '\0')
-	{
-		ft_putstr_fd("Ambigious redirect\n", 2);
-		return ;
-	}
-	io->out_fd = open(io->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-	if (io->out_fd == -1)
-		ft_putstr_fd("outfile error\n", 2);
-}
-
-static void	handle_write_to(t_cmd **cmd, t_data *data)
-{
-	init_io(&(*cmd)->io_fds);
-	open_outfile_trunc((*cmd)->io_fds, (*cmd)->argv[1]);
-	(*cmd) = (*cmd)->next;
-}
-
 void	handle_pipe(t_cmd **cmd, t_data *data)
 {
 	(*cmd)->pipe_output = 1;
@@ -301,26 +283,29 @@ void	handle_pipe(t_cmd **cmd, t_data *data)
 	(*cmd) = (*cmd)->next;
 }
 
-void create_files(t_cmd **cmd, t_data *data)
+static void	open_outfile_trunc(t_io_fds **io, char *file)
 {
-	t_cmd	*temp = *cmd;
+	if (!remove_old_file_ref((*io), false))
+		return ;
 
-	while (temp)
+	// Check if ft_strdup returns NULL
+	(*io)->outfile = ft_strdup(file);
+	if ((*io)->outfile == NULL)
 	{
-		if (temp->type == REDIR_OUT)
-		{
-			handle_write_to(&temp, data);
-		}
-		else if (temp->type == CMD)
-		{
-			handle_pipe(&temp, data);
-		}
-		else
-		{
-			ft_putstr_fd("Error: Invalid command type\n", 2);
-			temp = temp->next;
-		}
+		ft_putstr_fd("Ambiguous redirect\n", 2);
+		return;
 	}
+
+	(*io)->out_fd = open((*io)->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	if ((*io)->out_fd == -1)
+		ft_putstr_fd("outfile error\n", 2);
+}
+
+static void	handle_write_to(t_cmd **cmd, t_data *data)
+{
+	init_io(&(*cmd)->io_fds);
+	open_outfile_trunc(&(*cmd)->io_fds, (*cmd)->argv[1]);
+	(*cmd) = (*cmd)->next;  // Move to the next command
 }
 
 void	init_cmd(t_cmd *cmd)
@@ -334,15 +319,77 @@ void	init_cmd(t_cmd *cmd)
 	cmd->prev = NULL;
 }
 
+void	change_first_io(t_io_fds **io)
+{
+	(*io) = (t_io_fds *)malloc(sizeof(t_io_fds));
+	(*io)->in_fd = 99;
+}
+
+void	change_second_io(t_io_fds **io)
+{
+	(*io) = (t_io_fds *)malloc(sizeof(t_io_fds));
+	(*io)->in_fd = 88;
+}
+
+void	init_command(t_cmd *cmd, t_data *data)
+{
+	init_io(&cmd->io_fds);
+	if (cmd->next && cmd->next->type == CMD)
+	{
+		cmd->pipe_output = true;
+	}
+}
+
+void	init_write_to(t_cmd *cmd, t_data *data)
+{
+	init_io(&cmd->io_fds);
+	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
+	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDONLY | O_TRUNC | O_CREAT, 0644);
+}
+
+void	init_read_from(t_cmd *cmd, t_data *data)
+{
+	init_io(&cmd->io_fds);
+	cmd->io_fds->infile = ft_strdup(cmd->argv[1]);
+	printf("a;ldksjf: %s\n", cmd->argv[1]);
+	cmd->io_fds->in_fd = open(cmd->io_fds->infile, O_RDONLY);
+	if (cmd->io_fds->in_fd == -1)
+		ft_putstr_fd("infile error\n", 2);
+}
+
+void	init_append(t_cmd *cmd, t_data *data)
+{
+	init_io(&cmd->io_fds);
+	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
+	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDONLY | O_APPEND | O_CREAT, 0644);
+}
+
+static void	create_files_refined(t_cmd *cmd, t_data *data)
+{
+	while (cmd)
+	{
+		if (cmd->type == CMD)
+			init_command(cmd, data);
+		else if (cmd->type == REDIR_OUT)
+			init_write_to(cmd, data);
+		else if (cmd->type == REDIR_IN)
+			init_read_from(cmd, data);
+		else if (cmd->type == APPEND)
+			init_append(cmd, data);
+		cmd = cmd->next;
+	}
+}
+
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
 
 	if (data->cmd)
 	{
-		create_files(&data->cmd, data);
-		// show_command_ios(data->cmd);
+		// create_files(&data->cmd, data);
+		create_files_refined(data->cmd, data);
 		execute_cmds(data->cmd, data->envp_arr, data);
+		show_command_info(data->cmd);
 	}
 	else
 		ft_putstr_fd("No command found\n", 2);
