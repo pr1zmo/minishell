@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/21 15:28:46 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/21 20:49:31 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ bool	check_infile_outfile(t_io_fds *io)
 	return (true);
 }
 
-void	exec_cmd(char *av, char **env, t_data *data)
+int	exec_cmd(char *av, char **env, t_data *data)
 {
 	char	**cmd;
 	char	*path;
@@ -72,15 +72,18 @@ void	exec_cmd(char *av, char **env, t_data *data)
 	{
 		if (builtin(cmd[0]))
 		{
-			exec_builtin(data, cmd);
-			return ;
+			return (exec_builtin(data, cmd));
 		}
 		path = get_full_cmd(cmd[0], env);
 	}
 	if (!path)
 		perror(cmd[0]);
 	if (execve(path, cmd, env) == -1)
-		return ;
+	{
+		perror("execve");
+		return (1);
+	}
+	return (0);
 }
 
 int	single_command(t_data *data, char *cmd)
@@ -88,19 +91,21 @@ int	single_command(t_data *data, char *cmd)
 	t_line	*temp = data->head;
 	int pid;
 
-	ft_putstr_fd("About to execute\n", 2);
 	while (temp)
 	{
 		if (temp->next && temp->next->type == 7)
 			temp = temp->next;
-		pid = fork();
-		if (pid == -1)
+		data->pid = fork();
+		if (data->pid == -1)
 			return (ft_error(1, data));
-		if (pid == 0)
+		if (data->pid == 0)
+		{
 			exec_cmd(cmd, data->envp_arr, data);
+		}
 		waitpid(0, NULL, 0);
 		temp = temp->next;
 	}
+	// exec_cmd(cmd, data->envp_arr, data);
 	return (0);
 }
 
@@ -183,24 +188,25 @@ int	execute_command(t_data *data, t_cmd *cmd)
 {
 	int	ret;
 
+	printf("Reached here\n");
 	if (cmd->type != CMD)
 		return (1);
 	if (!check_infile_outfile(cmd->io_fds))
 		exit(1);
 	set_pipe_fds(data->cmd, cmd);
 	redirect_io(cmd->io_fds);
-	show_command_info(cmd);
 	close_fds(data->cmd, false);
+	show_command_info(cmd);
 	if (ft_strchr(cmd->cmd, '/') == NULL)
 	{
 		ret = exec_builtin(data, &cmd->cmd);
 		if (ret != 127)
 			exit(1);
-		ret = single_command(data, cmd->cmd);
+		ret = exec_cmd(cmd->cmd, data->envp_arr, data);
 		if (ret != 127)
 			exit(1);
 	}
-	ret = single_command(data, cmd->cmd);
+	ret = exec_cmd(cmd->cmd, data->envp_arr, data);
 	return (ret);
 }
 
@@ -216,9 +222,7 @@ bool	create_pipes(t_data *data)
 		{
 			fd = malloc(sizeof * fd * 2);
 			if (!fd || pipe(fd) != 0)
-			{
 				return (false);
-			}
 			tmp->pipe_fd = fd;
 		}
 		tmp = tmp->next;
@@ -249,50 +253,45 @@ static int	set_values(t_data *data)
 	return (127);
 }
 
+static int	close_file(t_data *data)
+{
+	pid_t	wpid;
+	int		status;
+	int		save_status;
+
+	close_fds(data->cmd, false);
+	save_status = 0;
+	wpid = 0;
+	while (wpid != -1 || errno != ECHILD)
+	{
+		wpid = waitpid(-1, &status, 0);
+		if (wpid == data->pid)
+			save_status = status;
+		continue ;
+	}
+	return (status);
+}
+
 static int	handle_execute(t_data *data)
 {
 	t_cmd	*cmd;
 	int		pid;
 
 	cmd = data->cmd;
-	pid = -1;
-	while (pid != 0 && cmd)
+	while (data->pid != 0 && cmd)
 	{
-		pid = fork();
-		if (pid == -1)
+		data->pid = fork();
+		ft_putstr_fd("The pid: ", 2);
+		ft_putnbr_fd(data->pid, 2);
+		ft_putchar_fd('\n', 2);
+		if (data->pid == -1)
 			ft_putstr_fd("fork error\n", 2);
-		else if (pid == 0)
-		{
+		else if (data->pid == 0)
 			execute_command(data, cmd);
-		}
 		cmd = cmd->next;
 	}
-	return (1);
+	return (close_file(data));
 }
-
-/* bool	restore_io(t_io_fds *io)
-{
-	int	ret;
-
-	ret = true;
-	if (!io)
-		return (ret);
-	if (io->stdin_backup != -1)
-	{
-		if (dup2(io->stdin_backup, STDIN_FILENO) == -1)
-			ret = false;
-		close(io->stdin_backup);
-		io->stdin_backup = -1;
-	}
-	if (io->stdout_backup != -1)
-	{
-		if (dup2(io->stdout_backup, STDOUT_FILENO) == -1)
-			ret = false;
-		close(io->stdout_backup);
-		io->stdout_backup = -1;
-	}
-	return (ret);
-} */
 
 int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 {
@@ -300,14 +299,17 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	int		ret;
 
 	ret = set_values(data);
-	if (check_infile_outfile(temp->io_fds))
+	if (ret != 127)
+		return (ret);
+	if (!data->cmd->pipe_fd && !data->cmd->prev
+		&&check_infile_outfile(temp->io_fds))
 	{
 		redirect_io(data->cmd->io_fds);
 		ret = exec_builtin(data, &temp->cmd);
 		// restore_io(cmd_list->io_fds);
 	}
-	if (ret == 127)
-		return (ret);
+	// if (ret == 127)
+	// 	return (ret);
 	return (handle_execute(data));
 }
 
@@ -489,6 +491,7 @@ int	minishell(t_data *data)
 		add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
 		data->head = head;
+		data->pid = -1;
 		get_final_list(&head, &cmd);
 		data->cmd = cmd;
 		// show_cmd(data->cmd);
