@@ -6,11 +6,45 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/20 22:49:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:28:46 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+// void lstclear_head(t_list **head)
+// {
+// 	t_list *current;
+// 	t_list *next_node;
+
+// 	if (!head || !*head)
+// 		return;
+
+// 	current = *head;
+// 	while (current)
+// 	{
+// 		next_node = current->next;
+// 		free(current->content);
+// 		free(current);
+// 		current = next_node;
+// 	}
+// 	*head = NULL;
+// }
+
+// void	free_data(t_data *data, int history)
+// {
+// 	if (data && data->arg)
+// 	{
+// 		free(data->arg);
+// 		data->arg = NULL;
+// 	}
+// 	if (data && data->head)
+// 	{
+// 		lstclear_head(&data->head);
+// 		data->head = NULL;
+// 	}
+// 	free(data);
+// }
 
 bool	check_infile_outfile(t_io_fds *io)
 {
@@ -54,6 +88,7 @@ int	single_command(t_data *data, char *cmd)
 	t_line	*temp = data->head;
 	int pid;
 
+	ft_putstr_fd("About to execute\n", 2);
 	while (temp)
 	{
 		if (temp->next && temp->next->type == 7)
@@ -154,9 +189,8 @@ int	execute_command(t_data *data, t_cmd *cmd)
 		exit(1);
 	set_pipe_fds(data->cmd, cmd);
 	redirect_io(cmd->io_fds);
+	show_command_info(cmd);
 	close_fds(data->cmd, false);
-	// debug();
-	ft_putstr_fd("Reached the execution\n", 2);
 	if (ft_strchr(cmd->cmd, '/') == NULL)
 	{
 		ret = exec_builtin(data, &cmd->cmd);
@@ -200,7 +234,11 @@ static int	set_values(t_data *data)
 	{
 		if (data->cmd->io_fds
 			&& !check_infile_outfile(data->cmd->io_fds))
+		{
+			ft_putstr_fd("Error in the fds\n", 2);
 			return (EXIT_FAILURE);
+		}
+		ft_putstr_fd("No cdd\n",2 );
 		return (EXIT_SUCCESS);
 	}
 	if (!create_pipes(data))
@@ -232,21 +270,44 @@ static int	handle_execute(t_data *data)
 	return (1);
 }
 
+/* bool	restore_io(t_io_fds *io)
+{
+	int	ret;
+
+	ret = true;
+	if (!io)
+		return (ret);
+	if (io->stdin_backup != -1)
+	{
+		if (dup2(io->stdin_backup, STDIN_FILENO) == -1)
+			ret = false;
+		close(io->stdin_backup);
+		io->stdin_backup = -1;
+	}
+	if (io->stdout_backup != -1)
+	{
+		if (dup2(io->stdout_backup, STDOUT_FILENO) == -1)
+			ret = false;
+		close(io->stdout_backup);
+		io->stdout_backup = -1;
+	}
+	return (ret);
+} */
+
 int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 {
 	t_cmd	*temp = cmd_list;
 	int		ret;
 
 	ret = set_values(data);
-	// show_command_info(temp);
 	if (check_infile_outfile(temp->io_fds))
 	{
 		redirect_io(data->cmd->io_fds);
 		ret = exec_builtin(data, &temp->cmd);
+		// restore_io(cmd_list->io_fds);
 	}
 	if (ret == 127)
 		return (ret);
-	ft_putstr_fd("\033[31mexecute_cmds function\033[0m\n", 2);
 	return (handle_execute(data));
 }
 
@@ -287,15 +348,12 @@ static void	open_outfile_trunc(t_io_fds **io, char *file)
 {
 	if (!remove_old_file_ref((*io), false))
 		return ;
-
-	// Check if ft_strdup returns NULL
 	(*io)->outfile = ft_strdup(file);
 	if ((*io)->outfile == NULL)
 	{
 		ft_putstr_fd("Ambiguous redirect\n", 2);
 		return;
 	}
-
 	(*io)->out_fd = open((*io)->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 	if ((*io)->out_fd == -1)
 		ft_putstr_fd("outfile error\n", 2);
@@ -351,7 +409,6 @@ void	init_read_from(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
 	cmd->io_fds->infile = ft_strdup(cmd->argv[1]);
-	printf("a;ldksjf: %s\n", cmd->argv[1]);
 	cmd->io_fds->in_fd = open(cmd->io_fds->infile, O_RDONLY);
 	if (cmd->io_fds->in_fd == -1)
 		ft_putstr_fd("infile error\n", 2);
@@ -389,7 +446,7 @@ void	complex_command(t_data *data)
 		// create_files(&data->cmd, data);
 		create_files_refined(data->cmd, data);
 		execute_cmds(data->cmd, data->envp_arr, data);
-		show_command_info(data->cmd);
+		// show_command_info(data->cmd);
 	}
 	else
 		ft_putstr_fd("No command found\n", 2);
