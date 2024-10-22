@@ -34,13 +34,13 @@ bool	redirect_io(t_io_fds *io)
 		return (ret);
 	if (io->in_fd != -1)
 	{
-		ft_putstr_fd("in_fd is not yet set\n", 2);
+		// ft_putstr_fd("in_fd is not yet set\n", 2);
 		if (dup2(io->in_fd, STDIN_FILENO) == -1)
 			ft_putstr_fd("dup2 error\n", 2);
 	}
 	if (io->out_fd != -1)
 	{
-		ft_putstr_fd("out_fd is not yet set\n", 2);
+		// ft_putstr_fd("out_fd is not yet set\n", 2);
 		if (dup2(io->out_fd, STDOUT_FILENO) == -1)
 			ft_putstr_fd("dup2 error\n", 2);
 	}

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/22 12:33:55 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:28:38 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,8 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
-		execute_cmds(data->cmd, data->envp_arr, data);
 		// show_command_info(data->cmd);
+		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else
 		ft_putstr_fd("No command found\n", 2);

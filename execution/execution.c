@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/22 12:29:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:15:37 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 // 		lstclear_head(&data->head);
 // 		data->head = NULL;
 // 	}
-// 	free(data);
+// 	free(data); 
 // }
 
 int	handle_input(t_data *data)

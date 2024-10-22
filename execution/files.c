@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:19:52 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/22 12:34:23 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:16:47 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	create_files(t_cmd *cmd, t_data *data)
 			init_read_from(cmd, data);
 		else if (cmd->type == APPEND)
 			init_append(cmd, data);
+		else if (cmd->type == HEREDOC)
+			init_heredoc(cmd, data);
 		cmd = cmd->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:24:39 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/22 12:27:14 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:36:29 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,28 @@ void	init_write_to(t_cmd *cmd, t_data *data)
 	if (!remove_old_file_ref(cmd->io_fds, false))
 		return ;
 	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
-	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDONLY | O_TRUNC | O_CREAT, 0644);
+	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (cmd->io_fds->out_fd == -1)
+	{
+		perror("open");
+		return ;
+	}
+	cmd->prev->io_fds->outfile = cmd->io_fds->outfile;
+	cmd->prev->io_fds->out_fd = cmd->io_fds->out_fd;
+}
+
+void	init_append(t_cmd *cmd, t_data *data)
+{
+	init_io(&cmd->io_fds);
+	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
+	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDWR | O_APPEND | O_CREAT, 0644);
+	if (cmd->io_fds->out_fd == -1)
+	{
+		perror("open");
+		return ;	
+	}
+	cmd->prev->io_fds->outfile = cmd->io_fds->outfile;
+	cmd->prev->io_fds->out_fd = cmd->io_fds->out_fd;
 }
 
 void	init_read_from(t_cmd *cmd, t_data *data)
@@ -56,11 +77,6 @@ void	init_read_from(t_cmd *cmd, t_data *data)
 	cmd->io_fds->in_fd = open(cmd->io_fds->infile, O_RDONLY);
 	if (cmd->io_fds->in_fd == -1)
 		ft_putstr_fd("infile error\n", 2);
-}
-
-void	init_append(t_cmd *cmd, t_data *data)
-{
-	init_io(&cmd->io_fds);
-	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
-	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDONLY | O_APPEND | O_CREAT, 0644);
+	cmd->prev->io_fds->infile = cmd->io_fds->infile;
+	cmd->prev->io_fds->in_fd = cmd->io_fds->in_fd;
 }

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:28:55 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/22 12:42:09 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:17:50 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,11 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	if (!data->cmd->pipe_fd && !data->cmd->prev
 		&&check_infile_outfile(cmd_list->io_fds))
 	{
-		ft_putstr_fd("RUNNING THIS\n", 2);
 		redirect_io(data->cmd->io_fds);
 		ret = exec_builtin(data, &cmd_list->cmd);
 	}
-	// if (ret == 127)
-	// 	return (ret);
+	if (ret != 127)
+		return (ret);
 	return (handle_execute(data));
 }
 

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/22 12:44:41 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/22 18:18:10 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,6 @@ bool	redirect_io(t_io_fds *io);
 bool	create_pipes(t_data *data);
 void	close_pipe_fds(t_cmd *cmds, t_cmd *skip_cmd);
 bool	set_pipe_fds(t_cmd *cmds, t_cmd *c);
+void	init_heredoc(t_cmd *cmd, t_data *data);
 
 #endif
