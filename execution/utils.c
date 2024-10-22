@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/21 16:32:39 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:06:36 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,11 +271,8 @@ int	count_symbols(t_data *data)
 }
 
 
-void show_cmd(t_cmd *cmd_list)
+void show_cmd(t_cmd *temp)
 {
-    int 	i = 0;
-    t_cmd	*temp = cmd_list;
-
 	while (temp)
 	{
 		printf("The command is: %s\n", temp->cmd);

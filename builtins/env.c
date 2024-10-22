@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 11:45:30 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/15 13:18:26 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/22 10:26:10 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-static void	print_error_env(char **cmd, char *str)
-{
-	ft_putstr_fd(RED, 2);
-	ft_putstr_fd(cmd[1], 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(RESET, 2);
-}
 
 void	print_reverse(t_list *envp)
 {
@@ -35,7 +27,7 @@ int	ft_env(t_data *data, char **args)
 	t_list	*env_temp = data->envp;
 
 	if (args && args[1])
-		return (print_error_env(args, ": No such file or directory\n"), EXIT_FAILURE);
+		return (perror(args[1]), EXIT_FAILURE);
 	i = 0;
 	if (!data->envp)
 		return (EXIT_FAILURE);

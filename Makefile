@@ -6,7 +6,9 @@ PARS_F	=	 parsing/parsing.c parsing/lexer.c \
 EXEC_F	=	minishell.c builtins/echo.c builtins/cd.c \
  		builtins/pwd.c builtins/export.c builtins/unset.c \
  		builtins/env.c builtins/exit.c execution/execution.c \
-		execution/execution_utils.c execution/utils.c
+		execution/pipe.c execution/commands.c \
+		execution/execute.c execution/files.c execution/ios.c \
+		execution/utils.c execution/init.c
 FILES	= $(PARS_F) $(EXEC_F)
 OBJS	=	$(FILES:.c=.o)
 LIBFT	=	libft/libft.a
