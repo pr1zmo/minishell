@@ -1,7 +1,6 @@
 *.o
 *.a
 /bash_tests
-minishell
 /_*
 .*
 file
