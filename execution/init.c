@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:24:39 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/23 11:09:03 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/23 22:14:00 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ void	init_write_to(t_cmd *cmd, t_data *data)
 void	init_append(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
+	if (!remove_old_file_ref(cmd->io_fds, false))
+		return ;
 	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
 	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDWR | O_APPEND | O_CREAT, 0644);
 	if (cmd->io_fds->out_fd == -1)

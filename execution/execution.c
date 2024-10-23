@@ -6,45 +6,11 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/22 16:15:37 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/23 22:23:01 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-// void lstclear_head(t_list **head)
-// {
-// 	t_list *current;
-// 	t_list *next_node;
-
-// 	if (!head || !*head)
-// 		return;
-
-// 	current = *head;
-// 	while (current)
-// 	{
-// 		next_node = current->next;
-// 		free(current->content);
-// 		free(current);
-// 		current = next_node;
-// 	}
-// 	*head = NULL;
-// }
-
-// void	free_data(t_data *data, int history)
-// {
-// 	if (data && data->arg)
-// 	{
-// 		free(data->arg);
-// 		data->arg = NULL;
-// 	}
-// 	if (data && data->head)
-// 	{
-// 		lstclear_head(&data->head);
-// 		data->head = NULL;
-// 	}
-// 	free(data); 
-// }
 
 int	handle_input(t_data *data)
 {

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/22 17:28:38 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/23 22:19:53 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ int	single_command(t_data *data, char *cmd)
 		waitpid(0, NULL, 0);
 		temp = temp->next;
 	}
-	// exec_cmd(cmd, data->envp_arr, data);
 	return (0);
 }
 
@@ -95,7 +94,6 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
-		// show_command_info(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else
