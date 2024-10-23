@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 11:45:30 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/22 10:26:10 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/23 10:59:52 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_env(t_data *data, char **args)
 	t_list	*env_temp = data->envp;
 
 	if (args && args[1])
-		return (perror(args[1]), EXIT_FAILURE);
+		return (perror("env"), EXIT_FAILURE);
 	i = 0;
 	if (!data->envp)
 		return (EXIT_FAILURE);
