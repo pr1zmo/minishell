@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/23 22:19:53 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/24 23:40:21 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	exec_cmd(char *av, char **env, t_data *data)
 		path = get_full_cmd(cmd[0], env);
 	}
 	if (!path)
-		perror(cmd[0]);
+		return (ft_error(7, data), 1);
 	if (execve(path, cmd, env) == -1)
 	{
 		perror("execve");
@@ -87,6 +87,64 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
+static void	print_cmd_args(t_cmd *cmd)
+{
+	int	i;
+
+	if (!cmd->argv)
+		return ;
+	i = 0;
+	while (cmd->argv[i])
+	{
+		printf("\tArgs[%d] = %s\n", i, cmd->argv[i]);
+		i++;
+	}
+}
+
+static void	print_cmd_io(t_cmd *cmd)
+{
+	if (!cmd->io_fds)
+		return ;
+	if (cmd->io_fds->infile)
+	{
+		printf("\tInfile: %s\n", cmd->io_fds->infile);
+		printf("\t\tfd_in: %d\n", cmd->io_fds->in_fd);
+	}
+	if (cmd->io_fds->heredoc_name)
+		printf("\tHeredoc delimiter: %s\n", cmd->io_fds->heredoc_name);
+	if (cmd->io_fds->outfile)
+	{
+		printf("\tOutfile: %s\n", cmd->io_fds->outfile);
+		printf("\t\tfd_in: %d\n", cmd->io_fds->out_fd);
+	}
+}
+
+static void	print_cmd_list(t_data *data)
+{
+	t_cmd	*cmd;
+
+	cmd = data->cmd;
+	printf("\n---- COMMAND LIST\n");
+	while (cmd)
+	{
+		printf("--- Command = %s\n", cmd->cmd);
+		print_cmd_args(cmd);
+		printf("\tPipe_output = %d\n", cmd->pipe_output);
+		print_cmd_io(cmd);
+		if (cmd->prev == NULL)
+			printf("\tprev = NULL\n");
+		else
+			printf("\tprev = %s\n", cmd->prev->cmd);
+		if (cmd->next == NULL)
+			printf("\tnext = NULL\n");
+		else
+			printf("\tnext = %s\n", cmd->next->cmd);
+		printf("\n");
+		cmd = cmd->next;
+	}
+	printf("\n");
+}
+
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
@@ -94,6 +152,9 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
+		// print_cmd_list(data);
+		// exit(0);
+		// show_command_info(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else
