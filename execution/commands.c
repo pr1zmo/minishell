@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/24 23:40:21 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/25 16:51:07 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,13 @@
 void	init_command(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
-	if (cmd->next && cmd->next->type == CMD)
+	if (cmd->next)
 	{
-		cmd->pipe_output = true;
+		init_io(&cmd->next->io_fds);
+		// cmd->io_fds->out_fd = cmd->pipe_fd[1];
+		cmd->io_fds->out_fd = cmd->next->io_fds->in_fd;
+		if (cmd->next->type == CMD)
+			cmd->pipe_output = true;
 	}
 }
 
