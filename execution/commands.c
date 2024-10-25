@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/25 18:53:44 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:32:27 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,7 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
+		show_command_info(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else

@@ -21,6 +21,8 @@ void	close_fds(t_cmd *cmds, bool close_backups)
 			close(cmds->io_fds->in_fd);
 		if (cmds->io_fds->out_fd != -1)
 			close(cmds->io_fds->out_fd);
+		if (close_backups)
+			restore_io(cmds->io_fds);
 	}
 	close_pipe_fds(cmds, NULL);
 }
@@ -32,6 +34,20 @@ bool	redirect_io(t_io_fds *io)
 	ret = true;
 	if (!io)
 		return (ret);
+	io->stdin_backup = dup(STDIN_FILENO);
+	if (io->stdin_backup == -1)
+	{
+		ft_putstr_fd("stdin backup error\n", 2);
+		ret = 1;
+	}
+		// ret = errmsg_cmd("dup", "stdin backup", "Some shit error", false);
+	io->stdout_backup = dup(STDOUT_FILENO);
+	if (io->stdout_backup == -1)
+	{
+		ft_putstr_fd("stdout backup error\n", 2);
+		ret = 1;
+	}
+		// ret = errmsg_cmd("dup", "stdout backup", "Some shit error", false);
 	if (io->in_fd != -1)
 	{
 		// ft_putstr_fd("in_fd is not yet set\n", 2);
@@ -43,6 +59,30 @@ bool	redirect_io(t_io_fds *io)
 		// ft_putstr_fd("out_fd is not yet set\n", 2);
 		if (dup2(io->out_fd, STDOUT_FILENO) == -1)
 			ft_putstr_fd("dup2 error\n", 2);
+	}
+	return (ret);
+}
+
+bool	restore_io(t_io_fds *io)
+{
+	int	ret;
+
+	ret = true;
+	if (!io)
+		return (ret);
+	if (io->stdin_backup != -1)
+	{
+		if (dup2(io->stdin_backup, STDIN_FILENO) == -1)
+			ret = false;
+		close(io->stdin_backup);
+		io->stdin_backup = -1;
+	}
+	if (io->stdout_backup != -1)
+	{
+		if (dup2(io->stdout_backup, STDOUT_FILENO) == -1)
+			ret = false;
+		close(io->stdout_backup);
+		io->stdout_backup = -1;
 	}
 	return (ret);
 }

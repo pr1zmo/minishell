@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/22 18:18:10 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:56:48 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ typedef	struct	s_io_fds
 	char	*infile;
 	char	*outfile;
 	char	*heredoc_name;
+	int		stdin_backup;
+	int		stdout_backup;
 }			t_io_fds;
 
 typedef struct s_cmd {
@@ -139,5 +141,6 @@ bool	create_pipes(t_data *data);
 void	close_pipe_fds(t_cmd *cmds, t_cmd *skip_cmd);
 bool	set_pipe_fds(t_cmd *cmds, t_cmd *c);
 void	init_heredoc(t_cmd *cmd, t_data *data);
+bool	restore_io(t_io_fds *io);
 
 #endif

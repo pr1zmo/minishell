@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/24 21:41:05 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:41:39 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ int	ft_error(int error, t_data *data)
 		ft_putstr_fd("error finding command\n", STDERR_FILENO);
 	else if (error == 3)
 		ft_putstr_fd("Could not find corresponding path\n", STDERR_FILENO);
+	else if (error == 4)
+		ft_putstr_fd("Ambigius rediredirict\n", 2);
 	else if (error == 7)
 	{
 		ft_putstr_fd(data->cmd->argv[0], STDERR_FILENO);

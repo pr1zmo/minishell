@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:28:55 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/24 20:44:42 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:00:46 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	{
 		redirect_io(data->cmd->io_fds);
 		ret = exec_builtin(data, &cmd_list->cmd);
+		restore_io(data->cmd->io_fds);
 	}
 	if (ret != 127)
 		return (ret);
