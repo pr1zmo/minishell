@@ -12,4 +12,5 @@ a.out
 /pipex
 test.sh
 outputFile.txt
-board.tldr
+_board.tldr
+minishell

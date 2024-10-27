@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/25 19:56:48 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/27 02:23:35 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,14 @@
 # define MAX_PATH 4096
 
 typedef struct s_token t_line;
+
+typedef struct s_redir_info
+{
+	t_cmd	*last_out;
+	t_cmd	*last_in;
+	t_cmd	*last_append;
+	t_cmd	*last_heredoc;
+} 			t_redir_info;
 
 typedef struct s_builtin
 {

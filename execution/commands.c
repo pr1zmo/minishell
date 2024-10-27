@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/25 20:32:27 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/27 01:19:30 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@ int	handle_execute(t_data *data)
 	cmd = data->cmd;
 	while (data->pid != 0 && cmd)
 	{
-		data->pid = fork();
-		if (data->pid == -1)
-			ft_putstr_fd("fork error\n", 2);
-		else if (data->pid == 0)
+		if (cmd->type == CMD)
+		{
+			data->pid = fork();
+			if (data->pid == -1)
+				ft_putstr_fd("fork error\n", 2);
+		}
+		if (data->pid == 0 || cmd->type != CMD)
 			execute_command(data, cmd);
 		cmd = cmd->next;
 	}
@@ -43,7 +46,7 @@ int	exec_cmd(char *av, char **env, t_data *data)
 {
 	char	**cmd;
 	char	*path;
-
+ 
 	cmd = ft_split(av, ' ');
 	if (cmd[0][0] == '/')
 		path = ft_strdup(cmd[0]);
@@ -145,6 +148,23 @@ static void	print_cmd_list(t_data *data)
 	printf("\n");
 }
 
+void print_open_fds(t_cmd *cmd)
+{
+	t_cmd	*temp = cmd;
+
+	while (temp)
+	{
+		if (temp->io_fds)
+		{
+			if (temp->io_fds->in_fd != -1)
+				printf("Infile: %s\n", temp->io_fds->infile);
+			if (temp->io_fds->out_fd != -1)
+				printf("Outfile: %s\n", temp->io_fds->outfile);
+		}
+		temp = temp->next;
+	}
+}
+
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
@@ -152,7 +172,6 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
-		show_command_info(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else

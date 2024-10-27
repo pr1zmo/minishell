@@ -40,26 +40,24 @@ bool	redirect_io(t_io_fds *io)
 		ft_putstr_fd("stdin backup error\n", 2);
 		ret = 1;
 	}
-		// ret = errmsg_cmd("dup", "stdin backup", "Some shit error", false);
 	io->stdout_backup = dup(STDOUT_FILENO);
 	if (io->stdout_backup == -1)
 	{
 		ft_putstr_fd("stdout backup error\n", 2);
 		ret = 1;
 	}
-		// ret = errmsg_cmd("dup", "stdout backup", "Some shit error", false);
 	if (io->in_fd != -1)
 	{
-		// ft_putstr_fd("in_fd is not yet set\n", 2);
 		if (dup2(io->in_fd, STDIN_FILENO) == -1)
 			ft_putstr_fd("dup2 error\n", 2);
 	}
+	close(io->in_fd);
 	if (io->out_fd != -1)
 	{
-		// ft_putstr_fd("out_fd is not yet set\n", 2);
 		if (dup2(io->out_fd, STDOUT_FILENO) == -1)
 			ft_putstr_fd("dup2 error\n", 2);
 	}
+	close(io->out_fd);
 	return (ret);
 }
 

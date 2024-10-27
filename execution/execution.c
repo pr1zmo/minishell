@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/23 22:23:01 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/27 00:39:47 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	minishell(t_data *data)
 		data->pid = -1;
 		get_final_list(&head, &cmd);
 		data->cmd = cmd;
-		// show_cmd(data->cmd);
 		handle_input(data);
 		if (data->status == 0)
 			break ;
