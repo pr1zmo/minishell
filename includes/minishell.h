@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/27 02:23:35 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:38:43 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,6 @@
 
 typedef struct s_token t_line;
 
-typedef struct s_redir_info
-{
-	t_cmd	*last_out;
-	t_cmd	*last_in;
-	t_cmd	*last_append;
-	t_cmd	*last_heredoc;
-} 			t_redir_info;
-
-typedef struct s_builtin
-{
-	char		*command;
-	int			has_args;
-	char		*argument;
-}				t_builtin;
-
 typedef	struct	s_io_fds
 {
 	int		in_fd;
@@ -75,6 +60,21 @@ typedef struct s_cmd {
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }					t_cmd;
+
+typedef struct s_redir_info
+{
+	t_cmd	*last_out;
+	t_cmd	*last_in;
+	t_cmd	*last_append;
+	t_cmd	*last_heredoc;
+} 			t_redir_info;
+
+typedef struct s_builtin
+{
+	char		*command;
+	int			has_args;
+	char		*argument;
+}				t_builtin;
 
 typedef struct s_data
 {
