@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/27 00:39:47 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:25:04 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ int	minishell(t_data *data)
 		cmd = NULL;
 		data->arg = readline(READLINE_MSG);
 		data->envp_arr = set_list_arra(data->envp);
-		if (data->arg == NULL || data->arg[0] == '\0')
-			reset_shell(data);
+		// if (data->arg == NULL || data->arg[0] == '\0')
+		// 	reset_shell(data);
 		add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
 		data->head = head;
