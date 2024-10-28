@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:28:55 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/28 00:46:43 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:25:20 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,26 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 		return (ret);
 	return (handle_execute(data));
 }
+
+/* int	execute_command(t_data *data, t_cmd *cmd)
+{
+	int	ret;
+
+	if (cmd->type != CMD)
+	{
+		return (1);
+	}
+	if (!check_infile_outfile(cmd->io_fds))
+		exit(1);
+	set_pipe_fds(data->cmd, cmd);
+	redirect_io(cmd->io_fds);
+	close_fds(data->cmd, false);
+	// ret = exec_builtin(data, &cmd->cmd);
+	if (ret != 127)
+		return (ret);
+	ret = exec_cmd(cmd->cmd, data->envp_arr, data);
+	return (ret);
+} */
 
 int	execute_command(t_data *data, t_cmd *cmd)
 {

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/27 21:27:18 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:19:53 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,14 @@ int	exec_cmd(char *av, char **env, t_data *data)
 	char	*path;
  
 	cmd = ft_split(av, ' ');
+	ft_putstr_fd("ENTRING HERE\n", 2);
 	if (cmd[0][0] == '/')
 		path = ft_strdup(cmd[0]);
 	else if (cmd[0][0] != '\0')
 	{
 		if (builtin(cmd[0]))
 		{
+			ft_putstr_fd("Builtin indeed\n", 2);
 			return (exec_builtin(data, cmd));
 		}
 		path = get_full_cmd(cmd[0], env);
@@ -172,6 +174,7 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
+		// show_command_info(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else
