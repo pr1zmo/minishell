@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/28 18:42:35 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/29 23:46:39 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 void	init_command(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
-	if (cmd->next && cmd->next->type == CMD)
-	{
+	if ((cmd->next && cmd->next->type == CMD) || builtin(cmd->argv[0]))
 		cmd->pipe_output = true;
-	}
 }
 
 int	handle_execute(t_data *data)
@@ -54,7 +52,7 @@ int	exec_cmd(char *av, char **env, t_data *data)
 	{
 		if (builtin(cmd[0]))
 		{
-			return (exec_builtin(data, cmd));
+			exit(exec_builtin(data, cmd));
 		}
 		path = get_full_cmd(cmd[0], env);
 	}
@@ -88,81 +86,6 @@ int	single_command(t_data *data, char *cmd)
 		temp = temp->next;
 	}
 	return (0);
-}
-
-static void	print_cmd_args(t_cmd *cmd)
-{
-	int	i;
-
-	if (!cmd->argv)
-		return ;
-	i = 0;
-	while (cmd->argv[i])
-	{
-		printf("\tArgs[%d] = %s\n", i, cmd->argv[i]);
-		i++;
-	}
-}
-
-static void	print_cmd_io(t_cmd *cmd)
-{
-	if (!cmd->io_fds)
-		return ;
-	if (cmd->io_fds->infile)
-	{
-		printf("\tInfile: %s\n", cmd->io_fds->infile);
-		printf("\t\tfd_in: %d\n", cmd->io_fds->in_fd);
-	}
-	if (cmd->io_fds->heredoc_name)
-		printf("\tHeredoc delimiter: %s\n", cmd->io_fds->heredoc_name);
-	if (cmd->io_fds->outfile)
-	{
-		printf("\tOutfile: %s\n", cmd->io_fds->outfile);
-		printf("\t\tfd_in: %d\n", cmd->io_fds->out_fd);
-	}
-}
-
-static void	print_cmd_list(t_data *data)
-{
-	t_cmd	*cmd;
-
-	cmd = data->cmd;
-	printf("\n---- COMMAND LIST\n");
-	while (cmd)
-	{
-		printf("--- Command = %s\n", cmd->cmd);
-		print_cmd_args(cmd);
-		printf("\tPipe_output = %d\n", cmd->pipe_output);
-		print_cmd_io(cmd);
-		if (cmd->prev == NULL)
-			printf("\tprev = NULL\n");
-		else
-			printf("\tprev = %s\n", cmd->prev->cmd);
-		if (cmd->next == NULL)
-			printf("\tnext = NULL\n");
-		else
-			printf("\tnext = %s\n", cmd->next->cmd);
-		printf("\n");
-		cmd = cmd->next;
-	}
-	printf("\n");
-}
-
-void print_open_fds(t_cmd *cmd)
-{
-	t_cmd	*temp = cmd;
-
-	while (temp)
-	{
-		if (temp->io_fds)
-		{
-			if (temp->io_fds->in_fd != -1)
-				printf("Infile: %s\n", temp->io_fds->infile);
-			if (temp->io_fds->out_fd != -1)
-				printf("Outfile: %s\n", temp->io_fds->outfile);
-		}
-		temp = temp->next;
-	}
 }
 
 void	complex_command(t_data *data)

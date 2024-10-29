@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/28 14:25:00 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/29 21:29:58 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	exec_builtin(t_data *data, char **cmd)
 		res = ft_unset(data, cmd);
 	else if (ft_strncmp(cmd[0], "export", 0) == 0)
 		res = ft_export(data, cmd);
+	// exit(res);
 	return (res);
 }
 
@@ -149,19 +150,6 @@ void set_list_var(t_data *data, char *name, char *new_value)
 	}
 }
 
-void	printa(char *message, char **str)
-{
-	int	i;
-
-	i = 0;
-	printf("%s: ", message);
-	while (str[i])
-	{
-		printf("%s ", str[i]);
-		i++;
-	}
-}
-
 int	count_pipes(t_data *data)
 {
 	int	i;
@@ -183,16 +171,6 @@ int	count_pipes(t_data *data)
 	}
 	// free(temp);
 	return (k);
-}
-
-void	debug()
-{
-	static int count;
-
-	if (!count)
-		count = 0;
-	printf("Here: %d\n", count);
-	count++;
 }
 
 char	*get_full_cmd(char *av, char **env)
@@ -278,17 +256,6 @@ int	count_symbols(t_data *data)
 	return (i);
 }
 
-
-void show_cmd(t_cmd *temp)
-{
-	while (temp)
-	{
-		printf("The command is: %s\n", temp->cmd);
-		printf("The type is: %i\n", temp->type);
-		temp = temp->next;
-	}
-}
-
 char *ft_strcat(char *s1, char *s2)
 {
 	size_t	len1;
@@ -350,78 +317,6 @@ char	*new_strjoin(char *s1, char *s2)
 		*result++ = *s2++;
 	*result = '\0';
 	return (result);
-}
-
-void	show_command_info(t_cmd *command)
-{
-	t_cmd *cmd = command;
-	while (cmd)
-	{
-		ft_putstr_fd("------------------\n", 2);
-		ft_putstr_fd("Command: ", 2);
-		ft_putstr_fd(cmd->cmd?cmd->cmd:"NULL", 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("The fd in is: ", 2);
-		ft_putnbr_fd(cmd->io_fds->in_fd, 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("The file to read from: ", 2);
-		ft_putstr_fd(cmd->io_fds->infile?cmd->io_fds->infile:"NULL", 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("The file to write to: ", 2);
-		ft_putstr_fd(cmd->io_fds->outfile?cmd->io_fds->outfile:"NULL", 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("The fd out is: ", 2);
-		ft_putnbr_fd(cmd->io_fds->out_fd, 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("Type: ", 2);
-		ft_putnbr_fd(cmd->type, 2);
-		ft_putchar_fd('\n', 2);
-		ft_putstr_fd("Is piped? ", 2);
-		ft_putstr_fd(cmd->pipe_output?"Yes":"No", 2);
-		ft_putchar_fd('\n', 2);
-		if (cmd->pipe_output)
-		{
-			ft_putchar_fd('\n', 2);
-			ft_putstr_fd("pipe[0]: ", 2);
-			ft_putnbr_fd(cmd->pipe_fd[0], 2);
-			ft_putchar_fd('\n', 2);
-			ft_putstr_fd("pipe[1]: ", 2);
-			ft_putnbr_fd(cmd->pipe_fd[1], 2);
-			ft_putchar_fd('\n', 2);
-		}
-		cmd = cmd->next;
-	}
-}
-
-void	show_command_ios(t_cmd *cmd)
-{
-	t_cmd	*temp = cmd;
-	while (temp)
-	{
-		show_io_fds(temp->io_fds);
-		temp = temp->next;
-	}
-}
-
-void	show_io_fds(t_io_fds *io_fds)
-{
-	if (!io_fds)
-	{
-		ft_putstr_fd("io_fds is NULL\n", 2);
-		return;
-	}
-	ft_putstr_fd("in_fd: ", 2);
-	ft_putnbr_fd(io_fds->in_fd, 2);
-	ft_putchar_fd('\n', 2);
-	ft_putstr_fd("out_fd: ", 2);
-	ft_putnbr_fd(io_fds->out_fd, 2);
-	ft_putchar_fd('\n', 2);
-	ft_putstr_fd("infile: ", 2);
-	ft_putstr_fd(io_fds->infile?io_fds->infile:"Null infile", 2);
-	ft_putchar_fd('\n', 2);
-	ft_putstr_fd("outfile: ", 2);
-	ft_putstr_fd(io_fds->outfile?io_fds->outfile:"Null outfile", 2);
-	ft_putchar_fd('\n', 2);
 }
 
 void set_cmd_strings(t_cmd *cmd)
