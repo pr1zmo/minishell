@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/29 21:29:58 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:38:56 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int	exec_builtin(t_data *data, char **cmd)
 	int	res;
 
 	res = 127;
+	ft_putstr_fd("Executing the builtins\n", 2);
 	if (ft_strncmp(cmd[0], "pwd", 0) == 0)
 		res = ft_pwd(data, cmd);
 	else if (ft_strncmp(cmd[0], "env", 0) == 0)
@@ -94,7 +95,6 @@ int	exec_builtin(t_data *data, char **cmd)
 		res = ft_unset(data, cmd);
 	else if (ft_strncmp(cmd[0], "export", 0) == 0)
 		res = ft_export(data, cmd);
-	// exit(res);
 	return (res);
 }
 

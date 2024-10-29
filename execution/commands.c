@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/29 23:46:39 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/30 00:44:07 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	init_command(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
-	if ((cmd->next && cmd->next->type == CMD) || builtin(cmd->argv[0]))
+	if ((cmd->next && cmd->next->type == CMD))
 		cmd->pipe_output = true;
 }
 
@@ -50,10 +50,10 @@ int	exec_cmd(char *av, char **env, t_data *data)
 		path = ft_strdup(cmd[0]);
 	else if (cmd[0][0] != '\0')
 	{
-		if (builtin(cmd[0]))
-		{
-			exit(exec_builtin(data, cmd));
-		}
+		// if (builtin(cmd[0]))
+		// {
+		// 	exit(exec_builtin(data, cmd));
+		// }
 		path = get_full_cmd(cmd[0], env);
 	}
 	if (!path)
@@ -80,7 +80,10 @@ int	single_command(t_data *data, char *cmd)
 			return (ft_error(1, data));
 		if (data->pid == 0)
 		{
-			exec_cmd(cmd, data->envp_arr, data);
+			if (builtin(data->cmd->argv[0]))
+				exec_builtin(data, data->cmd->argv);
+			else
+				exec_cmd(cmd, data->envp_arr, data);
 		}
 		waitpid(0, NULL, 0);
 		temp = temp->next;
