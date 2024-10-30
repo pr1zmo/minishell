@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/30 00:44:07 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:10:26 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ int	exec_cmd(char *av, char **env, t_data *data)
 		path = ft_strdup(cmd[0]);
 	else if (cmd[0][0] != '\0')
 	{
-		// if (builtin(cmd[0]))
-		// {
-		// 	exit(exec_builtin(data, cmd));
-		// }
+		if (builtin(cmd[0]))
+		{
+			exit(exec_builtin(data, cmd));
+		}
 		path = get_full_cmd(cmd[0], env);
 	}
 	if (!path)
@@ -98,7 +98,6 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
-		// show_command_info(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else
