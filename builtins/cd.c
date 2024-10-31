@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 16:43:22 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/04 13:15:19 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/31 22:29:57 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,12 @@ int ft_cd(t_data *data, char **arg)
 		return (printf("cd: %s is not a directory\n", arg[1]));
 	else if (valid_path == -3)
 		return (printf("cd: %s: Permission denied\n", arg[1]));
+	old_pwd = getcwd(NULL, 0);
 	if (chdir(arg[1]) == -1)
 		return (printf("cd: error changing directory\n"));
 	new_pwd = getcwd(NULL, 0);
 	if (!new_pwd)
 		return (printf("cd: error getting current working directory\n"));
-	old_pwd = ft_getenv("PWD", data);
 	modify_env_value("PWD", new_pwd, data);
 	modify_env_value("OLDPWD", old_pwd, data);
 	free(new_pwd);

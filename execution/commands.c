@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/31 18:42:17 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/31 23:46:12 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	init_command(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
-	if ((cmd->next && cmd->next->type == CMD))
+	if (cmd->type == CMD && cmd->next)
 		cmd->pipe_output = true;
 }
 
@@ -50,10 +50,6 @@ int	exec_cmd(char *av, char **env, t_data *data)
 		path = ft_strdup(cmd[0]);
 	else if (cmd[0][0] != '\0')
 	{
-		if (builtin(cmd[0]))
-		{
-			exit(exec_builtin(data, cmd));
-		}
 		path = get_full_cmd(cmd[0], env);
 	}
 	if (!path)
@@ -91,6 +87,65 @@ int	single_command(t_data *data, char *cmd)
 	return (0);
 }
 
+t_cmd	*init_new_cmd(t_cmd *src)
+{
+	t_cmd	*new;
+
+	new = (t_cmd *)malloc(sizeof(t_cmd));
+	if (!new)
+		return (NULL);
+	new->argv = src->argv;
+	new->cmd = src->cmd;
+	new->type = src->type;
+	new->pipe_fd = src->pipe_fd;
+	new->pipe_output = src->pipe_output;
+	new->io_fds = src->io_fds;
+	new->next = NULL;
+	new->prev = NULL;
+	return (new);
+}
+
+t_cmd	*set_command_list(t_cmd *cmd)
+{
+	t_cmd	*new_list;
+	t_cmd	*current;
+	t_cmd	*temp;
+
+	if (!cmd)
+		return (NULL);
+	while (cmd && cmd->type != CMD)
+		cmd = cmd->next;
+	if (!cmd)
+		return (NULL);
+	new_list = init_new_cmd(cmd);
+	if (!new_list)
+		return (NULL);
+	current = new_list;
+	cmd = cmd->next;
+	while (cmd)
+	{
+		if (cmd->type == CMD)
+		{
+			temp = init_new_cmd(cmd);
+			if (!temp)
+			{
+				while (new_list)
+				{
+					temp = new_list->next;
+					free(new_list);
+					new_list = temp;
+				}
+				return (NULL);
+			}
+			current->next = temp;
+			temp->prev = current;
+			current = temp;
+		}
+		cmd = cmd->next;
+	}
+	return (new_list);
+}
+
 void	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
@@ -98,6 +153,7 @@ void	complex_command(t_data *data)
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
+		data->cmd = set_command_list(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:17:37 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/31 18:43:28 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/11/01 00:16:32 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ bool	create_pipes(t_data *data)
 
 void	close_pipe_fds(t_cmd *cmds, t_cmd *skip_cmd)
 {
-	while (cmds)
+	while (cmds && cmds->pipe_output)
 	{
-		if (cmds != skip_cmd && cmds->pipe_fd && cmds->pipe_output)
-		{
-			close(cmds->pipe_fd[0]);
-			close(cmds->pipe_fd[1]);
-		}
+		close(cmds->pipe_fd[0]);
+		close(cmds->pipe_fd[1]);
+		// if (cmds != skip_cmd && cmds->pipe_fd && cmds->pipe_output)
+		// {
+		// }
 		cmds = cmds->next;
 	}
 }

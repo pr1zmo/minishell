@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:28:55 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/30 16:09:37 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/31 23:41:02 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	int		ret;
 
 	ret = set_values(data);
+	// show_command_info(data->cmd);
 	// if (ret != 127)
 	// 	return (ret);
 	if (!data->cmd->pipe_fd && !data->cmd->prev

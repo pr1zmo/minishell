@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:24:39 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/30 16:32:48 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/31 23:08:39 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ void init_read_from(t_cmd *cmd, t_data *data)
 		ft_putstr_fd("infile error\n", 2);
 		return;
 	}
-
 	t_cmd *current = cmd->prev;
 	while (current && current->type == REDIR_IN)
 	{
