@@ -6,7 +6,7 @@
 /*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/30 16:10:26 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/10/31 18:42:17 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	handle_execute(t_data *data)
 			if (data->pid == -1)
 				ft_putstr_fd("fork error\n", 2);
 		}
-		if (data->pid == 0 || cmd->type != CMD)
+		if (data->pid == 0)
 			execute_command(data, cmd);
 		cmd = cmd->next;
 	}

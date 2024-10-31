@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:17:37 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/29 23:40:26 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/10/31 18:43:28 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ bool	create_pipes(t_data *data)
 	while (tmp)
 	{
 		if (tmp->pipe_output && (tmp->pipe_fd || (tmp->prev && tmp->prev->pipe_fd)))
+		// if (tmp->pipe_output)
 		{
 			fd = malloc(sizeof * fd * 2);
 			if (!fd || pipe(fd) != 0)
