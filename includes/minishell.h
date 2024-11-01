@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/27 20:38:43 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:10:25 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ void 	debug(void);
 char 	*get_full_cmd(char *av, char **env);
 char 	*array_to_string(t_line *head);
 int		count_symbols(t_data *data);
-void 	show_cmd(t_cmd *cmd_list);
 char 	*to_str(char **arr);
 char 	*new_strjoin(char *s1, char *s2);
 void 	show_command_info(t_cmd *cmd_list);

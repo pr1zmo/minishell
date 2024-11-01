@@ -6,16 +6,32 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/31 23:46:12 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:09:04 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+int	should_pipe(t_cmd *cmd)
+{
+	t_cmd	*temp = cmd;
+	int		pipe_count = 0;
+
+	while (temp)
+	{
+		if (temp->type == CMD)
+			pipe_count++;
+		temp = temp->next;
+	}
+	if (pipe_count % 2 == 0)
+		return (1);
+	return (0);
+}
+
 void	init_command(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
-	if (cmd->type == CMD && cmd->next)
+	if (should_pipe(cmd) || (cmd->next && cmd->next->type == CMD))
 		cmd->pipe_output = true;
 }
 
@@ -154,6 +170,7 @@ void	complex_command(t_data *data)
 	{
 		create_files(data->cmd, data);
 		data->cmd = set_command_list(data->cmd);
+		// show_command_info(data->cmd);
 		execute_cmds(data->cmd, data->envp_arr, data);
 	}
 	else

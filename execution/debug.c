@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 21:28:33 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/31 23:35:06 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/01 15:11:39 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	show_command_info(t_cmd *command)
 		ft_putstr_fd("Is piped? ", 2);
 		ft_putstr_fd(cmd->pipe_output?"Yes":"No", 2);
 		ft_putchar_fd('\n', 2);
-		if (cmd->pipe_output)
+/* 		if (cmd->pipe_output)
 		{
 			ft_putchar_fd('\n', 2);
 			ft_putstr_fd("pipe[0]: ", 2);
@@ -48,7 +48,7 @@ void	show_command_info(t_cmd *command)
 			ft_putstr_fd("pipe[1]: ", 2);
 			ft_putnbr_fd(cmd->pipe_fd[1], 2);
 			ft_putchar_fd('\n', 2);
-		}
+		} */
 		cmd = cmd->next;
 	}
 }

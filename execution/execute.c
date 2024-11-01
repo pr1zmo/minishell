@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:28:55 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/31 23:41:02 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/01 18:26:59 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	int		ret;
 
 	ret = set_values(data);
-	// show_command_info(data->cmd);
 	// if (ret != 127)
 	// 	return (ret);
 	if (!data->cmd->pipe_fd && !data->cmd->prev
@@ -55,26 +54,6 @@ int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
 	return (handle_execute(data));
 }
 
-/* int	execute_command(t_data *data, t_cmd *cmd)
-{
-	int	ret;
-
-	if (cmd->type != CMD)
-	{
-		return (1);
-	}
-	if (!check_infile_outfile(cmd->io_fds))
-		exit(1);
-	set_pipe_fds(data->cmd, cmd);
-	redirect_io(cmd->io_fds);
-	close_fds(data->cmd, false);
-	// ret = exec_builtin(data, &cmd->cmd);
-	if (ret != 127)
-		return (ret);
-	ret = exec_cmd(cmd->cmd, data->envp_arr, data);
-	return (ret);
-} */
-
 int	execute_command(t_data *data, t_cmd *cmd)
 {
 	int	ret;
@@ -86,15 +65,5 @@ int	execute_command(t_data *data, t_cmd *cmd)
 	set_pipe_fds(data->cmd, cmd);
 	redirect_io(cmd->io_fds);
 	close_fds(data->cmd, false);
-/* 	if (ft_strchr(cmd->cmd, '/') == NULL)
-	{
-		ret = exec_builtin(data, &cmd->cmd);
-		if (ret != 127)
-			exit(1);
-		ret = exec_cmd(cmd->cmd, data->envp_arr, data);
-		if (ret != 127)
-			exit(1);
-	}
-	else */
 	return (exec_cmd(cmd->cmd, data->envp_arr, data));
 }

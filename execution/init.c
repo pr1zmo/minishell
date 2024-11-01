@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:24:39 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/31 23:08:39 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/01 20:28:48 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void init_write_to(t_cmd *cmd, t_data *data)
 		perror("file");
 		return;
 	}
-
 	t_cmd *current = cmd->prev;
 	while (current && current->type == REDIR_OUT)
 	{
@@ -90,7 +89,6 @@ void init_append(t_cmd *cmd, t_data *data)
 		perror("open");
 		return;
 	}
-
 	t_cmd *current = cmd->prev;
 	while (current && current->type == REDIR_OUT)
 	{
@@ -110,7 +108,6 @@ void init_read_from(t_cmd *cmd, t_data *data)
 	init_io(&cmd->io_fds);
 	if (!remove_old_file_ref(cmd->io_fds, true))
 		return;
-		
 	cmd->io_fds->infile = ft_strdup(cmd->argv[1]);
 	cmd->io_fds->in_fd = open(cmd->io_fds->infile, O_RDONLY);
 	if (cmd->io_fds->in_fd == -1)
@@ -129,19 +126,5 @@ void init_read_from(t_cmd *cmd, t_data *data)
 	{
 		current->io_fds->infile = cmd->io_fds->infile;
 		current->io_fds->in_fd = cmd->io_fds->in_fd;
-	}
-	current = cmd->next;
-	while (current)
-	{
-		init_io(&current->io_fds);
-		if (current->type != REDIR_IN)
-		{
-			current->io_fds->infile = cmd->io_fds->infile;
-			current->io_fds->in_fd = cmd->io_fds->in_fd;
-			break;
-		}
-		else
-			break ;
-		current = current->next;
 	}
 }
