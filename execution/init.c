@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:24:39 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/01 20:28:48 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/02 11:37:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,37 +40,6 @@ void	init_io(t_io_fds **io_fds)
 	(*io_fds)->stdout_backup = -1;
 }
 
-void init_write_to(t_cmd *cmd, t_data *data)
-{
-	init_io(&cmd->io_fds);
-	if (!remove_old_file_ref(cmd->io_fds, false))
-		return;
-	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
-	if (cmd->io_fds->outfile && cmd->io_fds->outfile[0] == '\0')
-	{
-		ft_error(3, data);
-		return;
-	}
-	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDWR | O_TRUNC | O_CREAT, 0644);
-	if (cmd->io_fds->out_fd == -1)
-	{
-		perror("file");
-		return;
-	}
-	t_cmd *current = cmd->prev;
-	while (current && current->type == REDIR_OUT)
-	{
-		current->io_fds->outfile = cmd->io_fds->outfile;
-		current->io_fds->out_fd = cmd->io_fds->out_fd;
-		current = current->prev;
-	}
-	if (current && current->type != REDIR_OUT)
-	{
-		current->io_fds->outfile = cmd->io_fds->outfile;
-		current->io_fds->out_fd = cmd->io_fds->out_fd;
-	}
-}
-
 void init_append(t_cmd *cmd, t_data *data)
 {
 	init_io(&cmd->io_fds);
@@ -90,7 +59,38 @@ void init_append(t_cmd *cmd, t_data *data)
 		return;
 	}
 	t_cmd *current = cmd->prev;
-	while (current && current->type == REDIR_OUT)
+	while (current && current->type != CMD)
+	{
+		current->io_fds->outfile = cmd->io_fds->outfile;
+		current->io_fds->out_fd = cmd->io_fds->out_fd;
+		current = current->prev;
+	}
+	if (current && current->type != APPEND)
+	{
+		current->io_fds->outfile = cmd->io_fds->outfile;
+		current->io_fds->out_fd = cmd->io_fds->out_fd;
+	}
+}
+
+void init_write_to(t_cmd *cmd, t_data *data)
+{
+	init_io(&cmd->io_fds);
+	if (!remove_old_file_ref(cmd->io_fds, false))
+		return;
+	cmd->io_fds->outfile = ft_strdup(cmd->argv[1]);
+	if (cmd->io_fds->outfile && cmd->io_fds->outfile[0] == '\0')
+	{
+		ft_error(3, data);
+		return;
+	}
+	cmd->io_fds->out_fd = open(cmd->io_fds->outfile, O_RDWR | O_TRUNC | O_CREAT, 0644);
+	if (cmd->io_fds->out_fd == -1)
+	{
+		perror("file");
+		return;
+	}
+	t_cmd *current = cmd->prev;
+	while (current && current->type != CMD)
 	{
 		current->io_fds->outfile = cmd->io_fds->outfile;
 		current->io_fds->out_fd = cmd->io_fds->out_fd;
@@ -116,7 +116,7 @@ void init_read_from(t_cmd *cmd, t_data *data)
 		return;
 	}
 	t_cmd *current = cmd->prev;
-	while (current && current->type == REDIR_IN)
+	while (current && current->type != CMD)
 	{
 		current->io_fds->infile = cmd->io_fds->infile;
 		current->io_fds->in_fd = cmd->io_fds->in_fd;
