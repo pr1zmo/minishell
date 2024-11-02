@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/28 18:10:04 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/02 21:20:01 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	minishell(t_data *data)
 	t_parse	p_data;
 	t_cmd	*cmd;
 
+	exit_status = 0;
 	while (1)
 	{
 		head = NULL;
@@ -55,5 +56,5 @@ int	minishell(t_data *data)
 		if (data->status == 0)
 			break ;
 	}
-	return (1);
+	return (exit_status);
 }
