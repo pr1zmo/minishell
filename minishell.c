@@ -6,11 +6,13 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/31 22:28:02 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/03 20:27:10 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
+
+int	exit_status;
 
 void	free_arr(char **arr)
 {
@@ -51,7 +53,7 @@ int	main(int ac, char **av, char **env)
 	if (ac != 1)
 		return (printf("minishell doesn't take any arguments\n"), 1);
 	program.envp = set_env(env);
-	program.status = 1;
+	exit_status = 0;
 	minishell(&program);
 	return (0);
 }

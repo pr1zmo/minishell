@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/28 18:10:04 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/03 21:29:45 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 int	handle_input(t_data *data)
 {
-	t_line	*temp = data->head;
+	t_line	*temp;
 	char	*cmd;
+	int		i;
 
-	int i = count_symbols(data);
+	temp = data->head;
+	i = count_symbols(data);
 	if (i == 0)
 	{
 		cmd = array_to_string(temp);

@@ -6,17 +6,19 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/02 10:25:23 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/03 20:19:32 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	should_pipe(t_cmd *cmd)
+static int	should_pipe(t_cmd *cmd)
 {
-	t_cmd	*temp = cmd;
-	int		pipe_count = 0;
+	t_cmd	*temp;
+	int		pipe_count;
 
+	temp = cmd;
+	pipe_count = 0;
 	while (temp)
 	{
 		if (temp->type == CMD)
