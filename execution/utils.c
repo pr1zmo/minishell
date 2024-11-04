@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/30 16:11:37 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/11/04 03:04:11 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int	exec_builtin(t_data *data, char **cmd)
 		res = ft_unset(data, cmd);
 	else if (ft_strncmp(cmd[0], "export", 0) == 0)
 		res = ft_export(data, cmd);
+	else if (ft_strncmp(cmd[0], "exit", 0) == 0)
+		res = ft_exit(data, cmd);
 	return (res);
 }
 
@@ -114,6 +116,7 @@ int	ft_error(int error, t_data *data)
 		ft_putstr_fd("Ambigius rediredirict\n", 2);
 	else if (error == 7)
 	{
+		data->status = 127;
 		ft_putstr_fd(data->cmd->argv[0], STDERR_FILENO);
 		ft_putchar_fd(' ', 2);
 		ft_putstr_fd("command not found\n", STDERR_FILENO);

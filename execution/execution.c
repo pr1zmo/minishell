@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/02 21:20:01 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/04 06:10:55 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	handle_input(t_data *data)
 	if (i == 0)
 	{
 		cmd = array_to_string(temp);
-		single_command(data, cmd);
+		data->status = single_command(data, cmd);
 	}
 	else
 	{
@@ -37,7 +37,6 @@ int	minishell(t_data *data)
 	t_parse	p_data;
 	t_cmd	*cmd;
 
-	exit_status = 0;
 	while (1)
 	{
 		head = NULL;
@@ -52,9 +51,11 @@ int	minishell(t_data *data)
 		data->pid = -1;
 		get_final_list(&head, &cmd);
 		data->cmd = cmd;
-		handle_input(data);
-		if (data->status == 0)
-			break ;
+		data->status = handle_input(data);
+		printf("The exit status is: %d\n", data->status);
+		exit_status = data->status;
+		// if (data->status == 0)
+		// 	break ;
 	}
-	return (exit_status);
+	return (data->status);
 }

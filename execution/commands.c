@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/02 10:25:23 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/04 06:09:57 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,12 @@ int	single_command(t_data *data, char *cmd)
 			if (builtin(data->cmd->argv[0]))
 				exec_builtin(data, data->cmd->argv);
 			else
-				exec_cmd(cmd, data->envp_arr, data);
+				data->status = exec_cmd(cmd, data->envp_arr, data);
 		}
 		waitpid(0, NULL, 0);
 		temp = temp->next;
 	}
-	return (0);
+	return (data->status);
 }
 
 t_cmd	*init_new_cmd(t_cmd *src)
