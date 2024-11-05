@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/05 01:16:47 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 01:24:14 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,31 +104,6 @@ int	single_command(t_data *data, char *cmd)
 	}
 	return (data->status);
 }
-
-/* int	single_command(t_data *data, char *cmd)
-{
-	t_line	*temp = data->head;
-	int pid;
-
-	while (temp)
-	{
-		if (temp->next && temp->next->type == 7)
-			temp = temp->next;
-		data->pid = fork();
-		if (data->pid == -1)
-			return (ft_error(1, data));
-		if (data->pid == 0)
-		{
-			if (builtin(data->cmd->argv[0]))
-				exec_builtin(data, data->cmd->argv);
-			else
-				data->status = exec_cmd(cmd, data->envp_arr, data);
-		}
-		waitpid(0, NULL, 0);
-		temp = temp->next;
-	}
-	return (data->status);
-} */
 
 t_cmd	*init_new_cmd(t_cmd *src)
 {

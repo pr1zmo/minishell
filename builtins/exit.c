@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:48:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/05 00:50:22 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 02:38:09 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,14 @@ int	check_arguemnts(char **cmd)
 int ft_exit(t_data *data, char **cmd)
 {
 	int	exit_code;
+	int	error;
 
 	exit_code = 0;
-	
+	if (!cmd[1])
+		ft_putstr_fd("exit", 2);
+	else
+	{
+		exit_code = get_code(cmd[1], &error);
+	}
 	free_data(data, exit_code);
 }
