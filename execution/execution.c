@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/04 06:10:55 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 00:01:23 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	minishell(t_data *data)
 	t_line	*head;
 	t_parse	p_data;
 	t_cmd	*cmd;
+	int		new_fd;
 
 	while (1)
 	{
@@ -52,10 +53,9 @@ int	minishell(t_data *data)
 		get_final_list(&head, &cmd);
 		data->cmd = cmd;
 		data->status = handle_input(data);
-		printf("The exit status is: %d\n", data->status);
+		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+		ft_putnbr_fd(data->status, new_fd);
 		exit_status = data->status;
-		// if (data->status == 0)
-		// 	break ;
 	}
 	return (data->status);
 }

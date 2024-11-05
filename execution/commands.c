@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/04 06:09:57 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 01:16:47 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	exec_cmd(char *av, char **env, t_data *data)
 {
 	char	**cmd;
 	char	*path;
- 
+
 	cmd = ft_split(av, ' ');
 	if (cmd[0][0] == '/')
 		path = ft_strdup(cmd[0]);
@@ -87,6 +87,33 @@ int	single_command(t_data *data, char *cmd)
 	{
 		if (temp->next && temp->next->type == 7)
 			temp = temp->next;
+		if (builtin(data->cmd->argv[0]))
+			exec_builtin(data, data->cmd->argv);
+		else
+		{
+			data->pid = fork();
+			if (data->pid == -1)
+				return (ft_error(1, data));
+			if (data->pid == 0)
+			{
+				data->status = exec_cmd(cmd, data->envp_arr, data);
+			}
+			waitpid(0, NULL, 0);
+		}
+		temp = temp->next;
+	}
+	return (data->status);
+}
+
+/* int	single_command(t_data *data, char *cmd)
+{
+	t_line	*temp = data->head;
+	int pid;
+
+	while (temp)
+	{
+		if (temp->next && temp->next->type == 7)
+			temp = temp->next;
 		data->pid = fork();
 		if (data->pid == -1)
 			return (ft_error(1, data));
@@ -101,7 +128,7 @@ int	single_command(t_data *data, char *cmd)
 		temp = temp->next;
 	}
 	return (data->status);
-}
+} */
 
 t_cmd	*init_new_cmd(t_cmd *src)
 {
@@ -162,17 +189,19 @@ t_cmd	*set_command_list(t_cmd *cmd)
 	return (new_list);
 }
 
-void	complex_command(t_data *data)
+int	complex_command(t_data *data)
 {
 	t_line	*temp = data->head;
+	int		ret;
 
 	if (data->cmd)
 	{
 		create_files(data->cmd, data);
 		data->cmd = set_command_list(data->cmd);
-		// show_command_info(data->cmd);
-		execute_cmds(data->cmd, data->envp_arr, data);
+		ret = set_values(data);
+		return (handle_execute(data));
 	}
 	else
 		ft_putstr_fd("No command found\n", 2);
+	return (0);
 }
