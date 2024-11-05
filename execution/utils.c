@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/05 23:12:09 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 00:21:02 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,25 +209,20 @@ char	*array_to_string(t_line *temp)
 	size_t cmd_size;
 	t_line *current = temp;
 
-	// Calculate the total length needed
 	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
 	{
 		for (size_t i = 0; current->str[i]; i++)
 			total_length += strlen(current->str[i]) + 1;
 		current = current->next;
 	}
-
-	// Allocate memory for the result string
-	cmd_size = total_length + 1; // +1 for the null terminator
+	cmd_size = total_length + 1;
 	cmd = (char *)malloc(cmd_size);
 	if (!cmd)
 	{
 		perror("malloc");
 		return NULL;
 	}
-	cmd[0] = '\0'; // Initialize the result string
-
-	// Concatenate each element with a space
+	cmd[0] = '\0';
 	current = temp;
 	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
 	{
