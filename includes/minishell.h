@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/05 01:04:35 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 20:41:27 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,11 @@
 # include "builtins.h"
 # include "styles.h"
 
+#ifndef MAX_PATH
 # define MAX_PATH 4096
+#endif
 
-extern int	exit_status;
+extern int	g_exit_status;
 
 typedef struct s_token t_line;
 

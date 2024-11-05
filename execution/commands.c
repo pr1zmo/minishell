@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/05 01:24:14 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 23:10:19 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	exec_cmd(char *av, char **env, t_data *data)
 	if (execve(path, cmd, env) == -1)
 	{
 		perror("execve");
+		g_exit_status = 1;
 		return (1);
 	}
 	return (0);

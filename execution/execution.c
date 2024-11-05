@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/05 00:01:23 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 20:40:50 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	minishell(t_data *data)
 		data->envp_arr = set_list_arra(data->envp);
 		// if (data->arg == NULL || data->arg[0] == '\0')
 		// 	reset_shell(data);
-		add_history(data->arg);
+		if (data->arg)
+			add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
 		data->head = head;
 		data->pid = -1;
@@ -55,7 +56,7 @@ int	minishell(t_data *data)
 		data->status = handle_input(data);
 		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 		ft_putnbr_fd(data->status, new_fd);
-		exit_status = data->status;
+		g_exit_status = data->status;
 	}
 	return (data->status);
 }

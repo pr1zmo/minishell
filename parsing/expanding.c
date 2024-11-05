@@ -6,13 +6,13 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/11/04 03:01:12 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 20:40:50 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
 
-int	exit_status;
+int	g_exit_status;
 
 static int	check_case(char *str, int i)
 {
@@ -175,7 +175,7 @@ char	*find_and_replace(char *str, t_parse *data)
 	while (str[i])
 	{
 		if (str[i] == -1 && str[i + 1] == '?')
-			tmp = expand_exit(tmp, i, exit_status);
+			tmp = expand_exit(tmp, i, g_exit_status);
 		else if (str[i] == -1)
 		{
 			ca = find(str, i, env, &size);

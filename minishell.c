@@ -6,13 +6,13 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/04 20:49:10 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 20:40:50 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int	exit_status;
+int	g_exit_status;
 
 void	free_arr(char **arr)
 {
