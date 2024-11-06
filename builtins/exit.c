@@ -6,32 +6,82 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:48:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/03 20:52:49 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:14:09 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+static int	is_num(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (!arg)
+		return (0);
+	if (arg[0] == '-' || arg[0] == '+')
+		i++;
+	while (arg[i])
+	{
+		if (!ft_isdigit(arg[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static int	get_code(char *arg, int *error)
+{
+	unsigned long long	exit_code;
+
+	if (!arg)
+	{
+		printf("No more arguments\n");
+		return (g_exit_status);
+	}
+	exit_code = 0;
+	if (!is_num(arg))
+	{
+		exit_code = 255;
+	}
+	else if (ft_atoi(arg) > 0 && ft_atoi(arg) < 256)
+	{
+		exit_code = ft_atoi(arg);
+	}
+	else if (ft_atoi(arg) > 255 || ft_atoi(arg) < 0)
+	{
+		exit_code = ft_atoi(arg) % 256;
+		if (exit_code < 0)
+			exit_code *= -1;
+	}
+	return (exit_code);	
+}
+
+int	check_arguemnts(char **cmd)
+{
+	return (0);
+}
+
 int ft_exit(t_data *data, char **cmd)
 {
-	exit_status = 1;
-	ft_putstr_fd("exit ", STDERR_FILENO);
-	cmd[1] ? ft_putendl_fd("❤️", STDERR_FILENO) : ft_putendl_fd("💚", STDERR_FILENO);
+	int	exit_code;
+	int	error;
+
+	exit_code = 0;
+	if (!cmd[1])
+		printf("exit\n");
 	if (cmd[1] && cmd[2])
 	{
-		exit_status = 1;
-		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		if (is_num(cmd[1]))
+			return (1);
+		else
+			printf("exit\n");
 	}
-	else if (cmd[1] && isalnum(cmd[1]) == 0)
+	else if (cmd[1] && !cmd[2])
 	{
-		exit_status = 255;
-		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
-		ft_putstr_fd(cmd[1], STDERR_FILENO);
-		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+		exit_code = get_code(cmd[1], &error);
 	}
-	else if (cmd[1])
-		exit_status = ft_atoi(cmd[1]);
-	else
-		exit_status = 0;
+	free_data(data, exit_code);
 	return (0);
 }

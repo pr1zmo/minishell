@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:28:55 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/01 18:26:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 01:20:37 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,6 @@ int	set_values(t_data *data)
 	return (127);
 }
 
-int execute_cmds(t_cmd *cmd_list, char **envp, t_data *data)
-{
-	int		ret;
-
-	ret = set_values(data);
-	// if (ret != 127)
-	// 	return (ret);
-	if (!data->cmd->pipe_fd && !data->cmd->prev
-		&& check_infile_outfile(cmd_list->io_fds))
-	{
-		redirect_io(data->cmd->io_fds);
-		ret = exec_builtin(data, &cmd_list->cmd);
-		restore_io(data->cmd->io_fds);
-	}
-	if (ret != 127)
-		return (ret);
-	return (handle_execute(data));
-}
-
 int	execute_command(t_data *data, t_cmd *cmd)
 {
 	int	ret;
@@ -61,9 +42,17 @@ int	execute_command(t_data *data, t_cmd *cmd)
 	if (cmd->type != CMD)
 		return (1);
 	if (!check_infile_outfile(cmd->io_fds))
-		exit(1);
+	{
+		perror("files\n");
+		return (1);	
+	}
 	set_pipe_fds(data->cmd, cmd);
 	redirect_io(cmd->io_fds);
 	close_fds(data->cmd, false);
-	return (exec_cmd(cmd->cmd, data->envp_arr, data));
+	ret = exec_builtin(data, cmd->argv);
+	if (ret != 127)
+		exit(0);
+	if (ret == 127)
+		return (exec_cmd(cmd->cmd, data->envp_arr, data));
+	return (ret);
 }

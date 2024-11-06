@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/03 20:26:26 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:14:32 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,11 @@
 # include "builtins.h"
 # include "styles.h"
 
+#ifndef MAX_PATH
 # define MAX_PATH 4096
+#endif
 
-extern int	exit_status;
+extern int	g_exit_status;
 
 typedef struct s_token t_line;
 
@@ -131,9 +133,8 @@ void	init_command(t_cmd *cmd, t_data *data);
 int		handle_execute(t_data *data);
 int		exec_cmd(char *av, char **env, t_data *data);
 int		single_command(t_data *data, char *cmd);
-void	complex_command(t_data *data);
+int		complex_command(t_data *data);
 int		set_values(t_data *data);
-int		execute_cmds(t_cmd *cmd_list, char **envp, t_data *data);
 int		execute_command(t_data *data, t_cmd *cmd);
 void	create_files(t_cmd *cmd, t_data *data);
 bool	check_infile_outfile(t_io_fds *io);
@@ -151,6 +152,6 @@ void	close_pipe_fds(t_cmd *cmds, t_cmd *skip_cmd);
 bool	set_pipe_fds(t_cmd *cmds, t_cmd *c);
 void	init_heredoc(t_cmd *cmd, t_data *data);
 bool	restore_io(t_io_fds *io);
-void	valid_pipe_redirection(t_cmd *cmd);
+void	free_all(t_data *data);
 
 #endif

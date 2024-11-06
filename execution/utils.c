@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/03 21:31:49 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:14:27 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ int	exec_builtin(t_data *data, char **cmd)
 		res = ft_unset(data, cmd);
 	else if (ft_strncmp(cmd[0], "export", 0) == 0)
 		res = ft_export(data, cmd);
+	else if (ft_strncmp(cmd[0], "exit", 0) == 0)
+		res = ft_exit(data, cmd);
 	return (res);
 }
 
@@ -114,6 +116,7 @@ int	ft_error(int error, t_data *data)
 		ft_putstr_fd("Ambigius rediredirict\n", 2);
 	else if (error == 7)
 	{
+		data->status = 127;
 		ft_putstr_fd(data->cmd->argv[0], STDERR_FILENO);
 		ft_putchar_fd(' ', 2);
 		ft_putstr_fd("command not found\n", STDERR_FILENO);
@@ -206,8 +209,6 @@ char	*array_to_string(t_line *temp)
 	size_t	cmd_size;
 	t_line	*current;
 
-	total_length = 0;
-	current = temp;
 	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
 	{
 		for (size_t i = 0; current->str[i]; i++)

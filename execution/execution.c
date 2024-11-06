@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/03 21:29:45 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:14:20 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	handle_input(t_data *data)
 	if (i == 0)
 	{
 		cmd = array_to_string(temp);
-		single_command(data, cmd);
+		data->status = single_command(data, cmd);
 	}
 	else
 	{
@@ -38,6 +38,7 @@ int	minishell(t_data *data)
 	t_line	*head;
 	t_parse	p_data;
 	t_cmd	*cmd;
+	int		new_fd;
 
 	while (1)
 	{
@@ -47,15 +48,17 @@ int	minishell(t_data *data)
 		data->envp_arr = set_list_arra(data->envp);
 		// if (data->arg == NULL || data->arg[0] == '\0')
 		// 	reset_shell(data);
-		add_history(data->arg);
+		if (data->arg)
+			add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
 		data->head = head;
 		data->pid = -1;
 		get_final_list(&head, &cmd);
 		data->cmd = cmd;
-		handle_input(data);
-		if (data->status == 0)
-			break ;
+		data->status = handle_input(data);
+		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+		ft_putnbr_fd(data->status, new_fd);
+		g_exit_status = data->status;
 	}
-	return (1);
+	return (data->status);
 }
