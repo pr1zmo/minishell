@@ -6,13 +6,11 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/11/05 20:40:50 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:26:19 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
-
-int	g_exit_status;
 
 static int	check_case(char *str, int i)
 {

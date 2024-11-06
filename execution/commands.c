@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/06 15:14:15 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:15:13 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,8 @@ int	complex_command(t_data *data)
 
 	if (data->cmd)
 	{
-		create_files(data->cmd, data);
+		if (create_files(data->cmd, data))
+			return (1);
 		data->cmd = set_command_list(data->cmd);
 		ret = set_values(data);
 		return (handle_execute(data));

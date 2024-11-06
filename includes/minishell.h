@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/06 15:14:32 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 16:15:52 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ int 	ft_error(int error, t_data *data);
 int 	count_pipes(t_data *data);
 void 	debug(void);
 char 	*get_full_cmd(char *av, char **env);
-char 	*array_to_string(t_line *head);
 int		count_symbols(t_data *data);
 char 	*to_str(char **arr);
 char 	*new_strjoin(char *s1, char *s2);
@@ -128,7 +127,6 @@ void 	show_io_fds(t_io_fds *io_fds);
 void 	set_cmd_strings(t_cmd *cmd);
 char 	**set_list_arra(t_list *envp);
 int		handle_input(t_data *data);
-void	create_files(t_cmd *cmd, t_data *data);
 void	init_command(t_cmd *cmd, t_data *data);
 int		handle_execute(t_data *data);
 int		exec_cmd(char *av, char **env, t_data *data);
@@ -136,14 +134,14 @@ int		single_command(t_data *data, char *cmd);
 int		complex_command(t_data *data);
 int		set_values(t_data *data);
 int		execute_command(t_data *data, t_cmd *cmd);
-void	create_files(t_cmd *cmd, t_data *data);
+int		create_files(t_cmd *cmd, t_data *data);
 bool	check_infile_outfile(t_io_fds *io);
 int		close_file(t_data *data);
 bool	remove_old_file_ref(t_io_fds *io, bool infile);
 void	init_cmd(t_cmd *cmd);
 void	init_io(t_io_fds **io_fds);
 void	init_write_to(t_cmd *cmd, t_data *data);
-void	init_read_from(t_cmd *cmd, t_data *data);
+int		init_read_from(t_cmd *cmd, t_data *data);
 void	init_append(t_cmd *cmd, t_data *data);
 void	close_fds(t_cmd *cmds, bool close_backups);
 bool	redirect_io(t_io_fds *io);
@@ -153,5 +151,6 @@ bool	set_pipe_fds(t_cmd *cmds, t_cmd *c);
 void	init_heredoc(t_cmd *cmd, t_data *data);
 bool	restore_io(t_io_fds *io);
 void	free_all(t_data *data);
+void	free_data(t_data *data, int exit_code);
 
 #endif

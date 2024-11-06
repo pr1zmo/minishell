@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/06 15:14:27 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/06 15:34:53 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,42 +202,6 @@ char	*get_full_cmd(char *av, char **env)
 	return (NULL);
 }
 
-char	*array_to_string(t_line *temp)
-{
-	size_t	total_length;
-	char	*cmd;
-	size_t	cmd_size;
-	t_line	*current;
-
-	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
-	{
-		for (size_t i = 0; current->str[i]; i++)
-			total_length += strlen(current->str[i]) + 1;
-		current = current->next;
-	}
-	cmd_size = total_length + 1;
-	cmd = (char *)malloc(cmd_size);
-	if (!cmd)
-	{
-		perror("malloc");
-		return NULL;
-	}
-	cmd[0] = '\0';
-	current = temp;
-	while (current && current->str[0][0] != '|' && current->str[0][0] != '>' && current->str[0][0] != '<')
-	{
-		for (size_t i = 0; current->str[i]; i++)
-		{
-			ft_strlcat(cmd, current->str[i], cmd_size);
-			if (current->str[i + 1] || (current->next &&
-				(current->next->type == 7 || current->next->type == 8)))
-				ft_strlcat(cmd, " ", cmd_size);
-		}
-		current = current->next;
-	}
-	return cmd;
-}
-
 int	count_symbols(t_data *data)
 {
 	int		i;
@@ -258,22 +222,23 @@ char *ft_strcat(char *s1, char *s2)
 {
 	size_t	len1;
 	size_t	len2;
+	char	*dest;
 
 	if (!s1 && !s2)
-		return (NULL); // Both are NULL
+		return (NULL);
 	if (!s1)
-		return (strdup(s2)); // s1 is NULL, return a copy of s2
+		return (strdup(s2));
 	if (!s2)
-		return (strdup(s1)); // s2 is NULL, return a copy of s1
+		return (strdup(s1));
 	len1 = strlen(s1);
 	len2 = strlen(s2);
-	char *dest = malloc(len1 + len2 + 1);
+	dest = malloc(len1 + len2 + 1);
 	if (!dest)
-		return (NULL); // Check for allocation failure
+		return (NULL);
 	memcpy(dest, s1, len1);
 	memcpy(dest + len1, s2, len2);
 	dest[len1 + len2] = '\0';
-	return (dest); // Return the pointer to the new string
+	return (dest);
 }
 
 char	*to_str(char **arr)
@@ -283,6 +248,8 @@ char	*to_str(char **arr)
 
 	i = 0;
 	result = NULL;
+	if (!arr || !arr[0])
+		return (NULL);
 	while (arr[i])
 	{
 		result = ft_strcat(result, arr[i]);
