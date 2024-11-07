@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/07 15:59:42 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/07 16:51:03 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,25 @@ int	handle_input(t_data *data)
 	return (0);
 }
 
+void	free_cmd(t_cmd **head)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = (*head);
+	while (*head)
+	{
+		i = 0;
+		while ((*head)->argv[i])
+			free((*head)->argv[i++]);
+		free((*head)->argv);
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+	}
+}
+
 int	minishell(t_data *data)
 {
 	t_line	*head;
@@ -61,6 +80,7 @@ int	minishell(t_data *data)
 		data->status = handle_input(data);
 		g_exit_status = data->status;
 		free_line(&head);
+		free_cmd(&cmd);
 	}
 	return (data->status);
 }

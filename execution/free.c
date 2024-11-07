@@ -6,40 +6,26 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 02:55:16 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/06 16:18:26 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/07 16:50:53 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	free_all(t_data *data)
-{
-	t_line	*temp;
-	t_line	*next;
+// void	free_all(t_data *data)
+// {
+// 	t_line	*temp;
+// 	t_line	*next;
 
-	temp = data->head;
-	while (temp)
-	{
-		next = temp->next;
-		free(temp->str);
-		free(temp);
-		temp = next;
-	}
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	t_cmd	*temp;
-
-	while (cmd)
-	{
-		temp = cmd;
-		cmd = cmd->next;
-		if (temp->argv)
-			free_arr(temp->argv);
-		free(temp);
-	}
-}
+// 	temp = data->head;
+// 	while (temp)
+// 	{
+// 		next = temp->next;
+// 		free(temp->str);
+// 		free(temp);
+// 		temp = next;
+// 	}
+// }
 
 void	free_io(t_io_fds *io_fds)
 {
@@ -55,10 +41,17 @@ void	free_io(t_io_fds *io_fds)
 	}
 }
 
+void	free_all(t_data *data)
+{
+	// if (data->envp_arr)
+	free_arr(data->envp_arr);
+	data->envp_arr = NULL;
+}
+
 void	free_data(t_data *data, int exit_code)
 {
 	// free_io(data->cmd->io_fds);
 	// free_cmd(data->cmd);
-	// free_all(data);
+	free_all(data);
 	exit(exit_code);
 }
