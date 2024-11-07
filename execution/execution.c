@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/06 16:35:14 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/07 15:59:42 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,8 @@ int	minishell(t_data *data)
 		get_final_list(&head, &cmd);
 		data->cmd = cmd;
 		data->status = handle_input(data);
-		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
-		ft_putnbr_fd(data->status, new_fd);
 		g_exit_status = data->status;
+		free_line(&head);
 	}
 	return (data->status);
 }
