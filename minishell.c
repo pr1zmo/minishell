@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/06 15:13:51 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/07 22:49:56 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,27 +24,6 @@ void	free_arr(char **arr)
 	free(arr);
 }
 
-t_list	*set_env(char **envp)
-{
-	t_list	*env;
-	t_list	*new;
-	int		i;
-
-	i = 0;
-	env = NULL;
-	while (envp[i])
-	{
-		new = malloc(sizeof(t_list));
-		if (!new)
-			return (NULL);
-		new->content = ft_strdup(envp[i]);
-		new->next = env;
-		env = new;
-		i++;
-	}
-	return (env);
-}
-
 int	main(int ac, char **av, char **env)
 {
 	(void)av;
@@ -52,7 +31,8 @@ int	main(int ac, char **av, char **env)
 
 	if (ac != 1)
 		return (printf("minishell doesn't take any arguments\n"), 1);
-	program.envp = set_env(env);
+	program.envp = NULL;
+	init(&program.envp, env);
 	program.status = 0;
 	minishell(&program);
 	return (0);

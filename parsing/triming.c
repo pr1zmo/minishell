@@ -6,12 +6,11 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/04 11:18:29 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/16 15:34:31 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/06 20:29:27 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "parsing.h"
-#include "../includes/minishell.h"
+#include "../includes/parsing.h"
 
 int	check_trim(char *str, int i)
 {

@@ -6,11 +6,11 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:49 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/04 15:08:19 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/06 20:29:14 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../includes/parsing.h"
 
 static void	lstadd_back(t_line **head, t_line *new)
 {

@@ -5,16 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/08 16:08:01 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/10/16 15:33:14 by mel-bouh         ###   ########.fr       */
+/*   Created: 2024/10/11 15:56:07 by mel-bouh          #+#    #+#             */
+/*   Updated: 2024/11/07 22:39:31 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../includes/parsing.h"
 
-static void	env_lstadd_back(t_env **head, t_env *new)
+static void	env_lstadd_back(t_list **head, t_list *new)
 {
-	t_env	*tmp;
+	t_list	*tmp;
 
 	if (!*head)
 	{
@@ -27,15 +27,15 @@ static void	env_lstadd_back(t_env **head, t_env *new)
 	tmp->next = new;
 }
 
-static void	set_env(t_env **head, char **envp)
+static void	set_env(t_list **head, char **envp)
 {
-	t_env	*new;
+	t_list	*new;
 	int		i;
 
 	i = 0;
 	while (envp[i])
 	{
-		new = malloc(sizeof(t_env));
+		new = malloc(sizeof(t_list));
 		if (!new)
 			return ;
 		new->content = ft_strdup(envp[i]);
@@ -45,12 +45,12 @@ static void	set_env(t_env **head, char **envp)
 	}
 }
 
-t_env	*get_pwd(void)
+t_list	*get_pwd(void)
 {
-	t_env	*env;
+	t_list	*env;
 	char	*tmp;
 
-	env = malloc(sizeof(t_env));
+	env = malloc(sizeof(t_list));
 	if (!env)
 		return (NULL);
 	tmp = malloc(sizeof(char) * PATH_MAX + 1);
@@ -64,11 +64,11 @@ t_env	*get_pwd(void)
 	return (env);
 }
 
-t_env	*get_shlvl(void)
+t_list	*get_shlvl(void)
 {
-	t_env	*tmp;
+	t_list	*tmp;
 
-	tmp = malloc(sizeof(t_env));
+	tmp = malloc(sizeof(t_list));
 	if (!tmp)
 		return (NULL);
 	tmp->content = malloc(8);
@@ -79,13 +79,13 @@ t_env	*get_shlvl(void)
 	return (tmp);
 }
 
-void	create_env(t_env **head)
+void	create_env(t_list **head)
 {
 	env_lstadd_back(head, get_pwd());
 	env_lstadd_back(head, get_shlvl());
 }
 
-void	init(t_env **data, char **env)
+void	init(t_list **data, char **env)
 {
 	int		i;
 

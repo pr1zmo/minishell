@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/06 16:35:14 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/07 22:55:08 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	free_cmd_list(t_cmd **head)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = (*head);
+	while (*head)
+	{
+		i = 0;
+		while ((*head)->argv[i])
+			free((*head)->argv[i++]);
+		free((*head)->argv);
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+	}
+}
 
 int	handle_input(t_data *data)
 {
@@ -53,15 +72,27 @@ int	minishell(t_data *data)
 		// 	reset_shell(data);
 		if (data->arg)
 			add_history(data->arg);
-		parse(data->arg, &head, data->envp_arr, &p_data);
+		p_data.env = data->envp;
+		parse(data->arg, &head, &p_data);
 		data->head = head;
 		data->pid = -1;
 		get_final_list(&head, &cmd);
 		data->cmd = cmd;
+		while (cmd)
+		{
+			printf("  this is a node\n");
+			printf("------------------\n");
+			for (int i = 0;cmd->argv[i];i++)
+				printf("str: %s\n", cmd->argv[i]);
+			printf("type: %i\n", cmd->type);
+			cmd = cmd->next;
+		}
 		data->status = handle_input(data);
 		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 		ft_putnbr_fd(data->status, new_fd);
 		g_exit_status = data->status;
+		free_line(&head);
+		free_cmd_list(&cmd);
 	}
 	return (data->status);
 }
