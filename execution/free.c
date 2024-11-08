@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 02:55:16 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/06 16:18:26 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 14:10:12 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,6 @@ void	free_all(t_data *data)
 		free(temp->str);
 		free(temp);
 		temp = next;
-	}
-}
-
-void	free_cmd(t_cmd *cmd)
-{
-	t_cmd	*temp;
-
-	while (cmd)
-	{
-		temp = cmd;
-		cmd = cmd->next;
-		if (temp->argv)
-			free_arr(temp->argv);
-		free(temp);
 	}
 }
 
