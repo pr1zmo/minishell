@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 13:46:09 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 13:47:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ int	handle_input(t_data *data)
 	int i = count_symbols(data);
 	if (i == 0)
 	{
-		// cmd = array_to_string(temp);
-		cmd = to_str(data->cmd->argv);
+		if (data->cmd)
+			cmd = to_str(data->cmd->argv);
 		data->status = single_command(data, cmd);
 	}
 	else
