@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 13:47:17 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 17:27:08 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,24 @@ int	handle_input(t_data *data)
 	return (0);
 }
 
-void	free_cmd(t_cmd **head)
-{
-	t_cmd	*tmp;
-	int		i;
+// void	free_cmd(t_cmd **head)
+// {
+// 	t_cmd	*tmp;
+// 	int		i;
 
-	i = 0;
-	tmp = (*head);
-	while (*head)
-	{
-		i = 0;
-		while ((*head)->argv[i])
-			free((*head)->argv[i++]);
-		free((*head)->argv);
-		tmp = (*head)->next;
-		free(*head);
-		*head = tmp;
-	}
-}
+// 	i = 0;
+// 	tmp = (*head);
+// 	while (*head)
+// 	{
+// 		i = 0;
+// 		while ((*head)->argv[i])
+// 			free((*head)->argv[i++]);
+// 		free((*head)->argv);
+// 		tmp = (*head)->next;
+// 		free(*head);
+// 		*head = tmp;
+// 	}
+// }
 
 int	minishell(t_data *data)
 {
@@ -63,9 +63,8 @@ int	minishell(t_data *data)
 		head = NULL;
 		cmd = NULL;
 		data->arg = readline(READLINE_MSG);
+		if (!data->envp_arr)
 		data->envp_arr = set_list_arra(data->envp);
-		// if (data->arg == NULL || data->arg[0] == '\0')
-		// 	reset_shell(data);
 		if (data->arg)
 			add_history(data->arg);
 		parse(data->arg, &head, data->envp_arr, &p_data);
@@ -77,7 +76,9 @@ int	minishell(t_data *data)
 		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 		ft_putnbr_fd(data->status, new_fd);
 		g_exit_status = data->status;
-		free_cmd(&cmd);
+		// if (data->envp_arr)
+		// 	free_arr(data->envp_arr);
+		// free_cmd(&cmd);
 		free_line(&head);
 	}
 	return (data->status);

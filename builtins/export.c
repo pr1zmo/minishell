@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:47:56 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/04 13:16:15 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 17:19:37 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static t_list	*create_env_node(const char *key)
 	if (!new_node->content)
 		return (free(new_node), NULL);
 	new_node->next = NULL;
-	return new_node;
+	return (new_node);
 }
 
 void create_env_value(t_data *data, char *key)

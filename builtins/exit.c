@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:48:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/05 22:30:18 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 17:24:29 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,6 @@ int ft_exit(t_data *data, char **cmd)
 	{
 		exit_code = get_code(cmd[1], &error);
 	}
-	free_data(data, exit_code);
-	return (0);
+	exit(free_data(data, exit_code));
+	return (-1);
 }
