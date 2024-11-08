@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/05 20:41:27 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 13:25:03 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,6 @@ bool	set_pipe_fds(t_cmd *cmds, t_cmd *c);
 void	init_heredoc(t_cmd *cmd, t_data *data);
 bool	restore_io(t_io_fds *io);
 void	free_all(t_data *data);
+void	free_data(t_data *data, int exit_code);
 
 #endif
