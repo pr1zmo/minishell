@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/06 16:15:13 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 02:44:01 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	exec_cmd(char *av, char **env, t_data *data)
 	if (execve(path, cmd, env) == -1)
 	{
 		perror("execve");
-		g_exit_status = 1;
+		g_exit_status = GENERAL_ERROR;
 		return (1);
 	}
 	return (0);

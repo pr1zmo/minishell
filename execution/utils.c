@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/06 16:34:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 00:56:07 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,6 @@ char *ft_getenv(char *name, t_data *data)
 		temp = temp->next;
 	}
 	return (NULL);
-}
-
-int	reset_shell(t_data *data)
-{
-	// data->head = data->head->next;
-	if (data->arg)
-	{
-		free(data->arg);
-		data->arg = NULL;
-	}
-	// rl_clear_history();
-	minishell(data);
-	return (1);
 }
 
 int	modify_env_value(char *name, char *new_value, t_data *data)

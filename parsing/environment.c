@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:07 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/11/07 22:39:31 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/08 02:33:08 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ void	init(t_list **data, char **env)
 	int		i;
 
 	i = 0;
+	signal(SIGINT, handlesig);
+	signal(SIGQUIT, SIG_IGN);
 	if (!env[0])
 		create_env(data);
 	else

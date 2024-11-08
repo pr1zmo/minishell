@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/07 22:49:56 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/08 02:31:09 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,5 @@ int	main(int ac, char **av, char **env)
 	init(&program.envp, env);
 	program.status = 0;
 	minishell(&program);
-	return (0);
+	return (g_exit_status);
 }

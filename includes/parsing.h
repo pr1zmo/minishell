@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:42 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/11/07 22:33:57 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/08 02:48:01 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "minishell.h"
+
+#define SUCCESS 0
+#define GENERAL_ERROR 1
+#define PARSE_ERROR 2
+#define COMMAND_INVOKED_CANNOT_EXECUTE 126
+#define COMMAND_NOT_FOUND 127
+#define INVALID_EXIT_ARGUMENT 128
+#define EXIT_OUT_OF_RANGE 255
+#define CTRL_C 130
 
 # define PATH_MAX 4096
 typedef enum
@@ -37,6 +46,7 @@ typedef enum
 }	t_token;
 
 typedef struct s_cmd t_cmd;
+typedef struct s_data t_data;
 
 #define BUFFER_SIZE	4098
 
@@ -63,7 +73,8 @@ void	init(t_list **data, char **env);
 void	triming_quotes(t_line *head);
 void	get_final_list(t_line **head, t_cmd **cmd);
 void	free_line(t_line **head);
-int		parse(char *line, t_line **head, t_parse *data);
+void	handlesig(int sig);
+int		parse(char *line, t_line **head, t_parse *data, t_data *ex_data);
 int		check_token(int c);
 int		special_char(char *str, int i);
 int		checkquotes(char *line);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/06 16:15:52 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 02:47:31 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 #endif
 
 extern int	g_exit_status;
+extern int	pid;
 
 typedef struct s_token t_line;
 
@@ -112,7 +113,7 @@ void	set_list_var(t_data *data, char *name, char *new_value);
 char	*find_value(char *name, t_list *envp);
 char	*new_substr(const char *str, int c);
 void	printa(char *str, char **arr);
-int 	reset_shell(t_data *data);
+void 	reset_shell(t_data *data);
 int		builtin(char *cmd);
 int 	exec_builtin(t_data *data, char **cmd);
 int 	ft_error(int error, t_data *data);

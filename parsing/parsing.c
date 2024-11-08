@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/07 22:32:10 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/08 02:46:53 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,18 @@ int	parse_error(t_line *head)
 	return (0);
 }
 
-int	parse(char *str, t_line **head, t_parse *data)
+int	parse(char *str, t_line **head, t_parse *data, t_data* ex_data)
 {
 	char	**arg;
 	char	*line;
 
 	if (!checkspaces(str))
-		return (0);
+		return (SUCCESS);
 	if (!checkquotes(str))
-		return (2);
+		return (PARSE_ERROR);
+	if (ex_data->arg == NULL)
+		reset_shell(ex_data);
+	add_history(ex_data->arg);
 	line = spacing(str);
 	line = find_and_replace(line, data->env);
 	arg = ft_split(line, ' ');
