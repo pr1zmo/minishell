@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/06 16:35:14 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 14:07:32 by prizmo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ int	handle_input(t_data *data)
 	{
 		if (data->cmd)
 			cmd = to_str(data->cmd->argv);
-		if (!cmd)
-			return (1);
 		data->status = single_command(data, cmd);
 	}
 	else
@@ -34,6 +32,25 @@ int	handle_input(t_data *data)
 		complex_command(data);
 	}
 	return (0);
+}
+
+void	free_cmd(t_cmd **head)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = (*head);
+	while (*head)
+	{
+		i = 0;
+		while ((*head)->argv[i])
+			free((*head)->argv[i++]);
+		free((*head)->argv);
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+	}
 }
 
 int	minishell(t_data *data)
@@ -62,6 +79,8 @@ int	minishell(t_data *data)
 		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
 		ft_putnbr_fd(data->status, new_fd);
 		g_exit_status = data->status;
+		free_cmd(&cmd);
+		free_line(&head);
 	}
 	return (data->status);
 }
