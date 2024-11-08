@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 14:07:32 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:47:17 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,10 @@
 
 int	handle_input(t_data *data)
 {
-	t_line	*temp;
+	t_line	*temp = data->head;
 	char	*cmd;
-	int		i;
 
-	temp = data->head;
-	i = count_symbols(data);
+	int i = count_symbols(data);
 	if (i == 0)
 	{
 		if (data->cmd)

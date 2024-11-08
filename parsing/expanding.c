@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expanding.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/11/08 14:09:14 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/11/08 13:24:47 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ char	*delete(char *tmp, int size)
 		new[j++] = tmp[i++];
 	new[j] = '\0';
 	free(tmp);
-return (new);
+	return (new);
 }
 
 int	alloc_exit(char *str, int exit)

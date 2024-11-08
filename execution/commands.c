@@ -6,19 +6,17 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:21:30 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/06 16:15:13 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/05 23:10:19 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	should_pipe(t_cmd *cmd)
+int	should_pipe(t_cmd *cmd)
 {
-	t_cmd	*temp;
-	int		pipe_count;
+	t_cmd	*temp = cmd;
+	int		pipe_count = 0;
 
-	temp = cmd;
-	pipe_count = 0;
 	while (temp)
 	{
 		if (temp->type == CMD)
@@ -174,8 +172,7 @@ int	complex_command(t_data *data)
 
 	if (data->cmd)
 	{
-		if (create_files(data->cmd, data))
-			return (1);
+		create_files(data->cmd, data);
 		data->cmd = set_command_list(data->cmd);
 		ret = set_values(data);
 		return (handle_execute(data));
