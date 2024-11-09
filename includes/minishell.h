@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 13:48:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 20:33:58 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct s_data
 	char		**envp_arr;
 	char		*curr_dir;
 	char		*old_dir;
+	int			exit;
 	int			pipe_count;
 }				t_data;
 

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 13:47:17 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 20:35:20 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,11 @@ int	minishell(t_data *data)
 	t_cmd	*cmd;
 	int		new_fd;
 
-	while (1)
+	while (data->exit == 0)
 	{
 		head = NULL;
 		cmd = NULL;
 		data->arg = readline(READLINE_MSG);
-		data->envp_arr = set_list_arra(data->envp);
 		// if (data->arg == NULL || data->arg[0] == '\0')
 		// 	reset_shell(data);
 		if (data->arg)

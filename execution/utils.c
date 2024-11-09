@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/05 23:12:09 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 20:38:18 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -357,20 +357,51 @@ void set_cmd_strings(t_cmd *cmd)
 
 char	**set_list_arra(t_list *env)
 {
-	char	**result;
-	t_list	*temp = env;
+    char	**result;
+    t_list	*temp = env;
+    int		i;
 
-	int i = ft_lstsize(env);
-	result = malloc(sizeof(char *) * (i + 1));
-	if (!result)
-		return NULL;
-	result[i] = NULL;
-	i = 0;
-	while (temp)
-	{
-		result[i] = temp->content;
-		temp = temp->next;
-		i++;
-	}
-	return (result);
+    i = ft_lstsize(env);
+    result = malloc(sizeof(char *) * (i + 1));
+    if (!result)
+        return NULL;
+    result[i] = NULL;
+    i = 0;
+    while (temp)
+    {
+        result[i] = ft_strdup(temp->content); // Make a copy of the string
+        if (!result[i])
+        {
+            // Free previously allocated memory in case of failure
+            while (i > 0)
+            {
+                free(result[--i]);
+            }
+            free(result);
+            return NULL;
+        }
+        temp = temp->next;
+        i++;
+    }
+    return (result);
 }
+
+// char	**set_list_arra(t_list *env)
+// {
+// 	char	**result;
+// 	t_list	*temp = env;
+
+// 	int i = ft_lstsize(env);
+// 	result = malloc(sizeof(char *) * (i + 1));
+// 	if (!result)
+// 		return NULL;
+// 	result[i] = NULL;
+// 	i = 0;
+// 	while (temp)
+// 	{
+// 		result[i] = temp->content;
+// 		temp = temp->next;
+// 		i++;
+// 	}
+// 	return (result);
+// }

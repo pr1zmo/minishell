@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:48:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/05 22:30:18 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/08 20:34:24 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ int ft_exit(t_data *data, char **cmd)
 		exit_code = get_code(cmd[1], &error);
 	}
 	free_data(data, exit_code);
+	data->exit = 1;
 	return (0);
 }
