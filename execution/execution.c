@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 02:58:08 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/09 23:40:29 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,25 @@ int	handle_input(t_data *data)
 	return (0);
 }
 
+void	free_cmd(t_cmd **head)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = (*head);
+	while (*head)
+	{
+		i = 0;
+		while ((*head)->argv[i])
+			free((*head)->argv[i++]);
+		free((*head)->argv);
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+	}
+}
+
 int	minishell(t_data *data)
 {
 	t_line	*head;
@@ -74,8 +93,6 @@ int	minishell(t_data *data)
 		get_final_list(&data->head, &data->cmd);
 		data->envp_arr = set_list_arra(data->envp);
 		data->status = handle_input(data);
-		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
-		ft_putnbr_fd(data->status, new_fd);
 		g_exit_status = data->status;
 		free_line(&data->head);
 		free_cmd_list(&data->cmd);

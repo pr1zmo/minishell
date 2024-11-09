@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 21:28:33 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/01 15:11:39 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/07 16:47:36 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,12 @@ void	printa(char *message, char **str)
 	int	i;
 
 	i = 0;
+	if (!str)
+		return;
 	printf("%s: ", message);
 	while (str[i])
 	{
-		printf("%s ", str[i]);
+		printf("%s\n", str[i]);
 		i++;
 	}
 }

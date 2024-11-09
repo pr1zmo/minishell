@@ -6,7 +6,11 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 11:18:31 by prizmo            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/11/08 02:31:09 by mel-bouh         ###   ########.fr       */
+=======
+/*   Updated: 2024/11/07 16:49:25 by zelbassa         ###   ########.fr       */
+>>>>>>> master
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +24,16 @@ void	free_arr(char **arr)
 
 	i = 0;
 	while (arr[i])
-		free(arr[i]);
+	{
+		if (arr[i])
+		{
+			free(arr[i]);
+			arr[i] = NULL;
+		}
+		i++;
+	}
 	free(arr);
+	arr = NULL;
 }
 
 int	main(int ac, char **av, char **env)
@@ -35,5 +47,6 @@ int	main(int ac, char **av, char **env)
 	init(&program.envp, env);
 	program.status = 0;
 	minishell(&program);
+	free_all(&program);
 	return (g_exit_status);
 }
