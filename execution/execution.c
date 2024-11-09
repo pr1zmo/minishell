@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 02:50:59 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/08 02:58:08 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	minishell(t_data *data)
 		data->arg = readline(READLINE_MSG);
 		p_data.env = data->envp;
 		data->pid = -1;
-		parse(data->arg, &data->head, &p_data, data);
+		g_exit_status = parse(data->arg, &data->head, &p_data, data);
 		get_final_list(&data->head, &data->cmd);
 		data->envp_arr = set_list_arra(data->envp);
 		data->status = handle_input(data);
