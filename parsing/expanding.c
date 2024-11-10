@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:16 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/11/08 13:24:47 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:43:55 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int	check_case(char *str, int i)
 	return (0);
 }
 
-int	find(char *tmp, int i, t_env *env, int *size)
+int	find(char *tmp, int i, t_list *env, int *size)
 {
 	int	j;
 
@@ -42,7 +42,7 @@ int	find(char *tmp, int i, t_env *env, int *size)
 	return (-1);
 }
 
-char	*replace(char *tmp, int k, t_env *env, int size)
+char	*replace(char *tmp, int k, t_list *env, int size)
 {
 	char	*new;
 	int		i;
@@ -138,7 +138,7 @@ char	*expand_exit(char *str, int i, int exit)
 	int		j;
 	char	*new;
 
-	size = alloc_exit(str, exit);
+	size = alloc_exit(str, g_exit_status);
 	new = malloc(size + 1);
 	if (!new)
 		return (NULL);
@@ -148,7 +148,7 @@ char	*expand_exit(char *str, int i, int exit)
 		new[j] = str[j];
 		j++;
 	}
-	fill_exit(new, j++, exit);
+	fill_exit(new, j++, g_exit_status);
 	i += 2;
 	while (str[i])
 		new[j++] = str[i++];
@@ -157,18 +157,16 @@ char	*expand_exit(char *str, int i, int exit)
 	return (new);
 }
 
-char	*find_and_replace(char *str, t_parse *data)
+char	*find_and_replace(char *str, t_list *env)
 {
 	int		i;
 	int		size;
 	int		ca;
 	char	*tmp;
-	t_env	*env;
 
 	if (!str)
 		return (NULL);
 	tmp = ft_strdup(str);
-	env = data->env;
 	i = 0;
 	while (str[i])
 	{

@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/25 12:50:28 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 20:33:58 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:43:38 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 #endif
 
 extern int	g_exit_status;
+extern int	pid;
 
 typedef struct s_token t_line;
 
@@ -113,7 +114,7 @@ void	create_env_value(t_data *data, char *key);
 void	set_list_var(t_data *data, char *name, char *new_value);
 void 	debug(void);
 void	printa(char *str, char **arr);
-int 	reset_shell(t_data *data);
+void 	reset_shell(t_data *data);
 int		builtin(char *cmd);
 int 	exec_builtin(t_data *data, char **cmd);
 int 	ft_error(int error, t_data *data);

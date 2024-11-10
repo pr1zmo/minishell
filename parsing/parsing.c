@@ -6,7 +6,7 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/10/16 15:34:26 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/11/09 23:51:34 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	print_error(char *str)
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd("'", 2);
 	ft_putstr_fd("\n", 2);
+	g_exit_status = 2;
 	return (2);
 }
 
@@ -60,17 +61,20 @@ int	parse_error(t_line *head)
 	return (0);
 }
 
-int	parse(char *str, t_line **head, char **env, t_parse *data)
+int	parse(char *str, t_line **head, t_parse *data, t_data* ex_data)
 {
 	char	**arg;
 	char	*line;
 
+	if (ex_data->arg == NULL)
+		reset_shell(ex_data);
 	if (!checkspaces(str))
-		return (0);
+		return (SUCCESS);
 	if (!checkquotes(str))
-		return (2);
+		return (PARSE_ERROR);
+	add_history(ex_data->arg);
 	line = spacing(str);
-	line = find_and_replace(line, data);
+	line = find_and_replace(line, data->env);
 	arg = ft_split(line, ' ');
 	free(line);
 	if (!arg)

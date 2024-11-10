@@ -6,11 +6,32 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 09:35:10 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 20:35:20 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:42:35 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	pid;
+
+void	free_cmd_list(t_cmd **head)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = (*head);
+	while (*head)
+	{
+		i = 0;
+		while ((*head)->argv[i])
+			free((*head)->argv[i++]);
+		free((*head)->argv);
+		tmp = (*head)->next;
+		free(*head);
+		*head = tmp;
+	}
+}
 
 int	handle_input(t_data *data)
 {
@@ -55,29 +76,22 @@ int	minishell(t_data *data)
 {
 	t_line	*head;
 	t_parse	p_data;
-	t_cmd	*cmd;
 	int		new_fd;
 
-	while (data->exit == 0)
+	while (!data->status)
 	{
-		head = NULL;
-		cmd = NULL;
+		data->head = NULL;
+		data->cmd = NULL;
 		data->arg = readline(READLINE_MSG);
-		// if (data->arg == NULL || data->arg[0] == '\0')
-		// 	reset_shell(data);
-		if (data->arg)
-			add_history(data->arg);
-		parse(data->arg, &head, data->envp_arr, &p_data);
-		data->head = head;
+		p_data.env = data->envp;
 		data->pid = -1;
-		get_final_list(&head, &cmd);
-		data->cmd = cmd;
+		g_exit_status = parse(data->arg, &data->head, &p_data, data);
+		get_final_list(&data->head, &data->cmd);
+		data->envp_arr = set_list_arra(data->envp);
 		data->status = handle_input(data);
-		new_fd = open("temp.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
-		ft_putnbr_fd(data->status, new_fd);
 		g_exit_status = data->status;
-		free_cmd(&cmd);
-		free_line(&head);
+		free_line(&data->head);
+		free_cmd_list(&data->cmd);
 	}
 	return (data->status);
 }

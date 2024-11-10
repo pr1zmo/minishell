@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 16:19:29 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/08 20:38:18 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/10 02:43:07 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,6 @@ char *ft_getenv(char *name, t_data *data)
 		temp = temp->next;
 	}
 	return (NULL);
-}
-
-int	reset_shell(t_data *data)
-{
-	// data->head = data->head->next;
-	if (data->arg)
-	{
-		free(data->arg);
-		data->arg = NULL;
-	}
-	// rl_clear_history();
-	minishell(data);
-	return (1);
 }
 
 int	modify_env_value(char *name, char *new_value, t_data *data)
@@ -385,23 +372,3 @@ char	**set_list_arra(t_list *env)
     }
     return (result);
 }
-
-// char	**set_list_arra(t_list *env)
-// {
-// 	char	**result;
-// 	t_list	*temp = env;
-
-// 	int i = ft_lstsize(env);
-// 	result = malloc(sizeof(char *) * (i + 1));
-// 	if (!result)
-// 		return NULL;
-// 	result[i] = NULL;
-// 	i = 0;
-// 	while (temp)
-// 	{
-// 		result[i] = temp->content;
-// 		temp = temp->next;
-// 		i++;
-// 	}
-// 	return (result);
-// }
