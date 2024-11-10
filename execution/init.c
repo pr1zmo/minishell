@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:24:39 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/02 11:37:17 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/11/10 01:48:40 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	init_cmd(t_cmd *cmd)
 {
 	cmd->argv = NULL;
 	cmd->cmd = NULL;
-	cmd->pipe_fd = NULL;
+	// cmd->pipe_fd = NULL;
 	cmd->io_fds = NULL;
 	cmd->type = 0;
 	cmd->next = NULL;
