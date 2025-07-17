@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:17:37 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/11/10 02:19:10 by zelbassa         ###   ########.fr       */
+/*   Updated: 2025/05/27 14:11:36 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,46 @@
 
 bool	create_pipes(t_data *data)
 {
-	int			*fd;
-	t_cmd		*tmp;
+	int		i;
+	t_cmd	*cmd;
 
-	tmp = data->cmd;
-	while (tmp)
+	i = 1;
+	cmd = data->cmd;
+	while (cmd)
 	{
-		// if (tmp->pipe_output && (tmp->pipe_fd || (tmp->prev && tmp->prev->pipe_fd)))
-		if (tmp->pipe_output)
+		if (cmd->pipe_output)
 		{
-			fd = malloc(sizeof * fd * 2);
-			if (!fd || pipe(fd) != 0)
-				return (false);
-			tmp->pipe_fd = fd;
+			if (pipe(cmd->pipe_fd) != 0)
+			{
+				if (errno == EMFILE)
+				{
+					i = 0;
+					close_pipe_fds(data->cmd);
+				}
+				break ;
+			}
 		}
-		tmp = tmp->next;
+		cmd = cmd->next;
+	}
+	if (i == 0)
+	{
+		ft_putstr_fd("Error: Too many open files\n", STDERR_FILENO);
+		return (false);
 	}
 	return (true);
 }
 
-void	close_pipe_fds(t_cmd *cmds, t_cmd *skip_cmd)
+void	close_pipe_fds(t_cmd *cmds)
 {
 	while (cmds && cmds->pipe_output)
 	{
-		close(cmds->pipe_fd[0]);
-		close(cmds->pipe_fd[1]);
+		ft_close(cmds->pipe_fd[0]);
+		ft_close(cmds->pipe_fd[1]);
 		cmds = cmds->next;
 	}
 }
 
-bool	set_pipe_fds(t_cmd *cmds, t_cmd *c)
+bool	set_pipe_fds(t_cmd *c)
 {
 	if (!c)
 		return (false);
@@ -51,6 +61,5 @@ bool	set_pipe_fds(t_cmd *cmds, t_cmd *c)
 		dup2(c->prev->pipe_fd[0], STDIN_FILENO);
 	if (c->pipe_output)
 		dup2(c->pipe_fd[1], STDOUT_FILENO);
-	close_pipe_fds(cmds, c);
 	return (true);
 }

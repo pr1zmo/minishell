@@ -3,57 +3,55 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 10:29:00 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/02 21:17:21 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/25 13:52:31 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	has_flag(char *av)
+static char	**check_n_option(char **str, int *new_line)
 {
-	int		i;
-	bool	n_flag;
-
-	n_flag = false;
-	i = 0;
-	if (av[i] != '-')
-		return (n_flag);
-	i++;
-	while (av[i] && av[i] == 'n')
-		i++;
-	if (av[i] == '\0')
-		n_flag = true;
-	return (n_flag);
-}
-
-int ft_echo(t_data *data, char **av)
-{
-	int	n_flag;
 	int	i;
 
-	i = 1;
-	(void)data;
-	if (!av[1])
+	*new_line = 1;
+	while (*str && ft_strncmp(*str, "-n", 2) == 0)
 	{
-		printf("\n");
-		return (EXIT_SUCCESS);
-	}
-	n_flag = has_flag(av[1]);
-	if (n_flag && !av[2])
-		return (EXIT_SUCCESS);
-	while (av[i])
-	{
-		while (has_flag(av[i]))
+		i = 2;
+		while ((*str)[i] == 'n')
 			i++;
-		printf("%s", av[i]);
-		if (av[i + 1])
-			printf(" ");
-		i++;
+		if ((*str)[i] == '\0')
+		{
+			*new_line = 0;
+			str++;
+		}
+		else
+			break ;
 	}
-	if (!n_flag)
+	return (str);
+}
+
+static void	print_arguments(char **str)
+{
+	while (*str)
+	{
+		printf("%s", *str);
+		if (*(str + 1))
+			printf(" ");
+		str++;
+	}
+}
+
+int	ft_echo(char **str)
+{
+	int	new_line;
+
+	str++;
+	str = check_n_option(str, &new_line);
+	print_arguments(str);
+	if (new_line)
 		printf("\n");
-	return (EXIT_SUCCESS);
+	return (0);
 }

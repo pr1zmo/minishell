@@ -6,31 +6,21 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 13:58:54 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/09 23:51:34 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/12/25 16:37:13 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/parsing.h"
 
-int	print_error(char *str)
-{
-	ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
-	ft_putstr_fd("'", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd("'", 2);
-	ft_putstr_fd("\n", 2);
-	g_exit_status = 2;
-	return (2);
-}
-
 int	redir_error(t_line *head)
 {
 	while (head)
 	{
-		if (check_token(head->str[0][0]) == 2 && \
-		(!head->next || head->next->type == PIPE))
+		if (isredir(head->type) && !head->next)
 			return (print_error("newline"));
-		if (check_token(head->str[0][0]) == 2 && check_token(head->next->str[0][0]) == 2)
+		if (isredir(head->type) && head->next->type == PIPE)
+			return (print_error("|"));
+		if (isredir(head->type) && isredir(head->next->type))
 			return (print_error(head->next->str[0]));
 		head = head->next;
 	}
@@ -57,29 +47,59 @@ int	parse_error(t_line *head)
 	if (pipe_error(head))
 		return (print_error("|"));
 	if (redir_error(head))
-		return (2);
+		return (-1);
 	return (0);
 }
 
-int	parse(char *str, t_line **head, t_parse *data, t_data* ex_data)
+void	expanding(t_line **head, t_list *env)
+{
+	t_line	*new;
+	int		flag;
+	int		i;
+
+	new = *head;
+	flag = 0;
+	while (new)
+	{
+		i = 0;
+		if (isredir((*head)->type))
+		{
+			new = new->next;
+			flag = 1;
+		}
+		if (!new)
+			break ;
+		while (new && new->str[i])
+		{
+			new->str[i] = find_and_replace(new->str[i], env, flag);
+			i++;
+			flag = 0;
+		}
+		new = new->next;
+	}
+}
+
+int	parse(char *str, t_line **head, t_list *env, t_data *ex_data)
 {
 	char	**arg;
 	char	*line;
 
 	if (ex_data->arg == NULL)
-		reset_shell(ex_data);
+		reset_shell(ex_data, 1);
 	if (!checkspaces(str))
-		return (SUCCESS);
-	if (!checkquotes(str))
-		return (PARSE_ERROR);
+		return (-1);
 	add_history(ex_data->arg);
+	if (!checkquotes(str, ex_data))
+		return (set_exit_status(2));
 	line = spacing(str);
-	line = find_and_replace(line, data->env);
+	flag_spaces(line);
 	arg = ft_split(line, ' ');
 	free(line);
+	unflag_spaces(arg);
 	if (!arg)
-		return (139);
-	lexer(arg, head, data);
+		return (set_exit_status(1));
+	lexer(arg, head);
+	expanding(head, env);
 	triming_quotes(*head);
 	return (parse_error(*head));
 }

@@ -3,43 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:17:11 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/28 17:29:48 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/12/26 16:12:57 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void init_heredoc(t_cmd *cmd, t_data *data)
+char	*random_file_name(void)
 {
-	init_io(&cmd->io_fds);
-	int temp_fd = open("/tmp/heredoc_zizi", O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (temp_fd == -1)
+	char		*name;
+	int			i;
+	int			fd;
+	int			k;
+	const char	charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+	name = malloc(30);
+	ft_strlcpy(name, "/tmp/", 6);
+	k = 0;
+	i = 0;
+	while (k < 15)
 	{
-		perror("heredoc temp file");
-		return;
+		fd = open("/dev/urandom", O_RDONLY);
+		read(fd, &i, 1);
+		name[k + 5] = charset[i % 36];
+		ft_close(fd);
+		k++;
 	}
-	char *line = NULL;
-	while (1)
+	name[k + 5] = '\0';
+	return (name);
+}
+
+void	write_to_file(t_data *data, t_cmd *cmd, int fd, char *file)
+{
+	char	*line;
+
+	line = NULL;
+	while (g_exit_status == -1)
 	{
 		line = readline("> ");
 		if (!line)
-			break;
-		if (strcmp(line, cmd->argv[1]) == 0)
+			execute_signal(data, fd, file);
+		if (ft_strncmp(line, cmd->argv[1], 0) == 0)
 		{
 			free(line);
-			break;
+			break ;
 		}
-		write(temp_fd, line, strlen(line));
-		write(temp_fd, "\n", 1);
+		if (ft_strchr(line, '$'))
+			line = expand_string(line, data->envp);
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 	}
-	close(temp_fd);
-	temp_fd = open("/tmp/heredoc_zizi", O_RDONLY, 0644);
+}
+
+void	set_ios(t_cmd *cmd, int temp_fd)
+{
+	t_cmd	*current;
+
 	cmd->io_fds->in_fd = temp_fd;
-	t_cmd *current = cmd->prev;
+	current = cmd->prev;
 	while (current && current->type != CMD)
 	{
 		current->io_fds->in_fd = temp_fd;
@@ -47,4 +72,40 @@ void init_heredoc(t_cmd *cmd, t_data *data)
 	}
 	if (current && current->type == CMD)
 		current->io_fds->in_fd = temp_fd;
+}
+
+void	end_and_reset(t_data *data, char *temp_file, int temp_fd)
+{
+	free(temp_file);
+	ft_close(temp_fd);
+	reset_shell(data, 0);
+}
+
+int	init_heredoc(t_cmd *cmd, t_data *data)
+{
+	char	*temp_file;
+	int		fork_id;
+
+	g_exit_status = -1;
+	temp_file = random_file_name();
+	fork_id = fork();
+	if (fork_id != 0)
+		signal(SIGINT, handlehang);
+	if (fork_id == 0)
+	{
+		signal(SIGINT, handledoc);
+		cmd->io_fds->heredoc_in_fd = \
+			open(temp_file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+		if (cmd->io_fds->heredoc_in_fd == -1)
+			return (perror("open"), 0);
+		write_to_file(data, cmd, cmd->io_fds->heredoc_in_fd, temp_file);
+		end_and_reset(data, temp_file, cmd->io_fds->heredoc_in_fd);
+	}
+	waitpid(0, &g_exit_status, 0);
+	handle_child_term(g_exit_status);
+	cmd->io_fds->heredoc_in_fd = open(temp_file, O_RDONLY, 0644);
+	if (cmd->io_fds->heredoc_in_fd == -1)
+		return (free(temp_file), 0);
+	set_ios(cmd, cmd->io_fds->heredoc_in_fd);
+	return (free(temp_file), 1);
 }

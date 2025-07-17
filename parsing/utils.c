@@ -6,57 +6,49 @@
 /*   By: mel-bouh <mel-bouh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 15:56:54 by mel-bouh          #+#    #+#             */
-/*   Updated: 2024/11/09 23:51:40 by mel-bouh         ###   ########.fr       */
+/*   Updated: 2024/12/25 16:24:43 by mel-bouh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/parsing.h"
+#include "../includes/minishell.h"
 
-void	handlesig(int sig)
+int	count_words(const char *s, char c)
 {
-	if (pid == 0)
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (*(s + i))
 	{
-		ft_putstr_fd("\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		g_exit_status = CTRL_C;
+		while (*(s + i) == c && *(s + i))
+			i++;
+		if (*(s + i) != '\0')
+		{
+			count++;
+			while (*(s + i) != c && *(s + i))
+				i++;
+		}
 	}
-	else
-	{
-		ft_putstr_fd("\n", 1);
-		g_exit_status = CTRL_C;
-	}
+	return (count);
 }
 
-void	free_env(t_list *env)
+int	isredir(int i)
 {
-	t_list	*temp;
-	t_list	*next;
-
-	temp = env;
-	while (temp)
-	{
-		next = temp->next;
-		free(temp->content);
-		free(temp);
-		temp = next;
-	}
-}
-
-void	reset_shell(t_data *data)
-{
-	ft_putstr_fd("exit\n", 1);
-	free_env(data->envp);
-	data->status = 1;
-	exit(g_exit_status);
-}
-
-int	is_space(char c)
-{
-	if ((c >= 9 && c <= 13) || c == 32)
+	if (i == REDIR_IN || i == REDIR_OUT || i == APPEND)
 		return (1);
+	if (i == HEREDOC)
+		return (2);
 	return (0);
+}
+
+void	reset_shell(t_data *data, int i)
+{
+	if (i)
+		ft_putstr_fd("exit\n", 1);
+	free_all(data, 1);
+	rl_clear_history();
+	exit(g_exit_status);
 }
 
 int	quotes_open(char *s, int i)
@@ -76,7 +68,7 @@ int	quotes_open(char *s, int i)
 	}
 	if (quotes[0] % 2)
 		return (1);
-	else if (quotes[1] % 2 || quotes[0] % 2)
+	else if (quotes[1] % 2)
 		return (2);
 	else
 		return (0);

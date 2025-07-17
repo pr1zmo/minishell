@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zelbassa <zelbassa@1337.student.ma>        +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 15:48:20 by prizmo            #+#    #+#             */
-/*   Updated: 2024/11/08 20:34:24 by zelbassa         ###   ########.fr       */
+/*   Updated: 2025/05/05 20:26:08 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,59 +30,59 @@ static int	is_num(char *arg)
 	return (1);
 }
 
-static int	get_code(char *arg, int *error)
+static int	get_code(char *arg)
 {
 	unsigned long long	exit_code;
 
+	exit_code = 0;
 	if (!arg)
 	{
 		printf("No more arguments\n");
 		return (g_exit_status);
 	}
-	exit_code = 0;
 	if (!is_num(arg))
-	{
 		exit_code = 255;
-	}
 	else if (ft_atoi(arg) > 0 && ft_atoi(arg) < 256)
-	{
 		exit_code = ft_atoi(arg);
-	}
 	else if (ft_atoi(arg) > 255 || ft_atoi(arg) < 0)
-	{
 		exit_code = ft_atoi(arg) % 256;
-		if (exit_code < 0)
-			exit_code *= -1;
+	return (exit_code);
+}
+
+static int	arg_count(char *arg1, char *arg2)
+{
+	if (arg1 && arg2)
+	{
+		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 2);
+		if (is_num(arg1))
+			return (0);
+		g_exit_status = 2;
 	}
-	return (exit_code);	
+	return (1);
 }
 
-int	check_arguemnts(char **cmd)
+int	ft_exit(t_data *data, char **cmd)
 {
-	return (0);
-}
-
-int ft_exit(t_data *data, char **cmd)
-{
-	int	exit_code;
-	int	error;
-
-	exit_code = 0;
 	if (!cmd[1])
 		printf("exit\n");
-	if (cmd[1] && cmd[2])
+	else if (!arg_count(cmd[1], cmd[2]))
 	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		if (is_num(cmd[1]))
-			return (1);
-		else
-			printf("exit\n");
+		g_exit_status = 1;
+		return (1);
 	}
-	else if (cmd[1] && !cmd[2])
+	else if (cmd[1] && !cmd[2] && !is_num(cmd[1]))
 	{
-		exit_code = get_code(cmd[1], &error);
+		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(cmd[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		g_exit_status = 2;
+		reset_shell(data, 0);
 	}
-	free_data(data, exit_code);
-	data->exit = 1;
+	else if (is_num(cmd[1]))
+		g_exit_status = get_code(cmd[1]);
+	free_all(data, 1);
+	rl_clear_history();
+	exit(g_exit_status);
 	return (0);
 }

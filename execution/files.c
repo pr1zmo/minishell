@@ -3,83 +3,88 @@
 /*                                                        :::      ::::::::   */
 /*   files.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: prizmo <prizmo@student.42.fr>              +#+  +:+       +#+        */
+/*   By: zelbassa <zelbassa@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:19:52 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/10/31 18:39:46 by prizmo           ###   ########.fr       */
+/*   Updated: 2024/12/26 18:18:13 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	create_files(t_cmd *cmd, t_data *data)
+int	create_files(t_cmd *cmd, t_data *data)
 {
+	int	i;
+
+	i = 1;
 	while (cmd)
 	{
+		init_io(&cmd->io_fds);
 		if (cmd->type == CMD)
-			init_command(cmd, data);
+			cmd->file_error = init_command(cmd, data);
 		else if (cmd->type == REDIR_OUT)
-			init_write_to(cmd, data);
+			handle_write_to(cmd);
 		else if (cmd->type == REDIR_IN)
-			init_read_from(cmd, data);
+			handle_read_from(cmd);
 		else if (cmd->type == APPEND)
-			init_append(cmd, data);
+			handle_append(cmd);
 		else if (cmd->type == HEREDOC)
-			init_heredoc(cmd, data);
+			cmd->file_error = init_heredoc(cmd, data);
+		i = cmd->file_error;
 		cmd = cmd->next;
 	}
+	return (i);
 }
 
 bool	check_infile_outfile(t_io_fds *io)
 {
+	if ((io->infile && io->in_fd == -1)
+		|| (io->outfile && io->out_fd == -1))
+		return (false);
 	if (!io || (!io->infile && !io->outfile))
 		return (true);
-	else if ((io->infile && io->in_fd == -1)
-		|| (io->outfile && io->out_fd == -1))
-			return (false);
 	return (true);
 }
 
-int	close_file(t_data *data)
+bool	remove_outfile_ref(t_io_fds *io)
 {
-	pid_t	wpid;
-	int		status;
-	int		save_status;
-
-	close_fds(data->cmd, false);
-	save_status = 0;
-	wpid = 0;
-	while (wpid != -1 || errno != ECHILD)
+	if (io->out_fd == -1 || (io->infile && io->in_fd == -1))
+		return (false);
+	if (io->outfile)
 	{
-		wpid = waitpid(-1, &status, 0);
-		if (wpid == data->pid)
-			save_status = status;
-		continue ;
+		free(io->outfile);
+		io->outfile = NULL;
 	}
-	return (status);
+	ft_close(io->out_fd);
+	return (true);
+}
+
+bool	remove_infile_ref(t_io_fds *io)
+{
+	if (io->in_fd == -1 || (io->outfile && io->out_fd == -1))
+		return (false);
+	if (io->heredoc_name != NULL)
+	{
+		free(io->heredoc_name);
+		io->heredoc_name = NULL;
+		unlink(io->infile);
+	}
+	if (io->infile)
+	{
+		free(io->infile);
+		io->infile = NULL;
+	}
+	ft_close(io->in_fd);
+	return (true);
 }
 
 bool	remove_old_file_ref(t_io_fds *io, bool infile)
 {
+	if (!io)
+		return (false);
 	if (infile == true && io->infile)
-	{
-		if (io->in_fd == -1 || (io->outfile && io->out_fd == -1))
-			return (false);
-		if (io->heredoc_name != NULL)
-		{
-			free(io->heredoc_name);
-			io->heredoc_name = NULL;
-			unlink(io->infile);
-		}
-		free(io->infile);
-		close(io->in_fd);
-	}
-	else if (infile == false && (io && io->outfile))
-	{
-		if (io->out_fd == -1 || (io->infile && io->in_fd == -1))
-			return (false);
-		free(io->outfile);
-		close(io->out_fd);
-	}
+		return (remove_infile_ref(io));
+	else if (infile == false && io->outfile)
+		return (remove_outfile_ref(io));
 	return (true);
 }
